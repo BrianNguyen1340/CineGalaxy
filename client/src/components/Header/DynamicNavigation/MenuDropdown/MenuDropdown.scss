@@ -1,0 +1,133 @@
+.menu-dropdown-container {
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    grid-column: 3/4;
+    grid-row: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    cursor: pointer;
+
+    .wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        width: fit-content;
+        height: 100%;
+        position: relative;
+        padding: 0;
+
+        .content {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+
+            button.btn-show-hide-menu-dropdown {
+                transition: 0.3s ease;
+            }
+
+            &:hover {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+            }
+
+            .image-wrapper {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                img {
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                }
+            }
+
+            button {
+                background-color: #f8f7f4;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        ul.menu-dropdown {
+            border-top: 1px solid #ccc;
+            position: absolute;
+            top: 100%;
+            z-index: 10;
+            width: 200px;
+            right: 0;
+            margin-top: 10px;
+            border-radius: 10px;
+            box-shadow:
+                0 4px 6px -1px rgb(0 0 0 / 0.1),
+                0 2px 4px -2px rgb(0 0 0 / 0.1);
+            justify-content: flex-start;
+            padding: 15px 0;
+            gap: 0;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+
+            li {
+                position: relative;
+                width: 100%;
+
+                a {
+                    margin: 0;
+                    padding: 0;
+                    display: block;
+                    width: 100%;
+                    padding: 15px;
+                    transition: 0.5s all ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    font-size: 16px;
+                    font-weight: normal;
+
+                    &::after {
+                        position: unset;
+                        content: '';
+                        left: unset;
+                        width: unset;
+                        bottom: unset;
+                        background-color: unset;
+                        height: unset;
+                        transition: unset;
+                    }
+
+                    &:hover {
+                        width: 100%;
+                        background-color: #eee;
+                    }
+                }
+
+                button {
+                    width: 100%;
+                    padding: 15px;
+                    background-color: transparent;
+                    cursor: pointer;
+                    text-align: start;
+                    transition: 0.5s all ease;
+                    font-family: 'Figtree', sans-serif;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    font-size: 16px;
+
+                    &:hover {
+                        width: 100%;
+                        background-color: #eee;
+                    }
+                }
+            }
+        }
+    }
+}

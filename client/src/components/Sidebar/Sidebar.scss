@@ -1,0 +1,10 @@
+.sidebar-container {
+  display: flex;
+  height: fit-content;
+  border-radius: 12px;
+  flex-direction: column;
+  overflow: hidden;
+  position: fixed;
+  left: 1rem;
+  background-color: white;
+}

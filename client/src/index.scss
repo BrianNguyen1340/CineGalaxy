@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    user-select: none;
+}
+
+body {
+    font-family: 'Figtree', sans-serif;
+    background-color: #f8f7f4;
+}
+
+ul,
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: #0d0c22;
+}
+
+button,
+input {
+    outline: none;
+    border: none;
+}
+
+.dark-overlay {
+    content: '';
+    position: fixed;
+    visibility: visible;
+    z-index: 1;
+    top: 100px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+@media (min-width: 1000px) {
+    .dark-overlay {
+        display: none !important;
+    }
+}
+
+label,
+input {
+    width: 100%;
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+button {
+    &:disabled {
+        cursor: no-drop;
+        background-color: #ddd;
+    }
+}
+
+.mb-1 {
+    margin-bottom: 0.25rem;
+}
+
+.mb-0 {
+    margin-bottom: 0px;
+}
+
+.duration-300 {
+    transition-duration: 300ms;
+}
+
+.transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+.ease-in-out {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}

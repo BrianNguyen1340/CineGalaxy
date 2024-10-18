@@ -1,0 +1,36 @@
+.dash-header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    position: relative;
+    border-bottom: 1px solid #ddd;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    background-color: #fff;
+
+    .upper-content,
+    .lower-content {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+
+        .body {
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.5s all ease;
+        }
+    }
+
+    .lower-content {
+        .body {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            margin-right: 15px;
+        }
+    }
+}
