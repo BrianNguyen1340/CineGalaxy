@@ -23,6 +23,11 @@ const userPaths = {
   ticketPurchaseHistory: '/ticket-purchase-history',
   watchedMovies: '/watched-movies',
   notFound: '/not-found',
+
+  // private auth
+  privateLogin: '/private-login',
+  privateForgotPassword: '/private-forgot-password',
+  privateResetPassword: '/private-reset-password',
 }
 
 const dashboardPaths = {

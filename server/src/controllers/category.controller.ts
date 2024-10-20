@@ -55,6 +55,23 @@ const handleGetAll = catchErrors(async (req, res) => {
     )
 })
 
+const handleUpdate = catchErrors(async (req, res) => {
+    const { _id } = req.params
+    const { name } = req.body
+
+    const response = await categoryService.handleUpdate({ _id, name })
+    if (!response.success) {
+        return sendErrorResponse(res, response.statusCode, response.message)
+    }
+
+    return sendSuccessResponse(
+        res,
+        response.statusCode,
+        response.message,
+        response.data,
+    )
+})
+
 export const categoryController = {
     handleCreate: [
         handleJoiError({ body: categoryValidation.handleCreate }),
@@ -62,4 +79,8 @@ export const categoryController = {
     ],
     handleGetOne,
     handleGetAll,
+    handleUpdate: [
+        handleJoiError({ body: categoryValidation.handleUpdate }),
+        handleUpdate,
+    ],
 }

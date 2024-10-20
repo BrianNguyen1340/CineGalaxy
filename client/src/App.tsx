@@ -37,6 +37,9 @@ const App = () => {
     paths.userPaths.register,
     paths.userPaths.verifyOtp,
     paths.userPaths.forgotPassword,
+    paths.userPaths.privateLogin,
+    paths.userPaths.privateForgotPassword,
+    paths.userPaths.privateResetPassword,
     paths.dashboardPaths.dashboard,
   ]
 
@@ -52,52 +55,50 @@ const App = () => {
     return <NotFound />
   }
 
+  if (loader) {
+    return <Loader />
+  }
+
   return (
     <>
-      {loader ? (
-        <Loader />
+      {user?.role === 0 || user?.role === 1 || user?.role === 2 ? (
+        <div style={{ display: 'flex', width: '100%' }}>
+          <Sidebar
+            openSidebar={openSidebar}
+            setOpenSidebar={setOpenSidebar}
+            style={{
+              width: `${openSidebar ? '288px' : '0'}`,
+              left: `${openSidebar ? '0' : '-100%'}`,
+              border: '1px solid #eee',
+            }}
+          />
+          <main
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: 'transparent',
+              position: 'relative',
+              width: `${openSidebar ? 'calc(100% - 288px)' : '100%'}`,
+              marginLeft: `${openSidebar ? '304px' : '0'}`,
+            }}
+          >
+            <DashHeader
+              openSidebar={openSidebar}
+              setOpenSidebar={setOpenSidebar}
+            />
+            <div style={{ height: '100vh' }}>
+              <DashLayout openSidebar={openSidebar} />
+            </div>
+            <DashFooter openSidebar={openSidebar} />
+          </main>
+        </div>
       ) : (
         <>
-          {user?.role === 0 || user?.role === 1 || user?.role === 2 ? (
-            <div style={{ display: 'flex', width: '100%' }}>
-              <Sidebar
-                openSidebar={openSidebar}
-                setOpenSidebar={setOpenSidebar}
-                style={{
-                  width: `${openSidebar ? '288px' : '0'}`,
-                  left: `${openSidebar ? '0' : '-100%'}`,
-                  border: '1px solid #eee',
-                }}
-              />
-              <main
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  backgroundColor: 'transparent',
-                  position: 'relative',
-                  width: `${openSidebar ? 'calc(100% - 288px)' : '100%'}`,
-                  marginLeft: `${openSidebar ? '304px' : '0'}`,
-                }}
-              >
-                <DashHeader
-                  openSidebar={openSidebar}
-                  setOpenSidebar={setOpenSidebar}
-                />
-                <div style={{ height: '100vh' }}>
-                  <DashLayout openSidebar={openSidebar} />
-                </div>
-                <DashFooter openSidebar={openSidebar} />
-              </main>
-            </div>
-          ) : (
-            <>
-              {!hideHeaderFooter && <Header />}
-              <main>
-                <MainLayout />
-              </main>
-              {!hideHeaderFooter && <Footer />}
-            </>
-          )}
+          {!hideHeaderFooter && <Header />}
+          <main>
+            <MainLayout />
+          </main>
+          {!hideHeaderFooter && <Footer />}
         </>
       )}
     </>

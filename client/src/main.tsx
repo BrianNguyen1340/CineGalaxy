@@ -31,6 +31,11 @@ import {
   VerifyOTP,
   WatchedMovies,
 
+  // private auth
+  PrivateLogin,
+  PrivateForgotPassword,
+  PrivateResetPassword,
+
   // dashboard
   Doashboard,
   NotFound,
@@ -130,6 +135,20 @@ createRoot(document.getElementById('root')!).render(
                 path={paths.userPaths.ticketPurchaseHistory}
                 element={<TicketPurchaseHistory />}
               />
+
+              {/* private auth */}
+              <Route
+                path={paths.userPaths.privateLogin}
+                element={<PrivateLogin />}
+              />
+              <Route
+                path={paths.userPaths.privateForgotPassword}
+                element={<PrivateForgotPassword />}
+              />
+              <Route
+                path={paths.userPaths.privateResetPassword}
+                element={<PrivateResetPassword />}
+              />
             </Route>
             {/* ADMIN ROUTES */}
             <Route element={<AdminRoute />}>
@@ -225,6 +244,11 @@ createRoot(document.getElementById('root')!).render(
             </Route>
             <Route element={<ManagerRoute />}>
               <Route
+                index
+                path={paths.dashboardPaths.dashboard}
+                element={<Doashboard />}
+              />
+              <Route
                 path={paths.dashboardPaths.managements.showtimes.list}
                 element={<ListShowtime />}
               />
@@ -262,6 +286,11 @@ createRoot(document.getElementById('root')!).render(
               />
             </Route>
             <Route element={<CashierRoute />}>
+              <Route
+                index
+                path={paths.dashboardPaths.dashboard}
+                element={<Doashboard />}
+              />
               <Route
                 path={paths.dashboardPaths.managements.sellServices.list}
                 element={<ListSellService />}

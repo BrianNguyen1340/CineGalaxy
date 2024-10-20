@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, FileLock, Mail } from 'lucide-react'
 import { HashLoader } from 'react-spinners'
 import Swal from 'sweetalert2'
@@ -23,6 +23,11 @@ type UserData = {
 }
 
 const Login = () => {
+  const { user, isAuthenticated } = useAppSelector((state) => state.user)
+  if (user?.role === 3 && isAuthenticated) {
+    return <Navigate to={paths.userPaths.home} replace />
+  }
+
   const {
     register,
     handleSubmit,
@@ -32,27 +37,15 @@ const Login = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
-  const { user } = useAppSelector((state) => state.user)
-
   const [loginApi, { isLoading }] = useLoginMutation()
   const [isVideoLoaded, setIsVideoLoaded] = useState<boolean>(false)
   const [showHidePassword, setShowHidePassword] = useState<boolean>(false)
 
-  useEffect(() => {
-    if (user) {
-      if (user.role === 0 || user.role === 1 || user.role === 2) {
-        navigate(paths.dashboardPaths.dashboard)
-      } else {
-        navigate(paths.userPaths.home)
-      }
-    }
-  }, [user, navigate])
-
-  const handleShowHidePassword = () => {
+  const handleShowHidePassword = (): void => {
     setShowHidePassword((prevState) => !prevState)
   }
 
-  const handleVideoLoaded = () => {
+  const handleVideoLoaded = (): void => {
     setIsVideoLoaded(true)
   }
 
@@ -72,16 +65,7 @@ const Login = () => {
 
       Swal.fire('Thành công', response.message, 'success')
 
-      if (
-        response.user?.role === 0 ||
-        response.user?.role === 1 ||
-        response.user?.role === 2
-      ) {
-        navigate(paths.dashboardPaths.dashboard)
-      }
-      if (response.user?.role === 3) {
-        navigate(paths.userPaths.home)
-      }
+      navigate(paths.userPaths.home)
     } catch (error: any) {
       dispatch(loginFailure(error.message))
       Swal.fire('Thất bại', error.message, 'error')

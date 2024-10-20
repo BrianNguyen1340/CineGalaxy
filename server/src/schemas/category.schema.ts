@@ -11,6 +11,7 @@ const categorySchema = new Schema<CategoryType>(
             type: String,
             required: true,
             trim: true,
+            unique: true,
         },
     },
     {

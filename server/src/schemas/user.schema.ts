@@ -36,8 +36,8 @@ export type UserType = Document & {
     gender?: Gender
     address?: AddressType
     photoURL?: string
-    isBlocked: boolean
     role: number
+    isBlocked: boolean
     isVerified: boolean
     lastLogin: Date
     resetPasswordToken?: string

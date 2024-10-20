@@ -10,6 +10,16 @@ router.post(
     [authentication, isAdmin],
     categoryController.handleCreate,
 )
-// router.get('/', [authentication, isAdmin], categoryController.h)
+router.get(
+    '/get/:id',
+    [authentication, isAdmin],
+    categoryController.handleGetOne,
+)
+router.get(
+    '/get-all',
+    [authentication, isAdmin],
+    categoryController.handleGetAll,
+)
+router.put('/update/:id', [authentication, isAdmin], categoryController.handleUpdate)
 
 export const categoryRoute = router

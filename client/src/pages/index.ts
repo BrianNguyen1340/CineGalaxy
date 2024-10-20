@@ -24,6 +24,11 @@ import TicketPurchaseHistory from './UserInterface/TicketPurchaseHistory/TicketP
 import WatchedMovies from './UserInterface/WatchedMovies/WatchedMovies'
 import NotFound from './NotFound/NotFound'
 
+// private auth
+import PrivateLogin from './Dashboard/PrivateAuth/PrivateLogin/PrivateLogin'
+import PrivateForgotPassword from './Dashboard/PrivateAuth/PrivateLogin/PrivateForgotPassword/PrivateForgotPassword'
+import PrivateResetPassword from './Dashboard/PrivateAuth/PrivateLogin/PrivateResetPassword/PrivateResetPassword'
+
 // protected pages
 import Doashboard from './Dashboard/Doashboard'
 
@@ -99,6 +104,11 @@ export {
   Support,
   TicketPurchaseHistory,
   WatchedMovies,
+
+  // private auth
+  PrivateLogin,
+  PrivateForgotPassword,
+  PrivateResetPassword,
 
   // protected pages
   Doashboard,

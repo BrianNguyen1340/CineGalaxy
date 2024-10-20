@@ -18,7 +18,6 @@ const profile = async (
 }> => {
     try {
         const user = await userModel.findById({ _id: params._id })
-
         if (!user) {
             return {
                 success: false,
@@ -90,7 +89,6 @@ const updateProfile = async (
             new: true,
             runValidators: true,
         })
-
         if (!request) {
             return {
                 success: false,
@@ -133,9 +131,160 @@ const updateProfile = async (
     }
 }
 
+type GetUserByAdminType = {
+    _id: string
+}
+
+const getUserByAdmin = async (
+    reqParams: GetUserByAdminType,
+): Promise<{
+    success: boolean
+    message: string
+    statusCode: number
+    data?: Partial<UserType>
+}> => {
+    try {
+        const user = await userModel.findById(reqParams._id)
+        if (!user) {
+            return {
+                success: false,
+                statusCode: StatusCodes.NOT_FOUND,
+                message: 'Người dùng không tồn tại!',
+            }
+        }
+
+        return {
+            success: true,
+            statusCode: StatusCodes.OK,
+            message: 'Lấy thông tin người dùng thành công!',
+            data: user,
+        }
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            return {
+                success: false,
+                statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+                message: `Lỗi hệ thống: ${error.message}`,
+            }
+        }
+        return {
+            success: false,
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+            message: 'Đã xảy ra lỗi không xác định!',
+        }
+    }
+}
+
+const getAllUsersByAdmin = async (): Promise<{
+    success: boolean
+    message: string
+    statusCode: number
+    data?: Partial<UserType>[]
+}> => {
+    try {
+        const users = await userModel.find()
+        if (users.length < 0) {
+            return {
+                success: false,
+                message: 'Danh sách người dùng trống!',
+                statusCode: StatusCodes.BAD_REQUEST,
+            }
+        }
+
+        return {
+            success: true,
+            message: 'Lấy tất cả thông tin người dùng thành công!',
+            statusCode: StatusCodes.OK,
+            data: users.map((user) => user.toObject()),
+        }
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            return {
+                success: false,
+                statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+                message: `Lỗi hệ thống: ${error.message}`,
+            }
+        }
+        return {
+            success: false,
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+            message: 'Đã xảy ra lỗi không xác định!',
+        }
+    }
+}
+
+const updateUserByAdmin = async (
+    _id: string,
+    userData?: {
+        email?: string
+        password?: string
+        name?: string
+        phone?: string
+        dateOfBirth?: {
+            day?: number
+            month?: number
+            year?: number
+        }
+        gender?: Gender
+        address?: AddressType
+        photoURL?: string
+        role?: number
+    },
+): Promise<{
+    success: boolean
+    message: string
+    statusCode: number
+    data?: Partial<UserType>
+}> => {
+    try {
+        const user = await userModel.findById(_id)
+        if (!user) {
+            return {
+                success: false,
+                statusCode: StatusCodes.NOT_FOUND,
+                message: 'Người dùng không tồn tại!',
+            }
+        }
+
+        const request = await userModel.findByIdAndUpdate(_id, userData, {
+            new: true,
+        })
+        if (!request) {
+            return {
+                success: false,
+                message: 'Cập nhật thông tin người dùng thất bại!',
+                statusCode: StatusCodes.BAD_REQUEST,
+            }
+        }
+
+        return {
+            success: true,
+            message: 'Cập nhật thông tin người dùng thành công!',
+            statusCode: StatusCodes.OK,
+            data: request,
+        }
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            return {
+                success: false,
+                statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+                message: `Lỗi hệ thống: ${error.message}`,
+            }
+        }
+        return {
+            success: false,
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+            message: 'Đã xảy ra lỗi không xác định!',
+        }
+    }
+}
+
 const userService = {
     profile,
     updateProfile,
+    getUserByAdmin,
+    getAllUsersByAdmin,
+    updateUserByAdmin,
 }
 
 export default userService

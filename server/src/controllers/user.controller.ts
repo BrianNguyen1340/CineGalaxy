@@ -1,7 +1,4 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express'
-import { StatusCodes } from 'http-status-codes'
-
-import { HttpException } from '~/utils/httpException'
+import { RequestHandler } from 'express'
 import { handleJoiError } from '~/middlewares/joi.middleware'
 import {
     sendErrorResponse,
@@ -9,135 +6,48 @@ import {
 } from '~/utils/responseDataHandler'
 import userService from '~/services/user.service'
 import userValidation from '~/validations/user.validation'
+import { catchErrors } from '~/utils/catchErrors'
 
 // -------------------------------------------------------------------------------
 
-const profile: RequestHandler = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-): Promise<Response | void> => {
-    try {
-        const { _id } = req.user
+const profile: RequestHandler = catchErrors(async (req, res) => {
+    const { _id } = req.user
 
-        const response = await userService.profile(_id)
-        if (!response.success) {
-            return sendErrorResponse(res, response.statusCode, response.message)
-        }
-
-        return sendSuccessResponse(
-            res,
-            response.statusCode,
-            response.message,
-            response.data,
-        )
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            return next(
-                new HttpException(
-                    StatusCodes.INTERNAL_SERVER_ERROR,
-                    error.message || 'An error has occured!',
-                ),
-            )
-        }
-        return next(
-            new HttpException(
-                StatusCodes.INTERNAL_SERVER_ERROR,
-                'An unknown error has occurred!',
-            ),
-        )
+    const response = await userService.profile(_id)
+    if (!response.success) {
+        return sendErrorResponse(res, response.statusCode, response.message)
     }
-}
 
-const updateProfile: RequestHandler = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-): Promise<Response | void> => {
-    try {
-        const userId = req.user._id
-        const userInfo = req.body
+    return sendSuccessResponse(
+        res,
+        response.statusCode,
+        response.message,
+        response.data,
+    )
+})
 
-        const response = await userService.updateProfile(userId, userInfo)
-        if (!response.success) {
-            return sendErrorResponse(res, response.statusCode, response.message)
-        }
+const updateProfile: RequestHandler = catchErrors(async (req, res) => {
+    const userId = req.user._id
+    const userInfo = req.body
 
-        return sendSuccessResponse(
-            res,
-            response.statusCode,
-            response.message,
-            response.data,
-        )
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            return next(
-                new HttpException(
-                    StatusCodes.INTERNAL_SERVER_ERROR,
-                    error.message || 'An error has occured!',
-                ),
-            )
-        }
-        return next(
-            new HttpException(
-                StatusCodes.INTERNAL_SERVER_ERROR,
-                'An unknown error has occurred!',
-            ),
-        )
+    const response = await userService.updateProfile(userId, userInfo)
+    if (!response.success) {
+        return sendErrorResponse(res, response.statusCode, response.message)
     }
-}
 
-const getUserByAdmin = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-): Promise<Response | void> => {
-    try {
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            return next(
-                new HttpException(
-                    StatusCodes.INTERNAL_SERVER_ERROR,
-                    error.message || 'An error has occured!',
-                ),
-            )
-        }
-        return next(
-            new HttpException(
-                StatusCodes.INTERNAL_SERVER_ERROR,
-                'An unknown error has occurred!',
-            ),
-        )
-    }
-}
+    return sendSuccessResponse(
+        res,
+        response.statusCode,
+        response.message,
+        response.data,
+    )
+})
 
-const updateUserByAdmin = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-): Promise<Response | void> => {
-    try {
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            return next(
-                new HttpException(
-                    StatusCodes.INTERNAL_SERVER_ERROR,
-                    error.message || 'An error has occured!',
-                ),
-            )
-        }
-        return next(
-            new HttpException(
-                StatusCodes.INTERNAL_SERVER_ERROR,
-                'An unknown error has occurred!',
-            ),
-        )
-    }
-}
+const getUserByAdmin: RequestHandler = catchErrors(async (req, res) => {})
 
-// * BLOCK ACCOUNT CONTROLLER
+const getAllUsersByAdmin: RequestHandler = catchErrors(async (req, res) => {})
 
-// * UNBLOCK ACCOUNT CONTROLLER
+const updateUserByAdmin: RequestHandler = catchErrors(async (req, res) => {})
 
 const userController = {
     profile,
@@ -147,6 +57,7 @@ const userController = {
     ],
     getUserByAdmin,
     updateUserByAdmin,
+    getAllUsersByAdmin,
 }
 
 export default userController
