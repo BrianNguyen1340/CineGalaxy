@@ -80,6 +80,7 @@ const App = () => {
               position: 'relative',
               width: `${openSidebar ? 'calc(100% - 288px)' : '100%'}`,
               marginLeft: `${openSidebar ? '304px' : '0'}`,
+              gap: '10px',
             }}
           >
             <DashHeader

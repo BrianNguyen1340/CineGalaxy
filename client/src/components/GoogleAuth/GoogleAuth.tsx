@@ -1,7 +1,7 @@
 import { FcGoogle } from 'react-icons/fc'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import Swal from 'sweetalert2'
-import NProgress from 'nprogress'
+import nProgress from 'nprogress'
 
 import { auth } from '~/firebase/firebase.config'
 import { useGoogleLoginMutation } from '~/services/auth.service'
@@ -24,7 +24,7 @@ const GoogleAuth = () => {
     const handleGoogleClick = async () => {
         try {
             dispatch(loginStart())
-            NProgress.start()
+            nProgress.start()
 
             const provider = new GoogleAuthProvider()
             const result = await signInWithPopup(auth, provider)
@@ -54,7 +54,7 @@ const GoogleAuth = () => {
             dispatch(loginFailure(error.message))
             Swal.fire('Thất bại!', error.message, 'error')
         } finally {
-            NProgress.done()
+            nProgress.done()
         }
     }
 

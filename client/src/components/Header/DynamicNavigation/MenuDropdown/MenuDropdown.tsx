@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ChevronDown, LogOut, User } from 'lucide-react'
 import Swal from 'sweetalert2'
-import NProgress from 'nprogress'
+import nProgress from 'nprogress'
 
 import { useAppDispatch, useAppSelector } from '~/hooks/redux'
 import { paths } from '~/utils/paths'
@@ -51,7 +51,7 @@ const MenuDropdown = () => {
     })
     if (result.isConfirmed) {
       try {
-        NProgress.start()
+        nProgress.start()
         const response = await logoutApi({}).unwrap()
         dispatch(logout())
         Swal.fire({
@@ -67,7 +67,7 @@ const MenuDropdown = () => {
       } catch (error: any) {
         Swal.fire('Thất bại', error.message, 'error')
       } finally {
-        NProgress.done()
+        nProgress.done()
       }
     }
   }

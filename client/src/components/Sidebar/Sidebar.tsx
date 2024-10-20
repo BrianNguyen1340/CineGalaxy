@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
-import NProgress from 'nprogress'
+import nProgress from 'nprogress'
 import { GiFilmProjector } from 'react-icons/gi'
 import { MdCategory } from 'react-icons/md'
 import { SiShowtime } from 'react-icons/si'
@@ -64,7 +64,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     })
     if (result.isConfirmed) {
       try {
-        NProgress.start()
+        nProgress.start()
         const response = await logoutApi({}).unwrap()
         dispatch(logout())
         Swal.fire({
@@ -80,7 +80,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       } catch (error: any) {
         Swal.fire('Thất bại', error.message, 'error')
       } finally {
-        NProgress.done()
+        nProgress.done()
       }
     }
   }
@@ -106,7 +106,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               img={user?.photoURL}
               item={
                 <SidebarMenuItem
-                  path={paths.userPaths.profile}
+                  path={paths.dashboardPaths.privateProfile}
                   spanText='profile'
                   spanTitle={<CircleParking size='16' />}
                   isSelected={selectedMenuItem === location.pathname}

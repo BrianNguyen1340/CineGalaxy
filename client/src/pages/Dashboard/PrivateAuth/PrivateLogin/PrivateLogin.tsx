@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, FileLock, Mail } from 'lucide-react'
 import { HashLoader } from 'react-spinners'
 import Swal from 'sweetalert2'
-import NProgress from 'nprogress'
+import nProgress from 'nprogress'
 
-import { useAppDispatch, useAppSelector } from '~/hooks/redux'
+import { useAppDispatch } from '~/hooks/redux'
 import { paths } from '~/utils/paths'
 import { useLoginMutation } from '~/services/auth.service'
 import {
@@ -23,11 +23,6 @@ type UserData = {
 }
 
 const PrivateLogin = () => {
-  const { user } = useAppSelector((state) => state.user)
-  if (user?.role === 0 || user?.role === 1 || user?.role === 2) {
-    return <Navigate to={paths.dashboardPaths.dashboard} replace />
-  }
-
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
@@ -48,7 +43,7 @@ const PrivateLogin = () => {
     try {
       const { email, password } = reqBody
       dispatch(loginStart())
-      NProgress.start()
+      nProgress.start()
 
       const response = await loginApi({ email, password }).unwrap()
 
@@ -65,7 +60,7 @@ const PrivateLogin = () => {
       dispatch(loginFailure(error.message))
       Swal.fire('Thất bại', error.message, 'error')
     } finally {
-      NProgress.done()
+      nProgress.done()
     }
   }
 

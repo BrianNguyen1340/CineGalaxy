@@ -28,6 +28,7 @@ import NotFound from './NotFound/NotFound'
 import PrivateLogin from './Dashboard/PrivateAuth/PrivateLogin/PrivateLogin'
 import PrivateForgotPassword from './Dashboard/PrivateAuth/PrivateLogin/PrivateForgotPassword/PrivateForgotPassword'
 import PrivateResetPassword from './Dashboard/PrivateAuth/PrivateLogin/PrivateResetPassword/PrivateResetPassword'
+import PrivateProfile from './Dashboard/PrivateProfile/PrivateProfile'
 
 // protected pages
 import Doashboard from './Dashboard/Doashboard'
@@ -109,6 +110,7 @@ export {
   PrivateLogin,
   PrivateForgotPassword,
   PrivateResetPassword,
+  PrivateProfile,
 
   // protected pages
   Doashboard,

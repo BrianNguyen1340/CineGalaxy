@@ -4,7 +4,7 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { Mail } from 'lucide-react'
 import { HashLoader } from 'react-spinners'
 import Swal from 'sweetalert2'
-import NProgress from 'nprogress'
+import nProgress from 'nprogress'
 
 import { useAppSelector } from '~/hooks/redux'
 import { paths } from '~/utils/paths'
@@ -42,7 +42,7 @@ const ForgotPassword = () => {
     ) => {
         try {
             const { email } = reqBody
-            NProgress.start()
+            nProgress.start()
 
             const response = await forgotPasswordApi({ email }).unwrap()
             Swal.fire('Thành công', response.message, 'success')
@@ -50,7 +50,7 @@ const ForgotPassword = () => {
         } catch (error: any) {
             Swal.fire('Thất bại', error.message, 'error')
         } finally {
-            NProgress.done()
+            nProgress.done()
         }
     }
 

@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, FileLock, Mail } from 'lucide-react'
 import { HashLoader } from 'react-spinners'
 import Swal from 'sweetalert2'
-import NProgress from 'nprogress'
+import nProgress from 'nprogress'
 
-import { useAppDispatch, useAppSelector } from '~/hooks/redux'
+import { useAppDispatch } from '~/hooks/redux'
 import { FormInputGroup, GoogleAuth, Loader } from '~/components'
 import { useLoginMutation } from '~/services/auth.service'
 import { paths } from '~/utils/paths'
@@ -23,11 +23,6 @@ type UserData = {
 }
 
 const Login = () => {
-  const { user, isAuthenticated } = useAppSelector((state) => state.user)
-  if (user?.role === 3 && isAuthenticated) {
-    return <Navigate to={paths.userPaths.home} replace />
-  }
-
   const {
     register,
     handleSubmit,
@@ -53,7 +48,7 @@ const Login = () => {
     try {
       const { email, password } = reqBody
       dispatch(loginStart())
-      NProgress.start()
+      nProgress.start()
 
       const response = await loginApi({ email, password }).unwrap()
 
@@ -70,7 +65,7 @@ const Login = () => {
       dispatch(loginFailure(error.message))
       Swal.fire('Thất bại', error.message, 'error')
     } finally {
-      NProgress.done()
+      nProgress.done()
     }
   }
 

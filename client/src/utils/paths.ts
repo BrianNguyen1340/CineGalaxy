@@ -31,6 +31,7 @@ const userPaths = {
 }
 
 const dashboardPaths = {
+  privateProfile: '/private-profile',
   dashboard: '/dashboard',
   managements: {
     accounts: {

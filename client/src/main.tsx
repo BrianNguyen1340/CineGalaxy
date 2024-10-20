@@ -78,6 +78,7 @@ import AdminRoute from '~/routes/AdminRoute'
 import './index.scss'
 import ManagerRoute from './routes/ManagerRoute.tsx'
 import CashierRoute from './routes/CashierRoute.tsx'
+import PrivateProfile from './pages/Dashboard/PrivateProfile/PrivateProfile.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
@@ -109,6 +110,20 @@ createRoot(document.getElementById('root')!).render(
               element={<MovieDetails />}
             />
             <Route path={paths.userPaths.giftShop} element={<GiftShop />} />
+
+            {/* private auth */}
+            <Route
+              path={paths.userPaths.privateLogin}
+              element={<PrivateLogin />}
+            />
+            <Route
+              path={paths.userPaths.privateForgotPassword}
+              element={<PrivateForgotPassword />}
+            />
+            <Route
+              path={paths.userPaths.privateResetPassword}
+              element={<PrivateResetPassword />}
+            />
             {/* REQUIRED AUTH ROUTES */}
             <Route element={<RequiredAuth />}>
               <Route path={paths.userPaths.coupons} element={<Coupons />} />
@@ -135,20 +150,6 @@ createRoot(document.getElementById('root')!).render(
                 path={paths.userPaths.ticketPurchaseHistory}
                 element={<TicketPurchaseHistory />}
               />
-
-              {/* private auth */}
-              <Route
-                path={paths.userPaths.privateLogin}
-                element={<PrivateLogin />}
-              />
-              <Route
-                path={paths.userPaths.privateForgotPassword}
-                element={<PrivateForgotPassword />}
-              />
-              <Route
-                path={paths.userPaths.privateResetPassword}
-                element={<PrivateResetPassword />}
-              />
             </Route>
             {/* ADMIN ROUTES */}
             <Route element={<AdminRoute />}>
@@ -156,6 +157,10 @@ createRoot(document.getElementById('root')!).render(
                 index
                 path={paths.dashboardPaths.dashboard}
                 element={<Doashboard />}
+              />
+              <Route
+                path={paths.dashboardPaths.privateProfile}
+                element={<PrivateProfile />}
               />
               <Route
                 path={paths.dashboardPaths.managements.accounts.list}
@@ -249,6 +254,10 @@ createRoot(document.getElementById('root')!).render(
                 element={<Doashboard />}
               />
               <Route
+                path={paths.dashboardPaths.privateProfile}
+                element={<PrivateProfile />}
+              />
+              <Route
                 path={paths.dashboardPaths.managements.showtimes.list}
                 element={<ListShowtime />}
               />
@@ -290,6 +299,10 @@ createRoot(document.getElementById('root')!).render(
                 index
                 path={paths.dashboardPaths.dashboard}
                 element={<Doashboard />}
+              />
+              <Route
+                path={paths.dashboardPaths.privateProfile}
+                element={<PrivateProfile />}
               />
               <Route
                 path={paths.dashboardPaths.managements.sellServices.list}
