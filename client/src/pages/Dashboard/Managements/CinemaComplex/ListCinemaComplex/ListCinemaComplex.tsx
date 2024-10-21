@@ -1,5 +1,5 @@
 const ListCinemaComplex = () => {
-    return <div>ListCinemaComplex</div>
+  return <div>ListCinemaComplex</div>
 }
 
 export default ListCinemaComplex

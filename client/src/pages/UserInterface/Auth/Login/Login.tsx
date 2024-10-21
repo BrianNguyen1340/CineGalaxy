@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, FileLock, Mail } from 'lucide-react'
@@ -6,7 +6,7 @@ import { HashLoader } from 'react-spinners'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
-import { useAppDispatch } from '~/hooks/redux'
+import { useAppDispatch, useAppSelector } from '~/hooks/redux'
 import { FormInputGroup, GoogleAuth, Loader } from '~/components'
 import { useLoginMutation } from '~/services/auth.service'
 import { paths } from '~/utils/paths'
@@ -32,6 +32,8 @@ const Login = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
+  const { isAuthenticated, user } = useAppSelector((state) => state.user)
+
   const [loginApi, { isLoading }] = useLoginMutation()
   const [isVideoLoaded, setIsVideoLoaded] = useState<boolean>(false)
   const [showHidePassword, setShowHidePassword] = useState<boolean>(false)
@@ -52,6 +54,10 @@ const Login = () => {
 
       const response = await loginApi({ email, password }).unwrap()
 
+      if (!response.success) {
+        Swal.fire('Thất bại', response.message, 'error')
+      }
+
       dispatch(
         loginSuccess({
           user: response.data,
@@ -68,6 +74,16 @@ const Login = () => {
       nProgress.done()
     }
   }
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      if (user?.role === 3) {
+        navigate(paths.userPaths.home)
+      } else if (user?.role === 0 || user?.role === 1 || user?.role === 2) {
+        navigate(paths.dashboardPaths.dashboard)
+      }
+    }
+  }, [isAuthenticated, navigate])
 
   return (
     <div className='login-container'>

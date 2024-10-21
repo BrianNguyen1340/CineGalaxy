@@ -1,34 +1,34 @@
 {
-    "compilerOptions": {
-        "target": "ES2021",
-        "module": "CommonJS",
-        "rootDir": "./src",
-        "outDir": "./dist",
-        "baseUrl": ".",
-        "paths": {
-            "~/*": ["src/*"],
-            "~/configs/*": ["src/configs/*"],
-            "~/controllers/*": ["src/controllers/*"],
-            "~/databases/*": ["src/databases/*"],
-            "~/definitions/*": ["src/definitions/*"],
-            "~/envs/*": ["src/envs/*"],
-            "~/emails/*": ["src/emails/*"],
-            "~/helpers/*": ["src/helpers/*"],
-            "~/logs/*": ["src/logs/*"],
-            "~/middlewares/*": ["src/middlewares/*"],
-            "~/schemas/*": ["src/schemas/*"],
-            "~/routes/*": ["src/routes/*"],
-            "~/services/*": ["src/services/*"],
-            "~/types/*": ["src/types/*"],
-            "~/utils/*": ["src/utils/*"],
-            "~/validations/*": ["src/validations/*"]
-        },
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
-        "strict": true,
-        "skipLibCheck": true,
-        "typeRoots": ["src/definitions", "./node_modules/@types"]
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "CommonJS",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"],
+      "~/configs/*": ["src/configs/*"],
+      "~/controllers/*": ["src/controllers/*"],
+      "~/databases/*": ["src/databases/*"],
+      "~/definitions/*": ["src/definitions/*"],
+      "~/envs/*": ["src/envs/*"],
+      "~/emails/*": ["src/emails/*"],
+      "~/helpers/*": ["src/helpers/*"],
+      "~/logs/*": ["src/logs/*"],
+      "~/middlewares/*": ["src/middlewares/*"],
+      "~/schemas/*": ["src/schemas/*"],
+      "~/routes/*": ["src/routes/*"],
+      "~/services/*": ["src/services/*"],
+      "~/types/*": ["src/types/*"],
+      "~/utils/*": ["src/utils/*"],
+      "~/validations/*": ["src/validations/*"]
     },
-    "include": ["src"],
-    "exclude": ["node_modules", "dist"]
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "typeRoots": ["src/definitions", "./node_modules/@types"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

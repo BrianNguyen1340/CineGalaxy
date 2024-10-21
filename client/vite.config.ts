@@ -2,14 +2,14 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-    plugins: [react()],
-    resolve: {
-        alias: [{ find: '~', replacement: '/src' }],
+  plugins: [react()],
+  resolve: {
+    alias: [{ find: '~', replacement: '/src' }],
+  },
+  server: {
+    proxy: {
+      '/api/v1/': 'http://localhost:7777',
     },
-    server: {
-        proxy: {
-            '/api/v1/': 'http://localhost:7777',
-        },
-        port: 3000,
-    },
+    port: 3000,
+  },
 })

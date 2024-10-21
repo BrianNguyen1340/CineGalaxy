@@ -1,5 +1,5 @@
 const UpdateCinemaComplex = () => {
-    return <div>UpdateCinemaComplex</div>
+  return <div>UpdateCinemaComplex</div>
 }
 
 export default UpdateCinemaComplex

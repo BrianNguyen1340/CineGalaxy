@@ -1,26 +1,15 @@
 import { apiSlice } from '~/redux/apiSlice'
-import { UserType } from '~/types/user.type'
 
 export const authAPISlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    register: builder.mutation<
-      {
-        data: any
-        message: string
-        success: boolean
-      },
-      { email: string; password: string; name: string }
-    >({
+    register: builder.mutation({
       query: (data) => ({
         url: `/api/v1/auth/register`,
         method: 'POST',
         body: data,
       }),
     }),
-    verifyOTP: builder.mutation<
-      { message: string; success: boolean; user: UserType },
-      { code: string }
-    >({
+    verifyOTP: builder.mutation({
       query: (data) => ({
         url: `/api/v1/auth/verify-otp-register`,
         method: 'POST',
@@ -34,61 +23,28 @@ export const authAPISlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    googleLogin: builder.mutation<
-      {
-        accessToken: string
-        refreshToken: string
-        user: UserType
-        message: string
-        success: boolean
-        data: any
-      },
-      {
-        email: string
-        name: string
-        photoURL: string
-      }
-    >({
+    googleLogin: builder.mutation({
       query: (data) => ({
         url: `/api/v1/auth/google-login`,
         method: 'POST',
         body: data,
       }),
     }),
-    login: builder.mutation<
-      {
-        accessToken: string
-        refreshToken: string
-        user: UserType
-        message: string
-        success: boolean
-        data: any
-      },
-      { email: string; password: string }
-    >({
+    login: builder.mutation({
       query: (data) => ({
         url: `/api/v1/auth/login`,
         method: 'POST',
         body: data,
       }),
     }),
-    forgotPassword: builder.mutation<
-      { message: string; success: boolean; token: string },
-      { email: string }
-    >({
+    forgotPassword: builder.mutation({
       query: (data) => ({
         url: `/api/v1/auth/forgot-password`,
         method: 'POST',
         body: data,
       }),
     }),
-    resetPassword: builder.mutation<
-      {
-        message: string
-        success: boolean
-      },
-      { token: string; password: string }
-    >({
+    resetPassword: builder.mutation({
       query: ({ token, password }) => ({
         url: `/api/v1/auth/reset-password/${token}`,
         method: 'POST',

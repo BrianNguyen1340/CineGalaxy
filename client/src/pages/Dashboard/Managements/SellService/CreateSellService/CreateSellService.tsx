@@ -1,5 +1,5 @@
 const CreateSellService = () => {
-    return <div>CreateSellService</div>
+  return <div>CreateSellService</div>
 }
 
 export default CreateSellService

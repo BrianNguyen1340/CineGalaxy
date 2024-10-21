@@ -1,5 +1,5 @@
 const CreateSellTicket = () => {
-    return <div>CreateSellTicket</div>
+  return <div>CreateSellTicket</div>
 }
 
 export default CreateSellTicket

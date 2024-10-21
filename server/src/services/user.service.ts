@@ -4,12 +4,8 @@ import { Types } from 'mongoose'
 import { AddressType, Gender, userModel } from '~/schemas/user.schema'
 import { UserType } from '~/schemas/user.schema'
 
-type ProfileParams = {
-  _id: Types.ObjectId
-}
-
 const profile = async (
-  params: ProfileParams,
+  id: Types.ObjectId,
 ): Promise<{
   success: boolean
   message: string
@@ -17,7 +13,7 @@ const profile = async (
   data?: Partial<UserType>
 }> => {
   try {
-    const user = await userModel.findById({ _id: params._id })
+    const user = await userModel.findById(id)
     if (!user) {
       return {
         success: false,
@@ -52,7 +48,7 @@ const profile = async (
 }
 
 type UpdateProfileParams = {
-  _id: Types.ObjectId
+  id: Types.ObjectId
   email?: string
   name?: string
   phone?: string
@@ -115,12 +111,8 @@ const updateProfile = async (
   }
 }
 
-type GetUserByAdminType = {
-  _id: string
-}
-
 const getUserByAdmin = async (
-  reqParams: GetUserByAdminType,
+  _id: Types.ObjectId,
 ): Promise<{
   success: boolean
   message: string
@@ -128,7 +120,7 @@ const getUserByAdmin = async (
   data?: Partial<UserType>
 }> => {
   try {
-    const user = await userModel.findById(reqParams._id).select('-password')
+    const user = await userModel.findById(_id).select('-password')
     if (!user) {
       return {
         success: false,
@@ -198,7 +190,7 @@ const getAllUsersByAdmin = async (): Promise<{
 }
 
 const updateUserByAdmin = async (
-  _id: string,
+  id: Types.ObjectId,
   userData?: {
     email?: string
     password?: string
@@ -221,7 +213,7 @@ const updateUserByAdmin = async (
   data?: Partial<UserType>
 }> => {
   try {
-    const user = await userModel.findById(_id)
+    const user = await userModel.findById(id)
     if (!user) {
       return {
         success: false,
@@ -230,7 +222,7 @@ const updateUserByAdmin = async (
       }
     }
 
-    const request = await userModel.findByIdAndUpdate(_id, userData, {
+    const request = await userModel.findByIdAndUpdate(id, userData, {
       new: true,
     })
     if (!request) {

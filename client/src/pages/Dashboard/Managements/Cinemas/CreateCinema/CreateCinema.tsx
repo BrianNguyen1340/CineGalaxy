@@ -1,5 +1,5 @@
 const CreateCinema = () => {
-    return <div>CreateCinema</div>
+  return <div>CreateCinema</div>
 }
 
 export default CreateCinema

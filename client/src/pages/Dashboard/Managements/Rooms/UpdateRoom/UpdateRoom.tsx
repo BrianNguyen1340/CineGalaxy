@@ -1,5 +1,5 @@
 const UpdateRoom = () => {
-    return <div>UpdateRoom</div>
+  return <div>UpdateRoom</div>
 }
 
 export default UpdateRoom

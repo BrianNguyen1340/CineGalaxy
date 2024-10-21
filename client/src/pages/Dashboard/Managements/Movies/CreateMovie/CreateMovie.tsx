@@ -1,5 +1,5 @@
 const CreateMovie = () => {
-    return <div>CreateMovie</div>
+  return <div>CreateMovie</div>
 }
 
 export default CreateMovie

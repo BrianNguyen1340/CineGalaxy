@@ -15,18 +15,14 @@ import {
   sendVerificationOTPRegister,
 } from '~/emails/nodemailerSendEmail'
 
-type RegisterData = {
-  email: string
-  password: string
-  name: string
-}
-
 const register = async (
-  reqBody: RegisterData,
+  email: string,
+  password: string,
+  name: string,
 ): Promise<{ success: boolean; message: string; statusCode: number }> => {
   try {
     const checkUserExist = await userModel.exists({
-      email: reqBody.email,
+      email,
     })
     if (checkUserExist) {
       return {
@@ -36,15 +32,15 @@ const register = async (
       }
     }
 
-    const hashedPassword = await bcrypt.hash(reqBody.password, 12)
+    const hashedPassword = await bcrypt.hash(password, 12)
 
     const verificationToken = generateRandomNumber(8)
     const expiresAt = getExpirationTime(10, 'minutes')
 
     const tempUser = await verificationCodeRegister.create({
-      email: reqBody.email,
+      email,
       password: hashedPassword,
-      name: reqBody.name,
+      name,
       verificationToken,
       verificationTokenExpiresAt: expiresAt,
     })
@@ -57,7 +53,7 @@ const register = async (
     }
 
     const emailResponse = await sendVerificationOTPRegister({
-      email: reqBody.email,
+      email,
       verificationToken,
     })
 
@@ -82,12 +78,8 @@ const register = async (
   }
 }
 
-type VerifyOTPRegisterData = {
-  code: string
-}
-
 const verifyOTPRegister = async (
-  reqBody: VerifyOTPRegisterData,
+  code: string,
 ): Promise<{
   success: boolean
   message: string
@@ -96,7 +88,7 @@ const verifyOTPRegister = async (
 }> => {
   try {
     const tempUser = await verificationCodeRegister.findOne({
-      verificationToken: reqBody.code,
+      verificationToken: code,
       verificationTokenExpiresAt: { $gt: Date.now() },
     })
     if (!tempUser) {
@@ -148,19 +140,15 @@ const verifyOTPRegister = async (
   }
 }
 
-type ResendOTPRegisterData = {
-  email: string
-}
-
 const resendOTPRegister = async (
-  reqSession: ResendOTPRegisterData,
+  email: string,
 ): Promise<{ success: boolean; message: string; statusCode: number }> => {
   try {
     const verificationToken = generateRandomNumber(8)
     const expiresAt = getExpirationTime(10, 'minutes')
 
     const newOTP = await verificationCodeRegister.findOneAndUpdate(
-      { email: reqSession.email },
+      { email },
       {
         verificationToken,
         verificationTokenExpiresAt: expiresAt,
@@ -218,16 +206,16 @@ const googleLogin = async (
       email,
     })
 
-    if (user) {
-      if (user.isBlocked === true) {
-        return {
-          success: false,
-          statusCode: StatusCodes.NOT_FOUND,
-          message:
-            'Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên để hỗ trợ!',
-        }
+    if (user?.isBlocked === true) {
+      return {
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message:
+          'Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên để hỗ trợ!',
       }
+    }
 
+    if (user) {
       if (user.photoURL !== photoURL) {
         user.photoURL = photoURL
       }
@@ -333,14 +321,10 @@ const googleLogin = async (
   }
 }
 
-type LoginData = {
-  email: string
-  password: string
-  userAgent?: string
-}
-
 const login = async (
-  reqBody: LoginData,
+  email: string,
+  enteredPassword: string,
+  userAgent?: string,
 ): Promise<{
   success: boolean
   message: string
@@ -350,11 +334,11 @@ const login = async (
   refreshToken?: string
 }> => {
   try {
-    const user = await userModel.findOne({ email: reqBody.email })
+    const user = await userModel.findOne({ email })
     if (!user) {
       return {
         success: false,
-        statusCode: StatusCodes.NOT_FOUND,
+        statusCode: StatusCodes.BAD_REQUEST,
         message: 'Tài khoản không tồn tại!',
       }
     }
@@ -362,13 +346,20 @@ const login = async (
     if (user.isBlocked === true) {
       return {
         success: false,
-        statusCode: StatusCodes.NOT_FOUND,
+        statusCode: StatusCodes.BAD_REQUEST,
         message:
           'Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên để hỗ trợ!',
       }
     }
 
-    await bcrypt.compare(reqBody.password, user.password)
+    const isMatch = await bcrypt.compare(enteredPassword, user.password)
+    if (!isMatch) {
+      return {
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'Sai thông tin đăng nhập!',
+      }
+    }
 
     const accessToken = generateToken(
       {
@@ -419,15 +410,11 @@ const login = async (
   }
 }
 
-type ForgotPasswordData = {
-  email: string
-}
-
 const forgotPassword = async (
-  reqBody: ForgotPasswordData,
+  email: string,
 ): Promise<{ success: boolean; message: string; statusCode: number }> => {
   try {
-    const user = await userModel.findOne({ email: reqBody.email })
+    const user = await userModel.findOne({ email })
     if (!user) {
       return {
         success: false,
@@ -448,7 +435,7 @@ const forgotPassword = async (
     const resetUrl = `${varEnv.CLIENT_URI}/reset-password/${resetPasswordToken}`
 
     const emailResponse = await sendPasswordResetEmail({
-      email: reqBody.email,
+      email,
       resetUrl,
     })
 
@@ -473,17 +460,13 @@ const forgotPassword = async (
   }
 }
 
-type ResetPasswordData = {
-  token: string
-  password: string
-}
-
 const resetPassword = async (
-  reqBody: ResetPasswordData,
+  token: string,
+  password: string,
 ): Promise<{ success: boolean; message: string; statusCode: number }> => {
   try {
     const user = await userModel.findOne({
-      resetPasswordToken: reqBody.token,
+      resetPasswordToken: token,
       resetPasswordExpiresAt: { $gt: Date.now() },
     })
     if (!user) {
@@ -550,15 +533,11 @@ const logout = async (): Promise<{
   }
 }
 
-type CheckEmailExistData = {
-  email: string
-}
-
 const checkEmailExist = async (
-  reqBody: CheckEmailExistData,
+  email: string,
 ): Promise<{ success: boolean; message: string; statusCode: number }> => {
   try {
-    const user = await userModel.findOne({ email: reqBody.email })
+    const user = await userModel.findOne({ email })
     if (user) {
       return {
         success: false,
@@ -588,60 +567,6 @@ const checkEmailExist = async (
   }
 }
 
-type RefreshUserAccessTokenParams = {
-  refreshToken: string
-}
-
-const refreshUserAccessToken = async (
-  params: RefreshUserAccessTokenParams,
-): Promise<{
-  success: boolean
-  message: string
-  statusCode: number
-  newAccessToken?: string
-}> => {
-  try {
-    const decoded = verifyToken(
-      params.refreshToken,
-      varEnv.JWT_REFRESH_TOKEN_KEY,
-    )
-
-    const user = await userModel.findById(decoded._id)
-    if (!user) {
-      return {
-        success: false,
-        statusCode: StatusCodes.UNAUTHORIZED,
-        message: 'Người dùng không hợp lệ!',
-      }
-    }
-
-    const newAccessToken = generateToken(
-      { _id: user._id, role: user.role },
-      { secret: varEnv.JWT_ACCESS_TOKEN_KEY, expiresIn: '1h' },
-    )
-
-    return {
-      success: true,
-      message: 'Số điện thoại khả dụng!',
-      statusCode: StatusCodes.OK,
-      newAccessToken,
-    }
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return {
-        success: false,
-        message: `Lỗi hệ thống: ${error.message}`,
-        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-      }
-    }
-    return {
-      success: false,
-      message: 'Đã xảy ra lỗi không xác định!',
-      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-    }
-  }
-}
-
 export const authService = {
   register,
   verifyOTPRegister,
@@ -651,20 +576,5 @@ export const authService = {
   resetPassword,
   logout,
   checkEmailExist,
-  refreshUserAccessToken,
   googleLogin,
 }
-
-// const fiveMinuteAgo = timeAgo(5, 'minutes')
-// const count = await verificationCodeRegister.countDocuments({
-//     email: user.email,
-//     createdAt: { $gt: fiveMinuteAgo },
-// })
-// if (count) {
-//     return {
-//         success: false,
-//         message:
-//             'Yêu cầu thay đổi mật khẩu quá nhiều, vui lòng thử lại sau',
-//         statusCode: StatusCodes.BAD_GATEWAY,
-//     }
-// }

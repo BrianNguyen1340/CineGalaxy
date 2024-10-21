@@ -1,5 +1,5 @@
 const ListSeat = () => {
-    return <div>ListSeat</div>
+  return <div>ListSeat</div>
 }
 
 export default ListSeat

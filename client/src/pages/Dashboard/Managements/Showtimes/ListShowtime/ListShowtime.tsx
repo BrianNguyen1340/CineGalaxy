@@ -1,5 +1,5 @@
 const ListShowtime = () => {
-    return <div>ListShowtime</div>
+  return <div>ListShowtime</div>
 }
 
 export default ListShowtime

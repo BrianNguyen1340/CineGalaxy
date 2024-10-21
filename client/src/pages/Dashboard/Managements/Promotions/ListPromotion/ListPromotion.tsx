@@ -1,5 +1,5 @@
 const ListPromotion = () => {
-    return <div>ListPromotion</div>
+  return <div>ListPromotion</div>
 }
 
 export default ListPromotion

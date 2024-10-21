@@ -100,6 +100,30 @@ const MenuDropdown = () => {
                 </Link>
               </li>
             )}
+            {user?.role === 0 && (
+              <li onClick={() => setIsOpen(false)}>
+                <Link to={paths.dashboardPaths.privateProfile}>
+                  <User size='14' />
+                  <span>Tài khoản</span>
+                </Link>
+              </li>
+            )}
+            {user?.role === 1 && (
+              <li onClick={() => setIsOpen(false)}>
+                <Link to={paths.dashboardPaths.privateProfile}>
+                  <User size='14' />
+                  <span>Tài khoản</span>
+                </Link>
+              </li>
+            )}
+            {user?.role === 2 && (
+              <li onClick={() => setIsOpen(false)}>
+                <Link to={paths.dashboardPaths.privateProfile}>
+                  <User size='14' />
+                  <span>Tài khoản</span>
+                </Link>
+              </li>
+            )}
             <li onClick={() => setIsOpen(false)}>
               <button
                 disabled={isLoading ? true : false}

@@ -1,59 +1,59 @@
 .menu-mobile {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    height: fit-content;
-    z-index: 20;
-    background-color: white;
-    padding: 40px;
-    border-top: 2px solid #ccc;
-    border-bottom: 2px solid #ccc;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: fit-content;
+  z-index: 20;
+  background-color: white;
+  padding: 40px;
+  border-top: 2px solid #ccc;
+  border-bottom: 2px solid #ccc;
 
-    @media (min-width: 1000px) {
+  @media (min-width: 1000px) {
+    display: none;
+  }
+
+  ul {
+    @media (min-width: 600px) {
+      li:nth-child(7),
+      li:nth-child(8) {
         display: none;
+      }
     }
 
-    ul {
-        @media (min-width: 600px) {
-            li:nth-child(7),
-            li:nth-child(8) {
-                display: none;
-            }
-        }
-
-        @media (min-width: 401px) {
-            li:nth-child(9),
-            li:nth-child(10) {
-                display: none;
-            }
-        }
-
-        li {
-            text-align: center;
-
-            @media (max-width: 500px) {
-                text-align: start;
-            }
-
-            a {
-                display: block;
-                width: 100%;
-                text-transform: capitalize;
-                padding: 15px 0;
-                transition: 0.5s all ease;
-                font-weight: bold;
-
-                &:hover {
-                    background-color: #eee;
-                }
-            }
-        }
-
-        .hr-menu-mobile {
-            @media (min-width: 501px) {
-                display: none;
-            }
-        }
+    @media (min-width: 401px) {
+      li:nth-child(9),
+      li:nth-child(10) {
+        display: none;
+      }
     }
+
+    li {
+      text-align: center;
+
+      @media (max-width: 500px) {
+        text-align: start;
+      }
+
+      a {
+        display: block;
+        width: 100%;
+        text-transform: capitalize;
+        padding: 15px 0;
+        transition: 0.5s all ease;
+        font-weight: bold;
+
+        &:hover {
+          background-color: #eee;
+        }
+      }
+    }
+
+    .hr-menu-mobile {
+      @media (min-width: 501px) {
+        display: none;
+      }
+    }
+  }
 }

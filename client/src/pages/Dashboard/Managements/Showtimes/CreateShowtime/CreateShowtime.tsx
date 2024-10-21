@@ -1,5 +1,5 @@
 const CreateShowtime = () => {
-    return <div>CreateShowtime</div>
+  return <div>CreateShowtime</div>
 }
 
 export default CreateShowtime

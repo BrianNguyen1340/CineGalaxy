@@ -1,5 +1,5 @@
 const CreateRoom = () => {
-    return <div>CreateRoom</div>
+  return <div>CreateRoom</div>
 }
 
 export default CreateRoom

@@ -4,9 +4,9 @@ import { useAppSelector } from '~/hooks/redux'
 import { paths } from '~/utils/paths'
 
 const AdminRoute = () => {
-  const { user, isAuthenticated } = useAppSelector((state) => state.user)
+  const { user } = useAppSelector((state) => state.user)
 
-  return user?.role === 0 && isAuthenticated ? (
+  return user?.role === 0 ? (
     <Outlet />
   ) : (
     <Navigate to={paths.userPaths.privateLogin} />

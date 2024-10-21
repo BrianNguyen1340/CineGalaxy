@@ -1,5 +1,5 @@
 const FloatingShape = () => {
-    return <div>FloatingShape</div>;
-};
+  return <div>FloatingShape</div>
+}
 
-export default FloatingShape;
+export default FloatingShape

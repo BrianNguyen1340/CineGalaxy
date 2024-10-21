@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { TbLockAccess, TbLockAccessOff } from 'react-icons/tb'
+import { FaTimes, FaLock, FaLockOpen } from 'react-icons/fa'
+import { SquarePen } from 'lucide-react'
 import ReactPaginate from 'react-paginate'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
@@ -10,9 +11,8 @@ import {
   useBlockAccountMutation,
   useUnblockAccountMutation,
 } from '~/services/user.service'
-import './ListAccount.scss'
 import { Loader } from '~/components'
-import { SquarePen } from 'lucide-react'
+import './ListAccount.scss'
 
 const ListAccount = () => {
   const { data: users, refetch, isLoading } = useGetAllUsersByAdminQuery({})
@@ -24,10 +24,10 @@ const ListAccount = () => {
     refetch()
   }, [refetch])
 
-  const handleBlockAccount = async (id: string) => {
+  const handleBlockAccount = async (_id: string) => {
     try {
       nProgress.start()
-      await blockAccount(id)
+      await blockAccount(_id)
       Swal.fire('Thành công!', 'Khóa tài khoản thành công!', 'success')
       refetch()
     } catch (error: any) {
@@ -37,10 +37,10 @@ const ListAccount = () => {
     }
   }
 
-  const handleUnblockAccount = async (id: string) => {
+  const handleUnblockAccount = async (_id: string) => {
     try {
       nProgress.start()
-      await unblockAccount(id)
+      await unblockAccount(_id)
       Swal.fire('Thành công!', 'Khóa tài khoản thành công!', 'success')
       refetch()
     } catch (error: any) {
@@ -79,6 +79,7 @@ const ListAccount = () => {
                 <th>email</th>
                 <th>name</th>
                 <th>avatar</th>
+                <th>last login</th>
                 <th>isBlocked</th>
                 <th>role</th>
                 <th>action</th>
@@ -90,7 +91,7 @@ const ListAccount = () => {
                   <td>{index + offset}</td>
                   <td>{user.email}</td>
                   <td>{user.name}</td>
-                  <td style={{ padding: '10px 0' }}>
+                  <td>
                     <img
                       src={user.photoURL}
                       alt='avatar'
@@ -100,28 +101,47 @@ const ListAccount = () => {
                     />
                   </td>
                   <td>
-                    {user.isBlocked === true ? (
-                      <button
-                        style={{ backgroundColor: 'white' }}
-                        onClick={() => handleBlockAccount(user?._id)}
-                      >
-                        <TbLockAccessOff
-                          size='20'
-                          color='red'
-                          style={{ backgroundColor: 'white' }}
-                        />
-                      </button>
+                    {new Date(user.lastLogin).toLocaleDateString('vi-VN')}
+                    {' - '}
+                    {new Date(user.lastLogin).toLocaleTimeString('vi-VN')}
+                  </td>
+                  <td>
+                    {user.role === 0 ? (
+                      <FaTimes size='20' color='red' />
                     ) : (
-                      <button
-                        style={{ backgroundColor: 'white' }}
-                        onClick={() => handleUnblockAccount(user?._id)}
-                      >
-                        <TbLockAccess
-                          size='20'
-                          color='green'
-                          style={{ backgroundColor: 'white' }}
-                        />
-                      </button>
+                      <>
+                        {user.isBlocked ? (
+                          <button
+                            style={{
+                              backgroundColor: 'white',
+                              cursor: 'pointer',
+                            }}
+                            onClick={() => handleUnblockAccount(user?._id)}
+                          >
+                            <FaLock
+                              size='20'
+                              color='red'
+                              style={{
+                                backgroundColor: 'white',
+                              }}
+                            />
+                          </button>
+                        ) : (
+                          <button
+                            style={{
+                              backgroundColor: 'white',
+                              cursor: 'pointer',
+                            }}
+                            onClick={() => handleBlockAccount(user?._id)}
+                          >
+                            <FaLockOpen
+                              size='20'
+                              color='green'
+                              style={{ backgroundColor: 'white' }}
+                            />
+                          </button>
+                        )}
+                      </>
                     )}
                   </td>
                   <td>{user.role}</td>

@@ -1,64 +1,64 @@
 .main-navigation {
-    font-size: 14px;
-    font-weight: 600;
-    white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
 
-    @media (min-width: 1400px) {
-        grid-column: 1/2;
-        grid-row: 1/1;
+  @media (min-width: 1400px) {
+    grid-column: 1/2;
+    grid-row: 1/1;
+  }
+
+  @media (max-width: 1000px) {
+    display: none !important;
+  }
+
+  @media (min-width: 1000px) and (max-width: 1400px) {
+    grid-column: 2/3;
+    grid-row: 1/1;
+  }
+
+  ul {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+
+    @media (max-width: 1200px) {
+      gap: 10px;
     }
 
-    @media (max-width: 1000px) {
-        display: none !important;
+    @media (max-width: 1400px) {
+      width: 80%;
+      margin: 0 auto;
+      justify-content: center;
     }
 
-    @media (min-width: 1000px) and (max-width: 1400px) {
-        grid-column: 2/3;
-        grid-row: 1/1;
-    }
+    li {
+      position: relative;
+      line-height: 1;
+      display: flex;
+      align-items: center;
 
-    ul {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 20px;
+      a {
+        text-transform: capitalize;
+        position: relative;
+        padding-bottom: 2px;
 
-        @media (max-width: 1200px) {
-            gap: 10px;
+        &::after {
+          position: absolute;
+          content: '';
+          left: 0;
+          width: 0;
+          bottom: -3px;
+          background-color: red;
+          height: 2px;
+          transition: 0.5s ease;
         }
 
-        @media (max-width: 1400px) {
-            width: 80%;
-            margin: 0 auto;
-            justify-content: center;
+        &:hover::after {
+          width: 100%;
         }
-
-        li {
-            position: relative;
-            line-height: 1;
-            display: flex;
-            align-items: center;
-
-            a {
-                text-transform: capitalize;
-                position: relative;
-                padding-bottom: 2px;
-
-                &::after {
-                    position: absolute;
-                    content: '';
-                    left: 0;
-                    width: 0;
-                    bottom: -3px;
-                    background-color: red;
-                    height: 2px;
-                    transition: 0.5s ease;
-                }
-
-                &:hover::after {
-                    width: 100%;
-                }
-            }
-        }
+      }
     }
+  }
 }

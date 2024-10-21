@@ -16,45 +16,45 @@ import { corsOptions } from '~/configs/corsOption.config'
 import { initAPIRoutes } from '~/routes/ApiRoutes'
 
 export const application = () => {
-    const app = express()
+  const app = express()
 
-    validateEnv()
-    connectDatabase()
+  validateEnv()
+  connectDatabase()
 
-    const mongoStore = MongoStore.create({
-        mongoUrl: varEnv.MONGO_DB_LOCAL_URI,
-        collectionName: 'session_temp_user_email',
-        ttl: 10 * 60,
-        autoRemove: 'native',
-    })
+  const mongoStore = MongoStore.create({
+    mongoUrl: varEnv.MONGO_DB_LOCAL_URI,
+    collectionName: 'session_temp_user_email',
+    ttl: 10 * 60,
+    autoRemove: 'native',
+  })
 
-    const sessionSecret = varEnv.SESSION_SECRET_KEY
+  const sessionSecret = varEnv.SESSION_SECRET_KEY
 
-    app.use(
-        session({
-            secret: sessionSecret,
-            resave: false,
-            saveUninitialized: false,
-            store: mongoStore,
-            cookie: {
-                secure: varEnv.NODE_ENV === 'production',
-                maxAge: 10 * 60 * 1000,
-                httpOnly: true,
-                sameSite: 'strict',
-            },
-        }),
-    )
+  app.use(
+    session({
+      secret: sessionSecret,
+      resave: false,
+      saveUninitialized: false,
+      store: mongoStore,
+      cookie: {
+        secure: varEnv.NODE_ENV === 'production',
+        maxAge: 10 * 60 * 1000,
+        httpOnly: true,
+        sameSite: 'strict',
+      },
+    }),
+  )
 
-    app.use(cookieParser())
-    app.use(bodyParser.json())
-    app.use(bodyParser.urlencoded({ extended: true, limit: '30mb' }))
-    app.use(morgan('combined'))
-    app.use(cors(corsOptions))
-    app.use(helmet())
-    app.use(logger)
-    app.use(errorHandlerMiddleware)
+  app.use(cookieParser())
+  app.use(bodyParser.json())
+  app.use(bodyParser.urlencoded({ extended: true, limit: '30mb' }))
+  app.use(morgan('combined'))
+  app.use(cors(corsOptions))
+  app.use(helmet())
+  app.use(logger)
+  app.use(errorHandlerMiddleware)
 
-    initAPIRoutes(app)
+  initAPIRoutes(app)
 
-    return app
+  return app
 }

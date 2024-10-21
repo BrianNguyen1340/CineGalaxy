@@ -1,5 +1,5 @@
 const UpdateSeat = () => {
-    return <div>UpdateSeat</div>
+  return <div>UpdateSeat</div>
 }
 
 export default UpdateSeat

@@ -45,9 +45,11 @@ const updateProfile: RequestHandler = catchErrors(async (req, res) => {
 })
 
 const getUserByAdmin: RequestHandler = catchErrors(async (req, res) => {
-  const { _id } = req.params
+  const { id } = req.params
 
-  const response = await userService.getUserByAdmin({ _id })
+  const objectId = new Types.ObjectId(id)
+
+  const response = await userService.getUserByAdmin(objectId)
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -75,9 +77,11 @@ const getAllUsersByAdmin: RequestHandler = catchErrors(async (req, res) => {
 })
 
 const updateUserByAdmin: RequestHandler = catchErrors(async (req, res) => {
-  const { _id } = req.params
+  const { id } = req.params
 
-  const response = await userService.updateUserByAdmin(_id, req.body)
+  const objectID = new Types.ObjectId(id)
+
+  const response = await userService.updateUserByAdmin(objectID, req.body)
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }

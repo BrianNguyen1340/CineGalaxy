@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, FileLock, Mail } from 'lucide-react'
@@ -6,7 +6,7 @@ import { HashLoader } from 'react-spinners'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
-import { useAppDispatch } from '~/hooks/redux'
+import { useAppDispatch, useAppSelector } from '~/hooks/redux'
 import { paths } from '~/utils/paths'
 import { useLoginMutation } from '~/services/auth.service'
 import {
@@ -25,6 +25,8 @@ type UserData = {
 const PrivateLogin = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+
+  const { isAuthenticated, user } = useAppSelector((state) => state.user)
 
   const {
     register,
@@ -63,6 +65,16 @@ const PrivateLogin = () => {
       nProgress.done()
     }
   }
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      if (user?.role === 0 || user?.role === 1 || user?.role === 2) {
+        navigate(paths.dashboardPaths.dashboard)
+      } else if (user?.role === 3) {
+        navigate(paths.userPaths.home)
+      }
+    }
+  }, [isAuthenticated, navigate])
 
   return (
     <div className='private-login-container'>
