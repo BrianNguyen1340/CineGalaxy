@@ -1,12 +1,12 @@
 import { Document, Schema, Types, model } from 'mongoose'
 
-export type TMovieVersion = Document & {
+export type MovieVersionType = Document & {
   _id: Types.ObjectId
   movieId: Types.ObjectId
   versionId: Types.ObjectId
 }
 
-const movieVersionSchema = new Schema<TMovieVersion>(
+const movieVersionSchema = new Schema<MovieVersionType>(
   {
     movieId: {
       type: Schema.Types.ObjectId,
@@ -22,7 +22,7 @@ const movieVersionSchema = new Schema<TMovieVersion>(
   },
 )
 
-export const movieVersionModel = model<TMovieVersion>(
+export const movieVersionModel = model<MovieVersionType>(
   'MovieVersion',
   movieVersionSchema,
   'movie_version',

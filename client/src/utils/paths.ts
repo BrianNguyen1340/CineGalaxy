@@ -40,11 +40,11 @@ const dashboardPaths = {
       update: '/update-account/:id',
       delete: '/delete-account/:id',
     },
-    movieCategories: {
-      list: '/list-movie-categories',
-      create: '/create-movie-category',
-      update: '/update-movie-category/:id',
-      delete: '/delete-movie-category/:id',
+    genres: {
+      list: '/list-genres',
+      create: '/create-genre',
+      update: '/update-genre/:id',
+      delete: '/delete-genre/:id',
     },
     cinemas: {
       list: '/list-cinemas',
@@ -53,10 +53,10 @@ const dashboardPaths = {
       delete: '/delete-cinema/:id',
     },
     cinemaComplexes: {
-      list: '/list-invoices',
-      create: '/create-complex',
-      update: '/update-complex/:id',
-      delete: '/delete-complex/:id',
+      list: '/list-cinema-complexes',
+      create: '/create-cinema-complex',
+      update: '/update-cinema-complex/:id',
+      delete: '/delete-cinema-complex/:id',
     },
     invoices: {
       list: '/list-invoices',

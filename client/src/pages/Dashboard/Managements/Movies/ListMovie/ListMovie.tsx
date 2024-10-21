@@ -1,5 +1,7 @@
+import './ListMovie.scss'
+
 const ListMovie = () => {
-  return <div>ListMovie</div>
+  return <div className='list-movie-container'></div>
 }
 
 export default ListMovie

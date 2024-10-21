@@ -68,9 +68,9 @@ import {
   ListCinemaComplex,
   CreateCinemaComplex,
   UpdateCinemaComplex,
-  ListMovieCategory,
-  CreateMovieCategory,
-  UpdateMovieCategory,
+  ListGenre,
+  CreateGenre,
+  UpdateGenre,
 } from '~/pages'
 import App from './App.tsx'
 import RequiredAuth from '~/routes/RequiredAuth'
@@ -199,16 +199,16 @@ createRoot(document.getElementById('root')!).render(
                 element={<UpdateCinema />}
               />
               <Route
-                path={paths.dashboardPaths.managements.movieCategories.list}
-                element={<ListMovieCategory />}
+                path={paths.dashboardPaths.managements.genres.list}
+                element={<ListGenre />}
               />
               <Route
-                path={paths.dashboardPaths.managements.movieCategories.create}
-                element={<CreateMovieCategory />}
+                path={paths.dashboardPaths.managements.genres.create}
+                element={<CreateGenre />}
               />
               <Route
-                path={paths.dashboardPaths.managements.movieCategories.update}
-                element={<UpdateMovieCategory />}
+                path={paths.dashboardPaths.managements.genres.update}
+                element={<UpdateGenre />}
               />
               <Route
                 path={paths.dashboardPaths.managements.movies.list}

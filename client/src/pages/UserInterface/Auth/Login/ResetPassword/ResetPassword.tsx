@@ -19,8 +19,12 @@ type ResetPasswordData = {
 
 const ResetPassword = () => {
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
-  if (isAuthenticated && user) {
-    return <Navigate to={paths.userPaths.home} />
+  if (isAuthenticated) {
+    if (user?.role === 3) {
+      return <Navigate to={paths.userPaths.home} />
+    } else if (user?.role === 0 || user?.role === 1 || user?.role === 2) {
+      return <Navigate to={paths.dashboardPaths.dashboard} />
+    }
   }
 
   const {
@@ -66,7 +70,7 @@ const ResetPassword = () => {
       Swal.fire('Thành công!', response.message)
       navigate(paths.userPaths.login)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.message, 'error')
+      Swal.fire('Thất bại', error.data.message, 'error')
     } finally {
       nProgress.done()
     }

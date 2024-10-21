@@ -1,20 +1,24 @@
 import { useEffect } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
-import { HashLoader } from 'react-spinners'
-import { Star } from 'lucide-react'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
-import { FormInputGroup, Loader } from '~/components'
 import {
-  useGetCinemaComplexQuery,
-  useUpdateCinemaComplexMutation,
-} from '~/services/cinemaComplex.service'
+  useGetGenreQuery,
+  useUpdateGenreMutation,
+} from '~/services/genre.service'
 import { paths } from '~/utils/paths'
-import './UpdateCinemaComplex.scss'
+import './UpdateGenre.scss'
+import { FormInputGroup } from '~/components'
+import { HashLoader } from 'react-spinners'
+import { Star } from 'lucide-react'
 
-const UpdateCinemaComplex = () => {
+type GenreData = {
+  name: string
+}
+
+const UpdateGenre = () => {
   const { id } = useParams()
 
   const navigate = useNavigate()
@@ -24,28 +28,22 @@ const UpdateCinemaComplex = () => {
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm<{ name: string }>()
+  } = useForm<GenreData>()
 
-  const { data: cinemaComplex, refetch } = useGetCinemaComplexQuery(id)
-  console.log(cinemaComplex)
-
-  const [updateApi, { isLoading }] = useUpdateCinemaComplexMutation()
+  const { data: genre, refetch } = useGetGenreQuery(id)
+  const [updateApi, { isLoading }] = useUpdateGenreMutation()
 
   useEffect(() => {
-    if (cinemaComplex?.data) {
-      setValue('name', cinemaComplex?.data?.name)
+    if (genre?.data) {
+      setValue('name', genre?.data?.name)
     }
-  }, [cinemaComplex, setValue])
+  }, [genre, setValue])
 
   useEffect(() => {
     refetch()
   }, [refetch])
 
-  if (isLoading) {
-    return <Loader />
-  }
-
-  const handleUpdate: SubmitHandler<{ name: string }> = async (reqBody) => {
+  const handleUpdate: SubmitHandler<GenreData> = async (reqBody) => {
     try {
       const { name } = reqBody
 
@@ -53,7 +51,7 @@ const UpdateCinemaComplex = () => {
 
       Swal.fire('Thành công', response.message, 'success')
 
-      navigate(paths.dashboardPaths.managements.cinemaComplexes.list)
+      navigate(paths.dashboardPaths.managements.genres.list)
     } catch (error: any) {
       Swal.fire('Thất bại', error.data.message, 'error')
     } finally {
@@ -62,11 +60,11 @@ const UpdateCinemaComplex = () => {
   }
 
   return (
-    <div className='update-cinema-complex-container'>
+    <div className='update-movie-category-container'>
       <div className='title'>
         <span>Cập nhật danh mục phim</span>
         <Star color='yellow' />
-        {cinemaComplex?.data?.name}
+        {genre.data.name}
         <Star color='yellow' />
       </div>
       <form onSubmit={handleSubmit(handleUpdate)}>
@@ -102,4 +100,4 @@ const UpdateCinemaComplex = () => {
   )
 }
 
-export default UpdateCinemaComplex
+export default UpdateGenre

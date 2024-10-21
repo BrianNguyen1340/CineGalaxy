@@ -1,5 +1,7 @@
+import './UpdateMovie.scss'
+
 const UpdateMovie = () => {
-  return <div>UpdateMovie</div>
+  return <div className='update-movie-container'></div>
 }
 
 export default UpdateMovie

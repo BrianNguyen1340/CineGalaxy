@@ -1,6 +1,6 @@
 import { Document, model, Schema, Types } from 'mongoose'
 
-export type TInvoice = Document & {
+export type InvoiceType = Document & {
   _id: Types.ObjectId
   name: string
   totalPrice: number
@@ -10,7 +10,7 @@ export type TInvoice = Document & {
   serviceTicket: Types.ObjectId
 }
 
-const invoiceSchema = new Schema<TInvoice>(
+const invoiceSchema = new Schema<InvoiceType>(
   {
     name: {
       type: String,
@@ -46,4 +46,4 @@ const invoiceSchema = new Schema<TInvoice>(
   },
 )
 
-export const invoiceModel = model<TInvoice>('Invoice', invoiceSchema)
+export const invoiceModel = model<InvoiceType>('Invoice', invoiceSchema)

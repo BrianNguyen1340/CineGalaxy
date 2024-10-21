@@ -1,6 +1,6 @@
 import { Document, model, Schema, Types } from 'mongoose'
 
-export type TMovieTicket = Document & {
+export type MovieTicketType = Document & {
   _id: Types.ObjectId
   totalPrice: number
   quantity: number
@@ -10,7 +10,7 @@ export type TMovieTicket = Document & {
   cashierId: Types.ObjectId
 }
 
-const movieTicketSchema = new Schema<TMovieTicket>(
+const movieTicketSchema = new Schema<MovieTicketType>(
   {
     totalPrice: {
       type: Number,
@@ -45,7 +45,7 @@ const movieTicketSchema = new Schema<TMovieTicket>(
   },
 )
 
-export const movieTicketModel = model<TMovieTicket>(
+export const movieTicketModel = model<MovieTicketType>(
   'MovieTicket',
   movieTicketSchema,
   'movie_ticket',

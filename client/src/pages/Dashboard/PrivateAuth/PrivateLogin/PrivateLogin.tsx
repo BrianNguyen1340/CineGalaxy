@@ -59,8 +59,8 @@ const PrivateLogin = () => {
 
       navigate(paths.dashboardPaths.dashboard)
     } catch (error: any) {
-      dispatch(loginFailure(error.message))
-      Swal.fire('Thất bại', error.message, 'error')
+      dispatch(loginFailure(error.data.message))
+      Swal.fire('Thất bại', error.data.message, 'error')
     } finally {
       nProgress.done()
     }

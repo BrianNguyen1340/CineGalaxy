@@ -1,6 +1,6 @@
 import { Document, Schema, Types, model } from 'mongoose'
 
-export type TMovie = Document & {
+export type MovieType = Document & {
   _id: Types.ObjectId
   name: string
   description: string
@@ -11,10 +11,10 @@ export type TMovie = Document & {
   poster: string
   trailer: string
   movieVersionId: Types.ObjectId
-  movieCategoryId: Types.ObjectId
+  genre: Types.ObjectId
 }
 
-const movieSchema = new Schema<TMovie>(
+const movieSchema = new Schema<MovieType>(
   {
     name: {
       type: String,
@@ -54,10 +54,10 @@ const movieSchema = new Schema<TMovie>(
       required: true,
       ref: 'MovieVersion',
     },
-    movieCategoryId: {
+    genre: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'MovieCategory',
+      ref: 'Genre',
     },
   },
   {
@@ -65,4 +65,4 @@ const movieSchema = new Schema<TMovie>(
   },
 )
 
-export const movieModel = model<TMovie>('Movie', movieSchema)
+export const movieModel = model<MovieType>('Movie', movieSchema)

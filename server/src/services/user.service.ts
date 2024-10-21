@@ -1,8 +1,7 @@
 import { StatusCodes } from 'http-status-codes'
 import { Types } from 'mongoose'
 
-import { AddressType, Gender, userModel } from '~/schemas/user.schema'
-import { UserType } from '~/schemas/user.schema'
+import { AddressType, Gender, userModel, UserType } from '~/schemas/user.schema'
 
 const profile = async (
   id: Types.ObjectId,
@@ -159,7 +158,7 @@ const getAllUsersByAdmin = async (): Promise<{
 }> => {
   try {
     const users = await userModel.find().select('-password')
-    if (users.length < 0) {
+    if (!users || users.length === 0) {
       return {
         success: false,
         message: 'Danh sách người dùng trống!',

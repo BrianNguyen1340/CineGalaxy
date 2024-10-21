@@ -1,11 +1,11 @@
 import { Document, Schema, Types, model } from 'mongoose'
 
-export type TCinemaComplex = Document & {
+export type CinemaComplexType = Document & {
   _id: Types.ObjectId
   name: string
 }
 
-const cinemaComplexSchema = new Schema<TCinemaComplex>(
+const cinemaComplexSchema = new Schema<CinemaComplexType>(
   {
     name: {
       type: String,
@@ -18,7 +18,7 @@ const cinemaComplexSchema = new Schema<TCinemaComplex>(
   },
 )
 
-export const cinemaComplexModel = model<TCinemaComplex>(
+export const cinemaComplexModel = model<CinemaComplexType>(
   'CinemaComplex',
   cinemaComplexSchema,
   'cinema_complex',

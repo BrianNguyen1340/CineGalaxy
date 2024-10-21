@@ -1,15 +1,15 @@
 import { useForm, SubmitHandler } from 'react-hook-form'
+import { HashLoader } from 'react-spinners'
+import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
 import { useCreateGenreMutation } from '~/services/genre.service'
-import './CreateMovieCategory.scss'
-import { useNavigate } from 'react-router-dom'
 import { paths } from '~/utils/paths'
-import FormInput from '~/components/FormInputGroup/FormInputGroup'
-import { HashLoader } from 'react-spinners'
+import { FormInputGroup } from '~/components'
+import './CreateGenre.scss'
 
-const CreateMovieCategory = () => {
+const CreateGenre = () => {
   const {
     register,
     handleSubmit,
@@ -33,9 +33,9 @@ const CreateMovieCategory = () => {
 
       Swal.fire('Thành công', response.message, 'success')
 
-      navigate(paths.dashboardPaths.managements.movieCategories.list)
+      navigate(paths.dashboardPaths.managements.genres.list)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.message, 'error')
+      Swal.fire('Thất bại', error.data.message, 'error')
     } finally {
       nProgress.done()
     }
@@ -45,7 +45,7 @@ const CreateMovieCategory = () => {
     <div className='movie-category-container'>
       <div className='title'>tạo danh mục phim</div>
       <form onSubmit={handleSubmit(handleCreate)}>
-        <FormInput
+        <FormInputGroup
           register={register}
           errors={errors}
           validation={{
@@ -80,4 +80,4 @@ const CreateMovieCategory = () => {
   )
 }
 
-export default CreateMovieCategory
+export default CreateGenre

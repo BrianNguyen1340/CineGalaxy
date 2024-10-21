@@ -86,7 +86,7 @@ const Register = () => {
       localStorage.setItem('email', email)
       navigate(paths.userPaths.verifyOtp)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.message, 'error')
+      Swal.fire('Thất bại', error.data.message, 'error')
     } finally {
       nProgress.done()
     }

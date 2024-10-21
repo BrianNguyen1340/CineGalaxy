@@ -1,12 +1,12 @@
 import { Document, model, Schema, Types } from 'mongoose'
 
-export type TScreen = Document & {
+export type ScreenType = Document & {
   name: string
   opacity: number
   cinemaId: Types.ObjectId
 }
 
-const screenSchema = new Schema<TScreen>(
+const screenSchema = new Schema<ScreenType>(
   {
     name: {
       type: String,
@@ -26,6 +26,6 @@ const screenSchema = new Schema<TScreen>(
   { timestamps: true },
 )
 
-const screenModel = model<TScreen>('Screen', screenSchema)
+const screenModel = model<ScreenType>('Screen', screenSchema)
 
 export default screenModel

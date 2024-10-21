@@ -1,18 +1,14 @@
 import { useEffect, useState } from 'react'
-import ReactPaginate from 'react-paginate'
 import { Link } from 'react-router-dom'
 import { SquarePen } from 'lucide-react'
+import ReactPaginate from 'react-paginate'
 
 import { useGetAllGenresQuery } from '~/services/genre.service'
 import { Loader } from '~/components'
-import './ListMovieCategory.scss'
+import './ListGenre.scss'
 
-const ListMovieCategory = () => {
-  const {
-    data: movieCategories,
-    refetch,
-    isLoading,
-  } = useGetAllGenresQuery({})
+const ListGenre = () => {
+  const { data: genres, refetch, isLoading } = useGetAllGenresQuery({})
 
   useEffect(() => {
     refetch()
@@ -21,8 +17,8 @@ const ListMovieCategory = () => {
   const [currentPage, setCurrentPage] = useState(0)
   const itemsPerPage = 10
   const offset = currentPage * itemsPerPage
-  const currentItems = movieCategories
-    ? movieCategories.data
+  const currentItems = genres
+    ? genres.data
         .slice()
         .reverse()
         .slice(offset, offset + itemsPerPage)
@@ -38,7 +34,7 @@ const ListMovieCategory = () => {
   return (
     <div className='list-movie-category-container'>
       <div className='title'>danh sách danh mục phim</div>
-      {movieCategories ? (
+      {genres ? (
         <>
           <table>
             <thead>
@@ -49,12 +45,12 @@ const ListMovieCategory = () => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((movieCategory: any, index: number) => (
+              {currentItems.map((genre: any, index: number) => (
                 <tr key={index}>
                   <td>{index + offset}</td>
-                  <td>{movieCategory.name}</td>
+                  <td>{genre.name}</td>
                   <td>
-                    <Link to={`/update-movie-category/${movieCategory._id}`}>
+                    <Link to={`/update-genre/${genre._id}`}>
                       <SquarePen />
                     </Link>
                   </td>
@@ -62,6 +58,18 @@ const ListMovieCategory = () => {
               ))}
             </tbody>
           </table>
+          <ReactPaginate
+            previousLabel={'<'}
+            nextLabel={'>'}
+            breakLabel={'...'}
+            breakClassName={'break-me'}
+            pageCount={Math.ceil(genres.data.length / itemsPerPage)}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={handlePageClick}
+            containerClassName={'pagination'}
+            activeClassName={'active'}
+          />
         </>
       ) : (
         <div>Danh sách danh mục phim trống!</div>
@@ -70,4 +78,4 @@ const ListMovieCategory = () => {
   )
 }
 
-export default ListMovieCategory
+export default ListGenre

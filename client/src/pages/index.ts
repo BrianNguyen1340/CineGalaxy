@@ -52,9 +52,9 @@ import UpdateRoom from './Dashboard/Managements/Rooms/UpdateRoom/UpdateRoom'
 import ListSeat from './Dashboard/Managements/Seats/ListSeat/ListSeat'
 import CreateSeat from './Dashboard/Managements/Seats/CreateSeat/CreateSeat'
 import UpdateSeat from './Dashboard/Managements/Seats/UpdateSeat/UpdateSeat'
-import ListMovieCategory from './Dashboard/Managements/MovieCategory/ListMovieCategory/ListMovieCategory'
-import CreateMovieCategory from './Dashboard/Managements/MovieCategory/CreateMovieCategory/CreateMovieCategory'
-import UpdateMovieCategory from './Dashboard/Managements/MovieCategory/UpdateMovieCategory/UpdateMovieCategory'
+import ListGenre from './Dashboard/Managements/Genres/ListGenre/ListGenre'
+import CreateGenre from './Dashboard/Managements/Genres/CreateGenre/CreateGenre'
+import UpdateGenre from './Dashboard/Managements/Genres/UpdateGenre/UpdateGenre'
 
 // manager
 import ListShowtime from './Dashboard/Managements/Showtimes/ListShowtime/ListShowtime'
@@ -134,9 +134,9 @@ export {
   ListSeat,
   CreateSeat,
   UpdateSeat,
-  ListMovieCategory,
-  CreateMovieCategory,
-  UpdateMovieCategory,
+  ListGenre,
+  CreateGenre,
+  UpdateGenre,
 
   // manager
   ListShowtime,
