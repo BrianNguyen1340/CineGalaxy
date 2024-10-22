@@ -10,8 +10,9 @@ export type MovieType = Document & {
   duration: number
   poster: string
   trailer: string
-  movieVersionId: Types.ObjectId
-  genre: Types.ObjectId
+  // movieVersionId: Types.ObjectId
+  movieRating: string
+  genreId: Types.ObjectId
 }
 
 const movieSchema = new Schema<MovieType>(
@@ -20,14 +21,17 @@ const movieSchema = new Schema<MovieType>(
       type: String,
       required: true,
       unique: true,
+      trim: true,
     },
     description: {
       type: String,
       required: true,
+      trim: true,
     },
     director: {
       type: String,
       required: true,
+      trim: true,
     },
     releaseDate: {
       type: Date,
@@ -44,17 +48,24 @@ const movieSchema = new Schema<MovieType>(
     poster: {
       type: String,
       required: true,
+      trim: true,
     },
     trailer: {
       type: String,
       required: true,
+      trim: true,
     },
-    movieVersionId: {
-      type: Schema.Types.ObjectId,
+    // movieVersionId: {
+    //   type: Schema.Types.ObjectId,
+    //   required: true,
+    //   ref: 'MovieVersion',
+    // },
+    movieRating: {
+      type: String,
       required: true,
-      ref: 'MovieVersion',
+      trim: true,
     },
-    genre: {
+    genreId: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: 'Genre',

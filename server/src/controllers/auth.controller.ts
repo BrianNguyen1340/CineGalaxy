@@ -11,6 +11,8 @@ import { authService } from '~/services/auth.service'
 import { clearAuthCookies, setAuthCookies } from '~/utils/cookies'
 import { catchErrors } from '~/utils/catchErrors'
 
+// *****************************************************************************
+
 const register: RequestHandler = catchErrors(async (req, res) => {
   const { email, password, name } = req.body
 
@@ -178,17 +180,6 @@ const logout: RequestHandler = catchErrors(async (req, res) => {
   return sendSuccessResponse(res, response.statusCode, response.message)
 })
 
-const checkEmailExist: RequestHandler = catchErrors(async (req, res) => {
-  const { email } = req.body
-
-  const response = await authService.checkEmailExist(email)
-  if (!response.success) {
-    return sendErrorResponse(res, response.statusCode, response.message)
-  }
-
-  return sendSuccessResponse(res, response.statusCode, response.message)
-})
-
 const authController = {
   register: [handleJoiError({ body: authValidation.register }), register],
   verifyOTPRegister: [
@@ -203,10 +194,6 @@ const authController = {
   ],
   resetPassword,
   logout,
-  checkEmailExist: [
-    handleJoiError({ body: authValidation.checkEmailExist }),
-    checkEmailExist,
-  ],
   googleLogin: [
     handleJoiError({ body: authValidation.gooleLogin }),
     googleLogin,

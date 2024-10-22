@@ -9,18 +9,22 @@ import { getExpirationTime } from '~/utils/getExpirationTime'
 import { varEnv } from '~/configs/variableEnv.config'
 import { UserType, userModel } from '~/schemas/user.schema'
 import { verificationCodeRegister } from '~/schemas/verificationCodeRegister.schema'
-import { generateToken, verifyToken } from '~/utils/jsonwebtoken'
+import { generateToken } from '~/utils/jsonwebtoken'
 import {
   sendPasswordResetEmail,
   sendVerificationOTPRegister,
 } from '~/emails/nodemailerSendEmail'
 
+// *****************************************************************************
+
+// hàm đăng ký
 const register = async (
   email: string,
   password: string,
   name: string,
 ): Promise<{ success: boolean; message: string; statusCode: number }> => {
   try {
+    // kiểm tra user có tồn tại
     const checkUserExist = await userModel.exists({
       email,
     })
@@ -32,11 +36,15 @@ const register = async (
       }
     }
 
+    // mã hóa mật khẩu
     const hashedPassword = await bcrypt.hash(password, 12)
 
+    // tạo otp gồm 8 số
     const verificationToken = generateRandomNumber(8)
+    // thời gian sống của otp
     const expiresAt = getExpirationTime(10, 'minutes')
 
+    // lưu tạm giá trị của user
     const tempUser = await verificationCodeRegister.create({
       email,
       password: hashedPassword,
@@ -52,6 +60,7 @@ const register = async (
       }
     }
 
+    // gửi email xác thực đăng ký
     const emailResponse = await sendVerificationOTPRegister({
       email,
       verificationToken,
@@ -87,6 +96,7 @@ const verifyOTPRegister = async (
   statusCode: number
 }> => {
   try {
+    // kiểm tra người dùng tạm có otp hợp lệ đã được gửi trước đó?
     const tempUser = await verificationCodeRegister.findOne({
       verificationToken: code,
       verificationTokenExpiresAt: { $gt: Date.now() },
@@ -99,6 +109,7 @@ const verifyOTPRegister = async (
       }
     }
 
+    // gán giá trị người dùng tạm lưu vào bảng user chính
     const newUser = await userModel.create({
       email: tempUser.email,
       password: tempUser.password,
@@ -106,6 +117,7 @@ const verifyOTPRegister = async (
       isVerified: true,
     })
 
+    // xóa otp của người dùng tạm đã đăng ký thành công
     await verificationCodeRegister.deleteOne({ _id: tempUser._id })
 
     const {
@@ -140,13 +152,17 @@ const verifyOTPRegister = async (
   }
 }
 
+// hàm gửi lại otp
 const resendOTPRegister = async (
   email: string,
 ): Promise<{ success: boolean; message: string; statusCode: number }> => {
   try {
+    // tạo otp gồm 8 số
     const verificationToken = generateRandomNumber(8)
+    // thời gian sống của otp
     const expiresAt = getExpirationTime(10, 'minutes')
 
+    // tạo otp mới
     const newOTP = await verificationCodeRegister.findOneAndUpdate(
       { email },
       {
@@ -163,6 +179,7 @@ const resendOTPRegister = async (
       }
     }
 
+    // gửi lại email xác thực đăng ký
     const emailResponse = await sendVerificationOTPRegister({
       email: newOTP.email,
       verificationToken,
@@ -189,6 +206,7 @@ const resendOTPRegister = async (
   }
 }
 
+// hàm đăng nhập với google
 const googleLogin = async (
   email: string,
   name: string,
@@ -202,10 +220,11 @@ const googleLogin = async (
   refreshToken?: string
 }> => {
   try {
+    // kiểm tra user có tồn tại
     const user = await userModel.findOne({
       email,
     })
-
+    // kiểm tra tài khoản có bị khóa
     if (user?.isBlocked === true) {
       return {
         success: false,
@@ -215,11 +234,14 @@ const googleLogin = async (
       }
     }
 
+    // nếu có user
     if (user) {
+      // cập nhật giá trị của avatar người dùng
       if (user.photoURL !== photoURL) {
         user.photoURL = photoURL
       }
 
+      // tạo giá trị accessToken
       const accessToken = generateToken(
         {
           _id: user._id,
@@ -227,11 +249,13 @@ const googleLogin = async (
         },
         { secret: varEnv.JWT_ACCESS_TOKEN_KEY, expiresIn: '1d' },
       )
+      // tạo giá trị refreshToken
       const refreshToken = generateToken(
         { _id: user._id },
         { secret: varEnv.JWT_REFRESH_TOKEN_KEY, expiresIn: '7d' },
       )
 
+      // lưu lại thời gian đăng nhập mới nhất
       user.lastLogin = new Date()
       await user.save()
 
@@ -254,9 +278,14 @@ const googleLogin = async (
         data,
       }
     } else {
+      // nếu user chưa tồn tại
+
+      // tạo ngẫu nhiên mật khẩu
       const generatedPassword = Math.random().toString(36).slice(-16)
+      // mã hóa mật khẩu
       const hashedPassword = await bcrypt.hash(generatedPassword, 12)
 
+      // lưu giá trị của user vào csdl
       const newUser = await userModel.create({
         name: name?.split(' ').join('').toLowerCase(),
         email,
@@ -321,10 +350,10 @@ const googleLogin = async (
   }
 }
 
+// hàm đăng nhập
 const login = async (
   email: string,
   enteredPassword: string,
-  userAgent?: string,
 ): Promise<{
   success: boolean
   message: string
@@ -334,6 +363,7 @@ const login = async (
   refreshToken?: string
 }> => {
   try {
+    // kiểm tra user có tồn tại
     const user = await userModel.findOne({ email })
     if (!user) {
       return {
@@ -343,6 +373,7 @@ const login = async (
       }
     }
 
+    // nếu user bị khóa
     if (user.isBlocked === true) {
       return {
         success: false,
@@ -352,6 +383,7 @@ const login = async (
       }
     }
 
+    // kiểm tra mật khẩu khi đăng nhập
     const isMatch = await bcrypt.compare(enteredPassword, user.password)
     if (!isMatch) {
       return {
@@ -410,10 +442,12 @@ const login = async (
   }
 }
 
+// hàm quên mật khẩu
 const forgotPassword = async (
   email: string,
 ): Promise<{ success: boolean; message: string; statusCode: number }> => {
   try {
+    // kiểm tra user có tồn tại
     const user = await userModel.findOne({ email })
     if (!user) {
       return {
@@ -423,17 +457,22 @@ const forgotPassword = async (
       }
     }
 
+    // tạo token reset password
     const resetPasswordToken = generateRandomToken(20)
+    // thời gian token sống
     const expiresAt = getExpirationTime(10, 'minutes')
     const resetPasswordExpiresAt = expiresAt
 
+    // lưu token và thời gian sống vào csdl
     user.resetPasswordToken = resetPasswordToken
     user.resetPasswordExpiresAt = resetPasswordExpiresAt
 
     await user.save()
 
+    // giá trị token sẽ được gửi tới phía client
     const resetUrl = `${varEnv.CLIENT_URI}/reset-password/${resetPasswordToken}`
 
+    // gửi email xác nhận yêu cầu thay đổi mật khẩu
     const emailResponse = await sendPasswordResetEmail({
       email,
       resetUrl,
@@ -460,11 +499,13 @@ const forgotPassword = async (
   }
 }
 
+// hàm xác thực token khi thay đổi mật khẩu
 const resetPassword = async (
   token: string,
   password: string,
 ): Promise<{ success: boolean; message: string; statusCode: number }> => {
   try {
+    // kiểm tra token đã được lưu trước đó
     const user = await userModel.findOne({
       resetPasswordToken: token,
       resetPasswordExpiresAt: { $gt: Date.now() },
@@ -477,11 +518,13 @@ const resetPassword = async (
       }
     }
 
+    // mã hóa mật khẩu mới
     const hashedPassword = await bcrypt.hash(user.password, 12)
 
+    // lưu mật khẩu mới vào csdl
     user.password = hashedPassword
-    user.resetPasswordToken = undefined
-    user.resetPasswordExpiresAt = undefined
+    user.resetPasswordToken = undefined // xóa token đã lưu
+    user.resetPasswordExpiresAt = undefined // xóa thời gian
 
     await user.save()
 
@@ -506,6 +549,7 @@ const resetPassword = async (
   }
 }
 
+// đăng xuất
 const logout = async (): Promise<{
   success: boolean
   message: string
@@ -533,40 +577,6 @@ const logout = async (): Promise<{
   }
 }
 
-const checkEmailExist = async (
-  email: string,
-): Promise<{ success: boolean; message: string; statusCode: number }> => {
-  try {
-    const user = await userModel.findOne({ email })
-    if (user) {
-      return {
-        success: false,
-        message: 'Email đã được sử dụng!',
-        statusCode: StatusCodes.CONFLICT,
-      }
-    }
-
-    return {
-      success: true,
-      message: 'Email khả dụng!',
-      statusCode: StatusCodes.OK,
-    }
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return {
-        success: false,
-        message: `Lỗi hệ thống: ${error.message}`,
-        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-      }
-    }
-    return {
-      success: false,
-      message: 'Đã xảy ra lỗi không xác định!',
-      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-    }
-  }
-}
-
 export const authService = {
   register,
   verifyOTPRegister,
@@ -575,6 +585,5 @@ export const authService = {
   forgotPassword,
   resetPassword,
   logout,
-  checkEmailExist,
   googleLogin,
 }

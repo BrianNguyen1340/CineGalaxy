@@ -7,15 +7,20 @@ import {
 } from './emailTemplate'
 import { sendEmail } from './nodemailerConfig'
 
+// *****************************************************************************
+
+// khai báo kiểu dữ liệu
 type SendVerificationEmailData = {
   email: string
   verificationToken: string
 }
 
+// hàm gửi xác nhận otp khi đăng ký tài khoản
 export const sendVerificationOTPRegister = async (
   reqBody: SendVerificationEmailData,
 ): Promise<{ success: boolean; message: string; statusCode: number }> => {
   try {
+    // thông tin email và token yêu cầu từ phía client
     const { email, verificationToken } = reqBody
 
     if (!isEmail(email)) {
@@ -64,12 +69,14 @@ type SendPasswordResetEmail = {
   resetUrl: string
 }
 
+// hàm gửi email thay đổi mật khẩu
 export const sendPasswordResetEmail = async (
   reqBody: SendPasswordResetEmail,
 ) => {
-  const { email, resetUrl } = reqBody
-
   try {
+    // thông tin email và url kèm token yêu cầu từ phía client
+    const { email, resetUrl } = reqBody
+
     if (!isEmail(email)) {
       return {
         success: false,

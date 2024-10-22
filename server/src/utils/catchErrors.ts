@@ -3,12 +3,17 @@ import { StatusCodes } from 'http-status-codes'
 
 import { HttpException } from './httpException'
 
+// *****************************************************************************
+
+// Đây là một kiểu dữ liệu đại diện cho một controller bất đồng bộ.
+// Nó nhận các đối số req, res, và next, và trả về một Promise mà có thể là một Response hoặc void.
 type AsyncController = (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => Promise<Response | void>
 
+// hàm bắt lỗi
 export const catchErrors =
   (controller: AsyncController): AsyncController =>
   async (req, res, next) => {

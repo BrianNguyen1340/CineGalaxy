@@ -1,5 +1,8 @@
 import 'dotenv/config'
 
+// *****************************************************************************
+
+// hàm kiểm tra và lấy biến môi trường
 const getEnv = (key: string, defaultValue?: string): string => {
   const value = process.env[key] ?? defaultValue
   if (value === undefined) {
@@ -8,6 +11,7 @@ const getEnv = (key: string, defaultValue?: string): string => {
   return value
 }
 
+// hàm khai báo biến môi trường
 export const varEnv = {
   SERVER_URI: getEnv('SERVER_URI'),
   CLIENT_URI: getEnv('CLIENT_URI'),

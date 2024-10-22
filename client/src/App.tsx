@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
+import { jwtDecode } from 'jwt-decode'
 import 'nprogress/nprogress.css'
+import 'react-day-picker/dist/style.css'
 
 import {
-  DashFooter,
   DashHeader,
   DashLayout,
   Footer,
@@ -20,7 +22,31 @@ import { NotFound } from '~/pages'
 const App = () => {
   const { user } = useAppSelector((state) => state.user)
 
+  const navigate = useNavigate()
   const location = useLocation()
+
+  const accessToken = Cookies.get('AT')
+  if (accessToken) {
+    const decodedToken = jwtDecode(accessToken)
+
+    if (decodedToken.exp !== undefined) {
+      const expiresAt = decodedToken.exp * 1000
+      const timeToExpire = expiresAt - new Date().getTime()
+
+      if (timeToExpire > 0) {
+        setTimeout(() => {
+          Cookies.remove('AT')
+          if (user?.role === 0 || user?.role === 1 || user?.role === 2) {
+            navigate(paths.userPaths.privateLogin)
+          } else if (user?.role === 3) {
+            navigate(paths.userPaths.login)
+          }
+        }, timeToExpire)
+      }
+    } else {
+      console.warn("Token expiration 'exp' is undefined.")
+    }
+  }
 
   const [loader, setLoader] = useState(true)
   const [openSidebar, setOpenSidebar] = useState<boolean>(true)
@@ -90,7 +116,6 @@ const App = () => {
             <div style={{ height: '100vh' }}>
               <DashLayout openSidebar={openSidebar} />
             </div>
-            <DashFooter openSidebar={openSidebar} />
           </main>
         </div>
       ) : (

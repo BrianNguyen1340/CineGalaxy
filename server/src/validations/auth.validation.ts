@@ -56,16 +56,11 @@ const resetPassword = Joi.object({
     ),
 })
 
-const checkEmailExist = Joi.object({
-  email: Joi.string().required().trim().max(50).email(),
-})
-
 export const authValidation = {
   register,
   verifyOTPRegister,
   login,
   forgotPassword,
   resetPassword,
-  checkEmailExist,
   gooleLogin,
 }

@@ -1,5 +1,8 @@
 import { cleanEnv, str, port, num } from 'envalid'
 
+// *****************************************************************************
+
+// khai báo hàm xác thực biến môi trường
 export const validateEnv = () => {
   cleanEnv(process.env, {
     SERVER_URI: str(),

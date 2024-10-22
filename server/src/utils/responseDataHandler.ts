@@ -1,5 +1,7 @@
 import { Response } from 'express'
 
+// *****************************************************************************
+
 type ErrorResponse = {
   success: boolean
   message: string

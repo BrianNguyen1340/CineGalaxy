@@ -1,5 +1,7 @@
 import { randomBytes } from 'crypto'
 
+// *****************************************************************************
+
 export const generateRandomString = (length: number): string => {
   const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
   let result = ''
