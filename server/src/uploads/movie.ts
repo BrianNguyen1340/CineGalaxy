@@ -6,7 +6,7 @@ const router = Router()
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/movie')
+    cb(null, path.join(__dirname, 'uploads/movie'))
   },
   filename: (req, file, cb) => {
     const extname = path.extname(file.originalname)

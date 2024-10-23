@@ -6,12 +6,12 @@ export type MovieType = Document & {
   description: string
   director: string
   releaseDate: Date
-  age: number
   duration: number
   poster: string
   trailer: string
-  // movieVersionId: Types.ObjectId
-  movieRating: string
+  movieRating: number
+  subtitle: string
+  movieFormat: string
   genreId: Types.ObjectId
 }
 
@@ -37,17 +37,12 @@ const movieSchema = new Schema<MovieType>(
       type: Date,
       required: true,
     },
-    age: {
-      type: Number,
-      required: true,
-    },
     duration: {
       type: Number,
       required: true,
     },
     poster: {
       type: String,
-      required: true,
       trim: true,
     },
     trailer: {
@@ -55,13 +50,20 @@ const movieSchema = new Schema<MovieType>(
       required: true,
       trim: true,
     },
-    // movieVersionId: {
-    //   type: Schema.Types.ObjectId,
-    //   required: true,
-    //   ref: 'MovieVersion',
-    // },
     movieRating: {
+      type: Number,
+      required: true,
+      trim: true,
+    },
+    subtitle: {
       type: String,
+      // enum: ['Thuyết minh', 'Phụ đề', 'Lồng tiếng'],
+      required: true,
+      trim: true,
+    },
+    movieFormat: {
+      type: String,
+      // enum: ['2D', '3D'],
       required: true,
       trim: true,
     },

@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes'
 import { Types } from 'mongoose'
 
-import { AddressType, Gender, userModel, UserType } from '~/schemas/user.schema'
+import { AddressType, userModel, UserType } from '~/schemas/user.schema'
 
 const profile = async (
   id: Types.ObjectId,
@@ -56,7 +56,7 @@ type UpdateProfileParams = {
     month?: number
     year?: number
   }
-  gender?: Gender
+  gender?: string
   address?: AddressType
   avatar?: string
 }
@@ -200,7 +200,7 @@ const updateUserByAdmin = async (
       month?: number
       year?: number
     }
-    gender?: Gender
+    gender?: string
     address?: AddressType
     photoURL?: string
     role?: number

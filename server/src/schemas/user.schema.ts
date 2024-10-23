@@ -1,27 +1,5 @@
 import { Document, Schema, Types, model } from 'mongoose'
 
-export enum Gender {
-  Male = 'male',
-  Female = 'female',
-  Other = 'other',
-}
-
-export type AddressType = {
-  street: string
-  ward?: string
-  district: string
-  city: string
-  zipCode?: string
-}
-
-const addressSchema = new Schema<AddressType>({
-  street: { type: String, required: false },
-  ward: { type: String, required: false },
-  district: { type: String, required: false },
-  city: { type: String, required: false },
-  zipCode: { type: String, required: false },
-})
-
 export type UserType = Document & {
   _id: Types.ObjectId
   email: string
@@ -33,7 +11,7 @@ export type UserType = Document & {
     month?: number
     year?: number
   }
-  gender?: Gender
+  gender?: string
   address?: AddressType
   photoURL?: string
   role: number
@@ -46,22 +24,54 @@ export type UserType = Document & {
   updatedAt: Date
 }
 
+export type AddressType = {
+  street: string
+  ward?: string
+  district: string
+  city: string
+  zipCode?: string
+}
+
+const addressSchema = new Schema<AddressType>({
+  street: {
+    type: String,
+    required: false,
+  },
+  ward: {
+    type: String,
+    required: false,
+  },
+  district: {
+    type: String,
+    required: false,
+  },
+  city: {
+    type: String,
+    required: false,
+  },
+  zipCode: {
+    type: String,
+    required: false,
+  },
+})
+
 const userSchema = new Schema<UserType>(
   {
+    address: addressSchema,
     email: {
       type: String,
-      required: [true, 'Email is required!'],
+      required: true,
       unique: true,
       trim: true,
     },
     password: {
       type: String,
-      required: [true, 'Password is required!'],
+      required: true,
       trim: true,
     },
     name: {
       type: String,
-      required: [true, 'Name is required!'],
+      required: true,
       trim: true,
     },
     dateOfBirth: {
@@ -80,10 +90,9 @@ const userSchema = new Schema<UserType>(
     },
     gender: {
       type: String,
-      enum: Object.values(Gender),
+      enum: ['male', 'female', 'other'],
       trim: true,
     },
-    address: addressSchema,
     photoURL: {
       type: String,
       trim: true,

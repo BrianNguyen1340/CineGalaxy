@@ -21,6 +21,8 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
     poster,
     trailer,
     movieRating,
+    subtitle,
+    movieFormat,
     genreId,
   } = req.body
 
@@ -29,11 +31,12 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
     description,
     director,
     releaseDate,
-    age,
     duration,
     poster,
     trailer,
     movieRating,
+    subtitle,
+    movieFormat,
     genreId,
   )
   if (!response.success) {
@@ -48,7 +51,7 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
   )
 })
 
-const handleGetOne = catchErrors(async (req, res) => {
+const handleGetOne: RequestHandler = catchErrors(async (req, res) => {
   const { id } = req.params
 
   const objectID = new Types.ObjectId(id)
@@ -66,7 +69,7 @@ const handleGetOne = catchErrors(async (req, res) => {
   )
 })
 
-const handleGetAll = catchErrors(async (req, res) => {
+const handleGetAll: RequestHandler = catchErrors(async (req, res) => {
   const response = await movieService.handleGetAll()
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
@@ -80,7 +83,7 @@ const handleGetAll = catchErrors(async (req, res) => {
   )
 })
 
-const handleUpdate = catchErrors(async (req, res) => {
+const handleUpdate: RequestHandler = catchErrors(async (req, res) => {
   const { id } = req.params
   const {
     name,
@@ -92,6 +95,8 @@ const handleUpdate = catchErrors(async (req, res) => {
     poster,
     trailer,
     movieRating,
+    subtitle,
+    movieFormat,
     genreId,
   } = req.body
 
@@ -103,11 +108,12 @@ const handleUpdate = catchErrors(async (req, res) => {
     description,
     director,
     releaseDate,
-    age,
     duration,
     poster,
     trailer,
     movieRating,
+    subtitle,
+    movieFormat,
     genreId,
   )
   if (!response.success) {

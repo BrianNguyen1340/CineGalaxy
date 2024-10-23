@@ -8,17 +8,18 @@ const handleCreate = async (
   description: string,
   director: string,
   releaseDate: Date,
-  age: number,
   duration: number,
   poster: string,
   trailer: string,
   movieRating: string,
+  subtitle: string,
+  movieFormat: string,
   genreId: Types.ObjectId,
 ): Promise<{
   success: boolean
   message: string
-  data?: Partial<MovieType>
   statusCode: number
+  data?: Partial<MovieType>
 }> => {
   try {
     const checkExist = await movieModel.findOne({
@@ -37,11 +38,12 @@ const handleCreate = async (
       description,
       director,
       releaseDate,
-      age,
       duration,
       poster,
       trailer,
       movieRating,
+      subtitle,
+      movieFormat,
       genreId,
     })
     if (!request) {
@@ -158,11 +160,12 @@ const handleUpdate = async (
   description: string,
   director: string,
   releaseDate: Date,
-  age: number,
   duration: number,
   poster: string,
   trailer: string,
   movieRating: string,
+  subtitle: string,
+  movieFormat: string,
   genreId: Types.ObjectId,
 ): Promise<{
   success: boolean
@@ -187,11 +190,12 @@ const handleUpdate = async (
         description,
         director,
         releaseDate,
-        age,
         duration,
         poster,
         trailer,
         movieRating,
+        subtitle,
+        movieFormat,
         genreId,
       },
       {

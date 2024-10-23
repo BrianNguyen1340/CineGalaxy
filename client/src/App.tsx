@@ -4,6 +4,7 @@ import Cookies from 'js-cookie'
 import { jwtDecode } from 'jwt-decode'
 import 'nprogress/nprogress.css'
 import 'react-day-picker/dist/style.css'
+import 'react-quill/dist/quill.snow.css'
 
 import {
   DashHeader,

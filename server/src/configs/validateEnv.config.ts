@@ -22,7 +22,7 @@ export const validateEnv = () => {
     CLOUDINARY_NAME: str(),
     CLOUDINARY_API_KEY: num(),
     CLOUDINARY_SECRET_KEY: str(),
-    CLOUDINARY_API_ENV_VAR: str(),
+
     CLOUDINARY_URL: str(),
 
     PAYPAL_CLIENT_ID: str(),
