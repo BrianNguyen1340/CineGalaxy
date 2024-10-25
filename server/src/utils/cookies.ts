@@ -18,13 +18,13 @@ const defaults: CookieOptions = {
 // giá trị mặc định của accessToken
 const getAccessToken = (): CookieOptions => ({
   ...defaults,
-  expires: getExpirationTime(1, 'days'),
+  expires: getExpirationTime(30, 'days'),
 })
 
 // giá trị mặc định của refreshToken
 const getRefreshToken = (): CookieOptions => ({
   ...defaults,
-  expires: getExpirationTime(7, 'days'),
+  expires: getExpirationTime(60, 'days'),
   path: refreshTokenPath,
 })
 

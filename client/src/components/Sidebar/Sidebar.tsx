@@ -218,20 +218,20 @@ const Sidebar: React.FC<SidebarProps> = ({
                   }
                 />
                 <SidebarMenu
-                  spanTitle='Danh mục phim'
+                  spanTitle='Thể loại phim'
                   icon={<MdCategory size='16' />}
                   item={
                     <>
                       <SidebarMenuItem
                         path={paths.dashboardPaths.managements.genres.list}
-                        spanText='danh sách danh mục phim'
+                        spanText='danh sách thể loại phim'
                         spanTitle='L'
                         isSelected={selectedMenuItem === location.pathname}
                         onSelect={() => setSelectedMenuItem(location.pathname)}
                       />
                       <SidebarMenuItem
                         path={paths.dashboardPaths.managements.genres.create}
-                        spanText='tạo danh mục phim'
+                        spanText='tạo thể loại phim'
                         spanTitle='C'
                         isSelected={selectedMenuItem === location.pathname}
                         onSelect={() => setSelectedMenuItem(location.pathname)}

@@ -146,19 +146,15 @@ table {
   padding: 20px;
   border-collapse: collapse;
 
-  th {
-    text-transform: capitalize;
-    padding: 10px 0;
-  }
-
   th,
   td {
     border: 1px solid #000;
+    text-transform: capitalize;
+    padding: 10px 0;
   }
 
   td {
     text-align: center;
     font-weight: 600;
-    padding: 10px 0;
   }
 }

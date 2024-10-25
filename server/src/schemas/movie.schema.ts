@@ -3,6 +3,7 @@ import { Document, Schema, Types, model } from 'mongoose'
 export type MovieType = Document & {
   _id: Types.ObjectId
   name: string
+  slug: string
   description: string
   director: string
   releaseDate: Date
@@ -12,7 +13,7 @@ export type MovieType = Document & {
   movieRating: number
   subtitle: string
   movieFormat: string
-  genreId: Types.ObjectId
+  genres: Types.ObjectId[]
 }
 
 const movieSchema = new Schema<MovieType>(
@@ -21,6 +22,11 @@ const movieSchema = new Schema<MovieType>(
       type: String,
       required: true,
       unique: true,
+      trim: true,
+    },
+    slug: {
+      type: String,
+      required: true,
       trim: true,
     },
     description: {
@@ -57,18 +63,18 @@ const movieSchema = new Schema<MovieType>(
     },
     subtitle: {
       type: String,
-      // enum: ['Thuyết minh', 'Phụ đề', 'Lồng tiếng'],
+      enum: ['Thuyết minh', 'Phụ đề', 'Lồng tiếng'],
       required: true,
       trim: true,
     },
     movieFormat: {
       type: String,
-      // enum: ['2D', '3D'],
+      enum: ['2D', '3D'],
       required: true,
       trim: true,
     },
-    genreId: {
-      type: Schema.Types.ObjectId,
+    genres: {
+      type: [Schema.Types.ObjectId],
       required: true,
       ref: 'Genre',
     },

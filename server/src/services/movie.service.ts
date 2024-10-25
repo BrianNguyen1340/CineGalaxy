@@ -5,16 +5,17 @@ import { MovieType, movieModel } from '~/schemas/movie.schema'
 
 const handleCreate = async (
   name: string,
+  slug: string,
   description: string,
   director: string,
   releaseDate: Date,
   duration: number,
   poster: string,
   trailer: string,
-  movieRating: string,
+  movieRating: number,
   subtitle: string,
   movieFormat: string,
-  genreId: Types.ObjectId,
+  genres: Types.ObjectId[],
 ): Promise<{
   success: boolean
   message: string
@@ -35,6 +36,7 @@ const handleCreate = async (
 
     const request = await movieModel.create({
       name,
+      slug,
       description,
       director,
       releaseDate,
@@ -44,7 +46,7 @@ const handleCreate = async (
       movieRating,
       subtitle,
       movieFormat,
-      genreId,
+      genres,
     })
     if (!request) {
       return {
@@ -123,7 +125,7 @@ const handleGetAll = async (): Promise<{
   statusCode: number
 }> => {
   try {
-    const request = await movieModel.find()
+    const request = await movieModel.find().populate('genres')
     if (!request || request.length === 0) {
       return {
         success: false,
@@ -163,10 +165,10 @@ const handleUpdate = async (
   duration: number,
   poster: string,
   trailer: string,
-  movieRating: string,
+  movieRating: number,
   subtitle: string,
   movieFormat: string,
-  genreId: Types.ObjectId,
+  genres: Types.ObjectId[],
 ): Promise<{
   success: boolean
   message: string
@@ -196,7 +198,7 @@ const handleUpdate = async (
         movieRating,
         subtitle,
         movieFormat,
-        genreId,
+        genres,
       },
       {
         new: true,

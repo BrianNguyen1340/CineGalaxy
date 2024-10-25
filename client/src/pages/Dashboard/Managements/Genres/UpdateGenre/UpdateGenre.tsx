@@ -62,7 +62,7 @@ const UpdateGenre = () => {
   return (
     <div className='update-movie-category-container'>
       <div className='title'>
-        <span>Cập nhật danh mục phim</span>
+        <span>Cập nhật thể loại phim</span>
         <Star color='yellow' />
         {genre.data.name}
         <Star color='yellow' />

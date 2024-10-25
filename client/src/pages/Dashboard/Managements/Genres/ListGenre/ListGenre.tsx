@@ -33,7 +33,7 @@ const ListGenre = () => {
 
   return (
     <div className='list-movie-category-container'>
-      <div className='title'>danh sách danh mục phim</div>
+      <div className='title'>danh sách thể loại phim</div>
       {genres ? (
         <>
           <table>
@@ -45,12 +45,12 @@ const ListGenre = () => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((genre: any, index: number) => (
+              {currentItems.map((item: any, index: number) => (
                 <tr key={index}>
                   <td>{index + offset}</td>
-                  <td>{genre.name}</td>
+                  <td>{item.name}</td>
                   <td>
-                    <Link to={`/update-genre/${genre._id}`}>
+                    <Link to={`/update-genre/${item._id}`}>
                       <SquarePen />
                     </Link>
                   </td>

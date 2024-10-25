@@ -9,6 +9,7 @@ import {
 import { movieService } from '~/services/movie.service'
 import { catchErrors } from '~/utils/catchErrors'
 import { Types } from 'mongoose'
+import slugify from 'slugify'
 
 const handleCreate: RequestHandler = catchErrors(async (req, res) => {
   const {
@@ -16,18 +17,24 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
     description,
     director,
     releaseDate,
-    age,
     duration,
     poster,
     trailer,
     movieRating,
     subtitle,
     movieFormat,
-    genreId,
+    genres,
   } = req.body
+
+  const slug = slugify(name, {
+    lower: true,
+    strict: true,
+    replacement: '-',
+  })
 
   const response = await movieService.handleCreate(
     name,
+    slug,
     description,
     director,
     releaseDate,
@@ -37,7 +44,7 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
     movieRating,
     subtitle,
     movieFormat,
-    genreId,
+    genres,
   )
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
@@ -90,7 +97,6 @@ const handleUpdate: RequestHandler = catchErrors(async (req, res) => {
     description,
     director,
     releaseDate,
-    age,
     duration,
     poster,
     trailer,

@@ -86,14 +86,14 @@ const ListAccount = () => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((user: any, index: number) => (
+              {currentItems.map((item: any, index: number) => (
                 <tr key={index}>
                   <td>{index + offset}</td>
-                  <td>{user.email}</td>
-                  <td>{user.name}</td>
+                  <td>{item.email}</td>
+                  <td>{item.name}</td>
                   <td>
                     <img
-                      src={user.photoURL}
+                      src={item.photoURL}
                       alt='avatar'
                       width='70'
                       height='70'
@@ -101,22 +101,22 @@ const ListAccount = () => {
                     />
                   </td>
                   <td>
-                    {new Date(user.lastLogin).toLocaleDateString('vi-VN')}
+                    {new Date(item.lastLogin).toLocaleDateString('vi-VN')}
                     {' - '}
-                    {new Date(user.lastLogin).toLocaleTimeString('vi-VN')}
+                    {new Date(item.lastLogin).toLocaleTimeString('vi-VN')}
                   </td>
                   <td>
-                    {user.role === 0 ? (
+                    {item.role === 0 ? (
                       <FaTimes size='20' color='red' />
                     ) : (
                       <>
-                        {user.isBlocked ? (
+                        {item.isBlocked ? (
                           <button
                             style={{
                               backgroundColor: 'white',
                               cursor: 'pointer',
                             }}
-                            onClick={() => handleUnblockAccount(user?._id)}
+                            onClick={() => handleUnblockAccount(item?._id)}
                           >
                             <FaLock
                               size='20'
@@ -132,7 +132,7 @@ const ListAccount = () => {
                               backgroundColor: 'white',
                               cursor: 'pointer',
                             }}
-                            onClick={() => handleBlockAccount(user?._id)}
+                            onClick={() => handleBlockAccount(item?._id)}
                           >
                             <FaLockOpen
                               size='20'
@@ -144,10 +144,10 @@ const ListAccount = () => {
                       </>
                     )}
                   </td>
-                  <td>{user.role}</td>
+                  <td>{item.role}</td>
                   <td>
-                    {user.role !== 0 && (
-                      <Link to={`/update-account/${user._id}`}>
+                    {item.role !== 0 && (
+                      <Link to={`/update-account/${item._id}`}>
                         <SquarePen />
                       </Link>
                     )}

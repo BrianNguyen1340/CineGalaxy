@@ -48,15 +48,15 @@ const ListCinema = () => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((cinema: any, index: number) => (
+              {currentItems.map((item: any, index: number) => (
                 <tr key={index}>
                   <td>{index + offset}</td>
-                  <td>{cinema.name}</td>
-                  <td>{cinema.address}</td>
-                  <td>{cinema.email}</td>
-                  <td>{cinema.phone}</td>
+                  <td>{item.name}</td>
+                  <td>{item.address}</td>
+                  <td>{item.email}</td>
+                  <td>{item.phone}</td>
                   <td>
-                    <Link to={`/update-cinema/${cinema._id}`}>
+                    <Link to={`/update-cinema/${item._id}`}>
                       <SquarePen />
                     </Link>
                   </td>

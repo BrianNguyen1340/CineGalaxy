@@ -49,12 +49,12 @@ const ListCinemaComplex = () => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((cinemaComplex: any, index: number) => (
+              {currentItems.map((item: any, index: number) => (
                 <tr key={index}>
                   <td>{index + offset}</td>
-                  <td>{cinemaComplex.name}</td>
+                  <td>{item.name}</td>
                   <td>
-                    <Link to={`/update-cinema-complex/${cinemaComplex._id}`}>
+                    <Link to={`/update-cinema-complex/${item._id}`}>
                       <SquarePen />
                     </Link>
                   </td>

@@ -1,68 +1,108 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from 'firebase/storage'
+import { CircularProgressbar } from 'react-circular-progressbar'
+import { AiOutlineCloudUpload } from 'react-icons/ai'
+import { FaRegStar } from 'react-icons/fa'
 import { DayPicker } from 'react-day-picker'
+import Select from 'react-select'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
+import makeAnimated from 'react-select/animated'
 
+import { useCreateMovieMutation } from '~/services/movie.service'
 import { paths } from '~/utils/paths'
-import {
-  useCreateMovieMutation,
-  useUploadMovieMutation,
-} from '~/services/movie.service'
-import './CreateMovie.scss'
 import { useGetAllGenresQuery } from '~/services/genre.service'
 import { FormInputGroup } from '~/components'
+import { app } from '~/firebase/firebase.config'
+import './CreateMovie.scss'
 
 const CreateMovie = () => {
   const navigate = useNavigate()
-
   const {
     register,
     handleSubmit,
     formState: { errors },
-    control,
+    setValue,
   } = useForm<{
     name: string
     description: string
     director: string
-    releaseDate: Date
-    age: number
+    releaseDate: Date | undefined
     duration: number
     poster: string
     trailer: string
-    movieRating: string
-    genreId: string
+    movieRating: number
+    subtitle: string
+    movieFormat: string
+    genres: { value: string; label: string }[]
   }>()
+  const animatedComponents = makeAnimated()
 
   const [createApi, { isLoading }] = useCreateMovieMutation()
 
-  const [uploadImage] = useUploadMovieMutation()
   const { data: genres } = useGetAllGenresQuery({})
-  const [releaseDate, setReleaseDate] = useState<any>()
-  const [image, setImage] = useState(null)
-  console.log(image)
 
-  const handleUpload = async (e: any) => {
+  const [selectedGenres, setSelectedGenres] = useState<
+    { value: string; label: string }[]
+  >([])
+
+  const [posterURL, setPosterURL] = useState<string | null>(null)
+
+  const [file, setFile] = useState<File | null>(null)
+
+  const [posterUploadProgress, setPosterUploadProgress] = useState<
+    string | null
+  >(null)
+
+  const [posterUploadError, setPosterUploadError] = useState<null | string>(
+    null,
+  )
+  const [releaseDate, setReleaseDate] = useState<Date | undefined>()
+
+  const handleDateChange = (date: Date | undefined) => {
+    setReleaseDate(date ?? undefined)
+    setValue('releaseDate', date ?? undefined, { shouldValidate: true })
+  }
+
+  const handleUpload = () => {
     try {
-      const file = e.target.files[0]
-
       if (!file) {
-        Swal.fire('Lỗi', 'Vui lòng chọn một file ảnh', 'error')
+        setPosterUploadError('Vui lòng chọn ảnh!')
         return
       }
-
-      const formData = new FormData()
-      formData.append('image', file)
-
-      const upload = await uploadImage(formData).unwrap()
-      console.log(upload)
-
-      setImage(upload.image)
-    } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
-    } finally {
-      nProgress.done()
+      setPosterUploadError(null)
+      const storage = getStorage(app)
+      const fileName = new Date().getTime() + '-' + file.name
+      const storageRef = ref(storage, fileName)
+      const uploadTask = uploadBytesResumable(storageRef, file)
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          setPosterUploadProgress(progress.toFixed(0))
+        },
+        (error: any) => {
+          setPosterUploadError(error)
+          setPosterUploadProgress(null)
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setPosterUploadProgress(null)
+            setPosterUploadError(null)
+            setPosterURL(downloadURL)
+          })
+        },
+      )
+    } catch (error) {
+      Swal.fire('Thất bại', 'Upload ảnh thất bại!', 'error')
     }
   }
 
@@ -70,41 +110,25 @@ const CreateMovie = () => {
     name: string
     description: string
     director: string
-    releaseDate: Date
-    age: number
+    releaseDate: Date | undefined
     duration: number
     poster: string
     trailer: string
-    movieRating: string
-    genreId: string
+    movieRating: number
+    subtitle: string
+    movieFormat: string
+    genres: { value: string; label: string }[]
   }> = async (reqBody) => {
     try {
       nProgress.start()
-      const {
-        name,
-        description,
-        director,
-        releaseDate,
-        age,
-        duration,
-        poster,
-        trailer,
-        movieRating,
-        genreId,
-      } = reqBody
-
-      const response = await createApi({
-        name,
-        description,
-        director,
-        releaseDate,
-        age,
-        duration,
-        poster,
-        trailer,
-        movieRating,
-        genreId,
-      }).unwrap()
+      const body = {
+        ...reqBody,
+        genres: selectedGenres.map((genre) => genre.value),
+        poster: posterURL,
+      }
+      const response = await createApi(body).unwrap()
+      Swal.fire('Thành công', response.message, 'success')
+      navigate(paths.dashboardPaths.managements.movies.list)
     } catch (error: any) {
       Swal.fire('Thất bại', error.data.message, 'error')
     } finally {
@@ -115,71 +139,23 @@ const CreateMovie = () => {
   return (
     <div className='create-movie-container'>
       <div className='title'>tạo phim</div>
-      <form onSubmit={handleSubmit(handleCreate)}>
-        <div>
-          <label>Ảnh</label>
-          <input
-            id='poster'
-            type='file'
-            onChange={handleUpload}
-            name='poster'
-            accept='images/*'
-            style={{ display: 'none' }}
-          />
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            marginBottom: '20px',
-          }}
-        >
-          {image ? (
-            <img src={image} alt='image' style={{ width: '200px' }} />
-          ) : (
-            <img
-              src='images/movie.jpg'
-              alt='image'
-              style={{ width: '200px' }}
-            />
-          )}
-          <label htmlFor='poster'>chọn ảnh</label>
-        </div>
-
-        <button type='submit' disabled={isLoading ? true : false}></button>
-      </form>
-    </div>
-  )
-}
-
-export default CreateMovie
-
-{
-  /* <FormInputGroup
+      <form
+        onSubmit={handleSubmit(handleCreate)}
+        style={{ width: '500px', margin: '0 auto' }}
+      >
+        <FormInputGroup
           register={register}
           errors={errors}
           validation={{
             required: 'Vui lòng nhập tên phim!',
           }}
-          labelChildren='name'
+          labelChildren='tên phim'
           htmlFor='name'
           id='name'
           placeholder='Vui lòng nhập tên phim'
           type='text'
           name='name'
-        />
-        <FormInputGroup
-          register={register}
-          errors={errors}
-          validation={{
-            required: 'Vui lòng nhập mô tả!',
-          }}
-          labelChildren='mô tả'
-          htmlFor='description'
-          id='description'
-          placeholder='Vui lòng nhập mô tả'
-          type='text'
-          name='description'
+          icon={<FaRegStar color='red' />}
         />
         <FormInputGroup
           register={register}
@@ -187,46 +163,212 @@ export default CreateMovie
           validation={{
             required: 'Vui lòng nhập tên đạo diễn!',
           }}
-          labelChildren='director'
+          labelChildren='đạo diễn'
           htmlFor='director'
           id='director'
           placeholder='Vui lòng nhập tên đạo diễn'
           type='text'
           name='director'
+          icon={<FaRegStar color='red' />}
         />
+        <div
+          style={{
+            marginBottom: '20px',
+          }}
+        >
+          <label
+            htmlFor='description'
+            style={{
+              textTransform: 'capitalize',
+              fontWeight: 700,
+              marginBottom: '5px',
+              display: 'block',
+            }}
+          >
+            mô tả
+          </label>
+          <textarea
+            {...register('description', {
+              required: 'Vui lòng nhập mô tả',
+            })}
+            id='description'
+            name='description'
+            style={{
+              width: '100%',
+              outline: 'none',
+              height: '300px',
+              padding: '10px',
+              fontSize: '16px',
+            }}
+          />
+        </div>
         <div style={{ marginBottom: '20px' }}>
-          <label htmlFor=''>Chọn ngày công chiếu</label>
+          <label
+            htmlFor='releaseDate'
+            style={{ textTransform: 'capitalize', fontWeight: 700 }}
+          >
+            Chọn ngày công chiếu
+          </label>
           <DayPicker
+            id='releaseDate'
             mode='single'
             selected={releaseDate}
-            onSelect={setReleaseDate}
+            onSelect={(date: Date | undefined) => handleDateChange(date)}
           />
         </div>
         <FormInputGroup
           register={register}
           errors={errors}
           validation={{
-            required: 'Vui lòng nhập độ tuổi!',
-          }}
-          labelChildren='age'
-          htmlFor='age'
-          id='age'
-          placeholder='Vui lòng nhập độ tuổi'
-          type='text'
-          name='age'
-        />
-        <FormInputGroup
-          register={register}
-          errors={errors}
-          validation={{
             required: 'Vui lòng nhập thời lượng phim!',
           }}
-          labelChildren='duration'
+          labelChildren='thời lượng phim'
           htmlFor='duration'
           id='duration'
           placeholder='Vui lòng nhập thời lượng phim'
           type='text'
           name='duration'
+          icon={<FaRegStar color='red' />}
+        />
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '5px',
+            marginBottom: '20px',
+          }}
+        >
+          <label style={{ textTransform: 'capitalize', fontWeight: 700 }}>
+            poster
+          </label>
+          <label
+            htmlFor='poster'
+            style={{ textTransform: 'capitalize', cursor: 'pointer' }}
+          >
+            <AiOutlineCloudUpload size='28' />
+          </label>
+          <input
+            type='file'
+            accept='image/*'
+            id='poster'
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              if (e.target.files && e.target.files.length > 0) {
+                setFile(e.target.files[0])
+              }
+            }}
+            hidden
+          />
+          {posterURL ? (
+            <img src={posterURL} alt='poster' width='250' />
+          ) : (
+            <img src='images/movie.jpg' alt='poster' width='250' />
+          )}
+          <button
+            type='button'
+            disabled={posterUploadProgress ? true : false}
+            onClick={handleUpload}
+            style={{ width: 'fit-content' }}
+          >
+            {posterUploadProgress ? (
+              <div style={{ width: '4rem', height: '4rem' }}>
+                <CircularProgressbar
+                  value={Number(posterUploadProgress)}
+                  text={`${posterUploadProgress || 0}%`}
+                />
+              </div>
+            ) : (
+              <div
+                style={{
+                  padding: '15px',
+                  textTransform: 'capitalize',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
+              >
+                upload
+              </div>
+            )}
+          </button>
+          {posterUploadError && <div>{posterUploadError}</div>}
+        </div>
+        <div
+          style={{
+            marginBottom: '25px',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <label
+            htmlFor='subtitle'
+            style={{
+              textTransform: 'capitalize',
+              fontWeight: 700,
+              marginBottom: '5px',
+            }}
+          >
+            định dạng phim
+          </label>
+          <select
+            {...register('movieFormat', {
+              required: 'Vui lòng chọn định dạng phim',
+            })}
+            id='movieFormat'
+            name='movieFormat'
+            style={{ padding: '8px', outline: 'none' }}
+          >
+            <option value='' aria-hidden='true'>
+              Chọn định dạng phim
+            </option>
+            <option value='2D'>2D</option>
+            <option value='3D'>3D</option>
+          </select>
+        </div>
+        <div
+          style={{
+            marginBottom: '25px',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <label
+            htmlFor='subtitle'
+            style={{
+              textTransform: 'capitalize',
+              fontWeight: 700,
+              marginBottom: '5px',
+            }}
+          >
+            phụ đề
+          </label>
+          <select
+            {...register('subtitle', {
+              required: 'Vui lòng chọn phụ đề',
+            })}
+            id='subtitle'
+            name='subtitle'
+            style={{ padding: '8px', outline: 'none' }}
+          >
+            <option value='' aria-hidden='true'>
+              Chọn phụ đề
+            </option>
+            <option value='Thuyết minh'>Thuyết minh</option>
+            <option value='Phụ đề'>Phụ đề</option>
+            <option value='Lồng tiếng'>Lồng tiếng</option>
+          </select>
+        </div>
+        <FormInputGroup
+          register={register}
+          errors={errors}
+          validation={{
+            required: 'Vui lòng nhập xếp hạng độ tuổi!',
+          }}
+          labelChildren='xếp hạng độ tuổi'
+          htmlFor='movieRating'
+          id='movieRating'
+          placeholder='Vui lòng nhập xếp hạng độ tuổi'
+          type='text'
+          name='movieRating'
+          icon={<FaRegStar color='red' />}
         />
         <FormInputGroup
           register={register}
@@ -245,5 +387,47 @@ export default CreateMovie
           placeholder='Vui lòng nhập trailer url'
           type='text'
           name='trailer'
-        /> */
+          icon={<FaRegStar color='red' />}
+        />
+        <div style={{ marginBottom: '20px' }}>
+          <label
+            htmlFor='genres'
+            style={{
+              textTransform: 'capitalize',
+              marginBottom: '5px',
+              fontWeight: 700,
+              display: 'block',
+            }}
+          >
+            thể loại phim
+          </label>
+          <Select
+            id='genres'
+            isMulti
+            options={genres?.data?.map((genre: any) => ({
+              value: genre._id,
+              label: genre.name,
+            }))}
+            onChange={(selectedOptions) => {
+              setSelectedGenres(
+                selectedOptions as { value: string; label: string }[],
+              )
+            }}
+            classNamePrefix='select'
+            placeholder='Chọn thể loại phim'
+            components={animatedComponents}
+          />
+        </div>
+        <button
+          type='submit'
+          disabled={isLoading ? true : false}
+          className='btn-create'
+        >
+          {isLoading ? 'Đang tạo' : 'Tạo'}
+        </button>
+      </form>
+    </div>
+  )
 }
+
+export default CreateMovie

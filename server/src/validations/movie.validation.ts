@@ -6,25 +6,33 @@ const handleCreate = Joi.object({
   director: Joi.string().required().trim(),
   releaseDate: Joi.date().required(),
   duration: Joi.number().required(),
+  poster: Joi.string().required().trim(),
   trailer: Joi.string().required().trim(),
-  movieRating: Joi.string().required().trim,
-  subtitle: Joi.string().required().trim,
-  movieFormat: Joi.string().required().trim,
-  genreId: Joi.string().required().trim(),
+  movieRating: Joi.number().required(),
+  subtitle: Joi.string().required().trim(),
+  movieFormat: Joi.string()
+    .valid('Thuyết minh', 'Phụ đề', 'Lồng tiếng')
+    .required()
+    .trim()
+    .valid('2D', '3D'),
+  genres: Joi.array().required(),
 })
 
 const handleUpdate = Joi.object({
-  name: Joi.string().trim(),
-  description: Joi.string().trim(),
-  director: Joi.string().trim(),
-  releaseDate: Joi.date(),
-  duration: Joi.number(),
-  poster: Joi.string().trim(),
-  trailer: Joi.string().trim(),
-  movieRating: Joi.string().trim,
-  subtitle: Joi.string().trim,
-  movieFormat: Joi.string().trim,
-  genreId: Joi.string().trim(),
+  name: Joi.string().trim().optional(),
+  description: Joi.string().trim().optional(),
+  director: Joi.string().trim().optional(),
+  releaseDate: Joi.date().optional(),
+  duration: Joi.number().optional(),
+  poster: Joi.string().trim().optional(),
+  trailer: Joi.string().trim().optional(),
+  movieRating: Joi.number().optional(),
+  subtitle: Joi.string()
+    .valid('Thuyết minh', 'Phụ đề', 'Lồng tiếng')
+    .trim()
+    .optional(),
+  movieFormat: Joi.string().trim().valid('2D', '3D').optional(),
+  genres: Joi.array().optional(),
 })
 
 export const movieValidation = {
