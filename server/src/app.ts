@@ -15,6 +15,8 @@ import { connectDatabase } from '~/configs/database.config'
 import { corsOptions } from '~/configs/corsOption.config'
 import { initAPIRoutes } from '~/routes/ApiRoutes'
 
+// *****************************************************************************
+
 export const application = () => {
   const app = express()
 

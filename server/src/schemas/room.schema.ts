@@ -1,11 +1,13 @@
 import { Document, model, Schema, Types } from 'mongoose'
 
+// *****************************************************************************
+
 export type RoomType = Document & {
   name: string
   opacity: number
   status: string
   screen: string
-  cinemaId: Types.ObjectId
+  cinema: Types.ObjectId
 }
 
 const roomSchema = new Schema<RoomType>(
@@ -32,7 +34,7 @@ const roomSchema = new Schema<RoomType>(
       required: true,
       trim: true,
     },
-    cinemaId: {
+    cinema: {
       type: Schema.Types.ObjectId,
       ref: 'Cinema',
       required: true,

@@ -1,5 +1,7 @@
 import { Document, Schema, Types, model } from 'mongoose'
 
+// *****************************************************************************
+
 export type MovieType = Document & {
   _id: Types.ObjectId
   name: string
@@ -10,7 +12,7 @@ export type MovieType = Document & {
   duration: number
   poster: string
   trailer: string
-  movieRating: number
+  movieRating: string
   subtitle: string
   movieFormat: string
   genres: Types.ObjectId[]
@@ -57,7 +59,8 @@ const movieSchema = new Schema<MovieType>(
       trim: true,
     },
     movieRating: {
-      type: Number,
+      type: String,
+      enum: [],
       required: true,
       trim: true,
     },

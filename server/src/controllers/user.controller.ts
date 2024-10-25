@@ -9,7 +9,7 @@ import userValidation from '~/validations/user.validation'
 import { catchErrors } from '~/utils/catchErrors'
 import { Types } from 'mongoose'
 
-// -------------------------------------------------------------------------------
+// *****************************************************************************
 
 const profile: RequestHandler = catchErrors(async (req, res) => {
   const { _id } = req.user

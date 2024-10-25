@@ -1,5 +1,7 @@
 import { paths } from './paths'
 
+// *****************************************************************************
+
 export const getTitleFromPathname = (pathname: string) => {
   switch (pathname) {
     case paths.userPaths.home:

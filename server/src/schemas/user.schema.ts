@@ -1,5 +1,7 @@
 import { Document, Schema, Types, model } from 'mongoose'
 
+// *****************************************************************************
+
 export type UserType = Document & {
   _id: Types.ObjectId
   email: string

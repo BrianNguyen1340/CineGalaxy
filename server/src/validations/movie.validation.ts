@@ -1,5 +1,7 @@
 import Joi from 'joi'
 
+// *****************************************************************************
+
 const handleCreate = Joi.object({
   name: Joi.string().required().trim(),
   description: Joi.string().required().trim(),
@@ -8,7 +10,7 @@ const handleCreate = Joi.object({
   duration: Joi.number().required(),
   poster: Joi.string().required().trim(),
   trailer: Joi.string().required().trim(),
-  movieRating: Joi.number().required(),
+  movieRating: Joi.string().required().trim(),
   subtitle: Joi.string().required().trim(),
   movieFormat: Joi.string()
     .valid('Thuyết minh', 'Phụ đề', 'Lồng tiếng')
@@ -26,7 +28,7 @@ const handleUpdate = Joi.object({
   duration: Joi.number().optional(),
   poster: Joi.string().trim().optional(),
   trailer: Joi.string().trim().optional(),
-  movieRating: Joi.number().optional(),
+  movieRating: Joi.string().trim().optional(),
   subtitle: Joi.string()
     .valid('Thuyết minh', 'Phụ đề', 'Lồng tiếng')
     .trim()

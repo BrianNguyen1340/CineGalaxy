@@ -1,5 +1,7 @@
 import { apiSlice } from '~/redux/apiSlice'
 
+// *****************************************************************************
+
 export const userAPISlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     profile: builder.query({

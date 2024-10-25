@@ -1,5 +1,7 @@
 import { Document, Schema, model } from 'mongoose'
 
+// *****************************************************************************
+
 export type TVerificationCodeRegister = Document & {
   email: string
   password: string

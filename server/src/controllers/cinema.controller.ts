@@ -10,6 +10,8 @@ import { cinemaService } from '~/services/cinema.service'
 import { catchErrors } from '~/utils/catchErrors'
 import { cinemaValidation } from '~/validations/cinema.validation'
 
+// *****************************************************************************
+
 const handleCreate: RequestHandler = catchErrors(async (req, res) => {
   const { name, email, phone, address } = req.body
 

@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+// *****************************************************************************
+
 export type UserState = {
   user: {
     id: string

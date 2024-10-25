@@ -1,5 +1,7 @@
 import Joi from 'joi'
 
+// *****************************************************************************
+
 const register = Joi.object({
   email: Joi.string().required().trim().max(50).email(),
   password: Joi.string()

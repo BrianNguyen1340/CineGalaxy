@@ -1,7 +1,9 @@
 import Joi from 'joi'
 
+// *****************************************************************************
+
 const updateProfile = Joi.object({
-  email: Joi.string().email().trim().max(50),
+  email: Joi.string().email().trim().max(50).optional(),
   password: Joi.string()
     .trim()
     .min(8)
@@ -10,17 +12,18 @@ const updateProfile = Joi.object({
       new RegExp(
         /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,30}$/,
       ),
-    ),
-  name: Joi.string().trim().min(2).max(50),
+    )
+    .optional(),
+  name: Joi.string().trim().min(2).max(50).optional(),
   dateOfBirth: {
-    day: Joi.number(),
-    month: Joi.number(),
-    year: Joi.number(),
+    day: Joi.number().optional(),
+    month: Joi.number().optional(),
+    year: Joi.number().optional(),
   },
-  photo: Joi.string().trim(),
-  gender: Joi.string().trim(),
-  address: Joi.string().trim(),
-  photoUrl: Joi.string().trim(),
+  photo: Joi.string().trim().optional(),
+  gender: Joi.string().trim().optional(),
+  address: Joi.string().trim().optional(),
+  photoUrl: Joi.string().trim().optional(),
 })
 
 const userValidation = {

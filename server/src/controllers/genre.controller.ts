@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express'
+import { Types } from 'mongoose'
 
 import { handleJoiError } from '~/middlewares/joi.middleware'
 import { genreValidation } from '~/validations/genre.validation'
@@ -8,7 +9,8 @@ import {
 } from '~/utils/responseDataHandler'
 import { genreService } from '~/services/genre.service'
 import { catchErrors } from '~/utils/catchErrors'
-import { Types } from 'mongoose'
+
+// *****************************************************************************
 
 const handleCreate: RequestHandler = catchErrors(async (req, res) => {
   const { name } = req.body

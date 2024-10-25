@@ -7,8 +7,7 @@ import { cinemaRoute } from './cinema.route'
 import { genreRoute } from './genre.route'
 import { movieRoute } from './movie.route'
 
-// upload route
-import { movieUpload } from '~/uploads/movie'
+// *****************************************************************************
 
 const router = Router()
 
@@ -19,9 +18,6 @@ export const initAPIRoutes = (app: Application) => {
   router.use('/cinema', cinemaRoute)
   router.use('/genre', genreRoute)
   router.use('/movie', movieRoute)
-
-  // upload route
-  router.use('/upload', movieUpload)
 
   return app.use('/api/v1', router)
 }

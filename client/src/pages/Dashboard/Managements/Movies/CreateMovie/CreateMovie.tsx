@@ -38,7 +38,7 @@ const CreateMovie = () => {
     duration: number
     poster: string
     trailer: string
-    movieRating: number
+    movieRating: string
     subtitle: string
     movieFormat: string
     genres: { value: string; label: string }[]
@@ -114,7 +114,7 @@ const CreateMovie = () => {
     duration: number
     poster: string
     trailer: string
-    movieRating: number
+    movieRating: string
     subtitle: string
     movieFormat: string
     genres: { value: string; label: string }[]
@@ -157,6 +157,35 @@ const CreateMovie = () => {
           name='name'
           icon={<FaRegStar color='red' />}
         />
+              <div style={{ marginBottom: '20px' }}>
+          <label
+            htmlFor='genres'
+            style={{
+              textTransform: 'capitalize',
+              marginBottom: '5px',
+              fontWeight: 700,
+              display: 'block',
+            }}
+          >
+            thể loại phim
+          </label>
+          <Select
+            id='genres'
+            isMulti
+            options={genres?.data?.map((genre: any) => ({
+              value: genre._id,
+              label: genre.name,
+            }))}
+            onChange={(selectedOptions) => {
+              setSelectedGenres(
+                selectedOptions as { value: string; label: string }[],
+              )
+            }}
+            classNamePrefix='select'
+            placeholder='Chọn thể loại phim'
+            components={animatedComponents}
+          />
+        </div>
         <FormInputGroup
           register={register}
           errors={errors}
@@ -221,6 +250,10 @@ const CreateMovie = () => {
           errors={errors}
           validation={{
             required: 'Vui lòng nhập thời lượng phim!',
+            pattern: {
+              value: /^\d+$/,
+              message: 'Chỉ được nhập số',
+            },
           }}
           labelChildren='thời lượng phim'
           htmlFor='duration'
@@ -356,20 +389,47 @@ const CreateMovie = () => {
             <option value='Lồng tiếng'>Lồng tiếng</option>
           </select>
         </div>
-        <FormInputGroup
-          register={register}
-          errors={errors}
-          validation={{
-            required: 'Vui lòng nhập xếp hạng độ tuổi!',
+        <div
+          style={{
+            marginBottom: '25px',
+            display: 'flex',
+            flexDirection: 'column',
           }}
-          labelChildren='xếp hạng độ tuổi'
-          htmlFor='movieRating'
-          id='movieRating'
-          placeholder='Vui lòng nhập xếp hạng độ tuổi'
-          type='text'
-          name='movieRating'
-          icon={<FaRegStar color='red' />}
-        />
+        >
+          <label
+            htmlFor='movieRating'
+            style={{
+              textTransform: 'capitalize',
+              fontWeight: 700,
+              marginBottom: '5px',
+            }}
+          >
+            xếp hạng độ tuổi
+          </label>
+          <select
+            {...register('movieRating', {
+              required: 'Vui lòng chọn phụ đề',
+            })}
+            id='movieRating'
+            name='movieRating'
+            style={{ padding: '8px', outline: 'none' }}
+          >
+            <option value='' aria-hidden='true'>
+              Chọn xếp hạng độ tuổi
+            </option>
+            <option value='P - Phổ biến'>P - Phổ biến</option>
+            <option value='K - Dành cho trẻ em'>K - Dành cho trẻ em</option>
+            <option value='C13 - Cấm khán giả dưới 13 tuổi'>
+              C13 - Cấm khán giả dưới 13 tuổi
+            </option>
+            <option value='C16 - Cấm khán giả dưới 16 tuổi'>
+              C16 - Cấm khán giả dưới 16 tuổi
+            </option>
+            <option value='C18 - Cấm khán giả dưới 18 tuổi'>
+              C18 - Cấm khán giả dưới 18 tuổi
+            </option>
+          </select>
+        </div>
         <FormInputGroup
           register={register}
           errors={errors}
@@ -389,35 +449,6 @@ const CreateMovie = () => {
           name='trailer'
           icon={<FaRegStar color='red' />}
         />
-        <div style={{ marginBottom: '20px' }}>
-          <label
-            htmlFor='genres'
-            style={{
-              textTransform: 'capitalize',
-              marginBottom: '5px',
-              fontWeight: 700,
-              display: 'block',
-            }}
-          >
-            thể loại phim
-          </label>
-          <Select
-            id='genres'
-            isMulti
-            options={genres?.data?.map((genre: any) => ({
-              value: genre._id,
-              label: genre.name,
-            }))}
-            onChange={(selectedOptions) => {
-              setSelectedGenres(
-                selectedOptions as { value: string; label: string }[],
-              )
-            }}
-            classNamePrefix='select'
-            placeholder='Chọn thể loại phim'
-            components={animatedComponents}
-          />
-        </div>
         <button
           type='submit'
           disabled={isLoading ? true : false}

@@ -3,6 +3,8 @@ import { getAuth } from 'firebase/auth'
 
 import { varEnv } from '~/configs/variableEnv'
 
+// *****************************************************************************
+
 const firebaseConfig = {
   apiKey: varEnv.VITE_FIREBASE_API_KEY,
   authDomain: varEnv.VITE_AUTH_DOMAIN,

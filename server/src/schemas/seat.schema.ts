@@ -1,5 +1,7 @@
 import { Document, model, Schema, Types } from 'mongoose'
 
+// *****************************************************************************
+
 export type SeatType = Document & {
   number: number
   row: string

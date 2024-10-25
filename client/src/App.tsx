@@ -18,6 +18,8 @@ import { paths } from '~/utils/paths'
 import { useAppSelector } from '~/hooks/redux'
 import { NotFound } from '~/pages'
 
+// *****************************************************************************
+
 const App = () => {
   const { user } = useAppSelector((state) => state.user)
 

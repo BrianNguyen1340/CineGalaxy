@@ -1,11 +1,13 @@
 import Joi from 'joi'
 
+// *****************************************************************************
+
 const handleCreate = Joi.object({
   name: Joi.string().required().trim(),
 })
 
 const handleUpdate = Joi.object({
-  name: Joi.string().required().trim(),
+  name: Joi.string().required().trim().optional(),
 })
 
 export const cinemaComplexValidation = {

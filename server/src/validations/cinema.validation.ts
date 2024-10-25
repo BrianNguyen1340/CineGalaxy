@@ -1,5 +1,7 @@
 import Joi from 'joi'
 
+// *****************************************************************************
+
 const handleCreate = Joi.object({
   name: Joi.string().required().trim(),
   address: Joi.string().required().trim(),
@@ -8,10 +10,10 @@ const handleCreate = Joi.object({
 })
 
 const handleUpdate = Joi.object({
-  name: Joi.string().trim(),
-  address: Joi.string().trim(),
-  phone: Joi.string().trim(),
-  email: Joi.string().trim(),
+  name: Joi.string().trim().optional(),
+  address: Joi.string().trim().optional(),
+  phone: Joi.string().trim().optional(),
+  email: Joi.string().trim().optional(),
 })
 
 export const cinemaValidation = {

@@ -23,6 +23,7 @@ const ListGenre = () => {
         .reverse()
         .slice(offset, offset + itemsPerPage)
     : []
+
   const handlePageClick = (event: any) => {
     setCurrentPage(event.selected)
   }

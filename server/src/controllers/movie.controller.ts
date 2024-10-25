@@ -1,4 +1,6 @@
 import { RequestHandler } from 'express'
+import { Types } from 'mongoose'
+import slugify from 'slugify'
 
 import { handleJoiError } from '~/middlewares/joi.middleware'
 import { movieValidation } from '~/validations/movie.validation'
@@ -8,8 +10,8 @@ import {
 } from '~/utils/responseDataHandler'
 import { movieService } from '~/services/movie.service'
 import { catchErrors } from '~/utils/catchErrors'
-import { Types } from 'mongoose'
-import slugify from 'slugify'
+
+// *****************************************************************************
 
 const handleCreate: RequestHandler = catchErrors(async (req, res) => {
   const {

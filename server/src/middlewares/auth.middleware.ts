@@ -7,6 +7,8 @@ import { sendErrorResponse } from '~/utils/responseDataHandler'
 import { userModel } from '~/schemas/user.schema'
 import { verifyToken } from '~/utils/jsonwebtoken'
 
+// *****************************************************************************
+
 export const authentication: RequestHandler = async (
   req: Request,
   res: Response,

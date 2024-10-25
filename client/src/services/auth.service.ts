@@ -1,5 +1,7 @@
 import { apiSlice } from '~/redux/apiSlice'
 
+// *****************************************************************************
+
 export const authAPISlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     register: builder.mutation({

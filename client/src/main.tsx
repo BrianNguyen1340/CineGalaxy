@@ -80,6 +80,8 @@ import ManagerRoute from './routes/ManagerRoute.tsx'
 import CashierRoute from './routes/CashierRoute.tsx'
 import PrivateProfile from './pages/Dashboard/PrivateProfile/PrivateProfile.tsx'
 
+// *****************************************************************************
+
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>

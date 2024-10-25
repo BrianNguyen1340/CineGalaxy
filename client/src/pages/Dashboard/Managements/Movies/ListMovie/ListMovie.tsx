@@ -9,13 +9,13 @@ import { Loader } from '~/components'
 
 const ListMovie = () => {
   const { data: movies, isLoading, refetch } = useGetAllMoviesQuery({})
-  console.log(movies)
+
   useEffect(() => {
     refetch()
   }, [refetch])
 
   const [currentPage, setCurrentPage] = useState(0)
-  const itemsPerPage = 10
+  const itemsPerPage = 5
   const offset = currentPage * itemsPerPage
   const currentItems = movies
     ? movies?.data
@@ -23,6 +23,7 @@ const ListMovie = () => {
         .reverse()
         .slice(offset, offset + itemsPerPage)
     : []
+
   const handlePageClick = (event: any) => {
     setCurrentPage(event.selected)
   }
@@ -46,7 +47,7 @@ const ListMovie = () => {
                 <th>công chiếu</th>
                 <th>thời lượng</th>
                 <th>phụ đề</th>
-                <th>xếp hạng phim</th>
+                <th style={{ width: '120px' }}>xếp hạng phim</th>
                 <th>định dạng</th>
                 <th>thể loại</th>
                 <th>hành động</th>

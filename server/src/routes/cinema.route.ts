@@ -3,6 +3,8 @@ import { Router } from 'express'
 import { authentication, isAdmin } from '~/middlewares/auth.middleware'
 import { cinemaController } from '~/controllers/cinema.controller'
 
+// *****************************************************************************
+
 const router = Router()
 
 router.post('/create', [authentication, isAdmin], cinemaController.handleCreate)

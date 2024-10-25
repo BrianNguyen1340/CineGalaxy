@@ -44,7 +44,10 @@ const CreateGenre = () => {
   return (
     <div className='movie-category-container'>
       <div className='title'>tạo danh mục phim</div>
-      <form onSubmit={handleSubmit(handleCreate)}>
+      <form
+        onSubmit={handleSubmit(handleCreate)}
+        style={{ width: '500px', margin: '0 auto' }}
+      >
         <FormInputGroup
           register={register}
           errors={errors}

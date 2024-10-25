@@ -5,6 +5,8 @@ import { varEnv } from '~/configs/variableEnv.config'
 import { logEvents } from '~/logs/customLoggers'
 import { winstonLoggers } from './logs/winston'
 
+// *****************************************************************************
+
 const bootstrap = () => {
   const Server = application()
 
