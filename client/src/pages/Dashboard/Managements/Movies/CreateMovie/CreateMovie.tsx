@@ -11,9 +11,9 @@ import { CircularProgressbar } from 'react-circular-progressbar'
 import { AiOutlineCloudUpload } from 'react-icons/ai'
 import { FaRegStar } from 'react-icons/fa'
 import { DayPicker } from 'react-day-picker'
-import Select from 'react-select'
-import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
+import Swal from 'sweetalert2'
+import Select from 'react-select'
 import makeAnimated from 'react-select/animated'
 
 import { useCreateMovieMutation } from '~/services/movie.service'
@@ -137,7 +137,7 @@ const CreateMovie = () => {
   }
 
   return (
-    <div className='create-movie-container'>
+    <div className='container'>
       <div className='title'>tạo phim</div>
       <form
         onSubmit={handleSubmit(handleCreate)}
@@ -157,7 +157,7 @@ const CreateMovie = () => {
           name='name'
           icon={<FaRegStar color='red' />}
         />
-              <div style={{ marginBottom: '20px' }}>
+        <div style={{ marginBottom: '20px' }}>
           <label
             htmlFor='genres'
             style={{

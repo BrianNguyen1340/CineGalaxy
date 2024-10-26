@@ -32,7 +32,7 @@ const ListCinema = () => {
   }
 
   return (
-    <div className='list-cinema-container'>
+    <div className='container'>
       <div className='title'>danh sách rạp</div>
       {cinemas ? (
         <>
@@ -41,9 +41,10 @@ const ListCinema = () => {
               <tr>
                 <th>stt</th>
                 <th>name</th>
-                <th>address</th>
                 <th>email</th>
+                <th>address</th>
                 <th>phone</th>
+                <th>cụm rạp</th>
                 <th>action</th>
               </tr>
             </thead>
@@ -52,9 +53,10 @@ const ListCinema = () => {
                 <tr key={index}>
                   <td>{index + offset}</td>
                   <td>{item.name}</td>
+                  <td style={{ textTransform: 'unset' }}>{item.email}</td>
                   <td>{item.address}</td>
-                  <td>{item.email}</td>
                   <td>{item.phone}</td>
+                  <td>{item.cinemaComplex.name}</td>
                   <td>
                     <Link to={`/update-cinema/${item._id}`}>
                       <SquarePen />

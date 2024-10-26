@@ -5,8 +5,9 @@ import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
 import { useCreateCinemaMutation } from '~/services/cinema.service'
+import { useGetAllCinemaComplexesQuery } from '~/services/cinemaComplex.service'
+import { FormInputGroup, Loader } from '~/components'
 import { paths } from '~/utils/paths'
-import { FormInputGroup } from '~/components'
 import './CreateCinema.scss'
 
 const CreateCinema = () => {
@@ -16,21 +17,36 @@ const CreateCinema = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<{ name: string; email: string; phone: string; address: string }>()
+  } = useForm<{
+    name: string
+    email: string
+    address: string
+    phone: string
+    cinemaComplex: string
+  }>()
 
   const [createApi, { isLoading }] = useCreateCinemaMutation()
+  const { data: cinemaComplexes, isLoading: isLoadingCinemaComplexes } =
+    useGetAllCinemaComplexesQuery({})
 
   const handleCreate: SubmitHandler<{
     name: string
     email: string
-    phone: string
     address: string
+    phone: string
+    cinemaComplex: string
   }> = async (reqBody) => {
     try {
       nProgress.start()
-      const { name, email, phone, address } = reqBody
+      const { name, email, phone, address, cinemaComplex } = reqBody
 
-      const response = await createApi({ name, email, phone, address }).unwrap()
+      const response = await createApi({
+        name,
+        email,
+        phone,
+        address,
+        cinemaComplex,
+      }).unwrap()
 
       if (!response.success) {
         Swal.fire('Thất bại', response.message, 'error')
@@ -46,73 +62,102 @@ const CreateCinema = () => {
     }
   }
 
+  if (isLoadingCinemaComplexes) {
+    return <Loader />
+  }
+
   return (
-    <div className='create-cinema-container'>
+    <div className='container'>
       <div className='title'>tạo rạp</div>
-      <form onSubmit={handleSubmit(handleCreate)}>
+      <form
+        onSubmit={handleSubmit(handleCreate)}
+        style={{ width: '500px', margin: '0 auto' }}
+      >
+        <FormInputGroup
+          register={register}
+          errors={errors}
+          validation={{
+            required: 'Vui lòng nhập tên!',
+          }}
+          labelChildren='name'
+          htmlFor='name'
+          id='name'
+          placeholder='Vui lòng nhập tên rạp'
+          type='text'
+          name='name'
+        />
+        <FormInputGroup
+          register={register}
+          errors={errors}
+          validation={{
+            required: 'Vui lòng nhập email!',
+            pattern: {
+              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+              message: 'Vui lòng nhập đúng định dạng email!',
+            },
+          }}
+          labelChildren='email'
+          htmlFor='email'
+          id='email'
+          placeholder='Vui lòng nhập email'
+          type='text'
+          name='email'
+        />
+        <FormInputGroup
+          register={register}
+          errors={errors}
+          validation={{
+            required: 'Vui lòng nhập địa chỉ!',
+          }}
+          labelChildren='address'
+          htmlFor='address'
+          id='address'
+          placeholder='Vui lòng nhập địa chỉ'
+          type='text'
+          name='address'
+        />
+        <FormInputGroup
+          register={register}
+          errors={errors}
+          validation={{
+            required: 'Vui lòng nhập số điện thoại!',
+          }}
+          labelChildren='phone'
+          htmlFor='phone'
+          id='phone'
+          placeholder='Vui lòng nhập số điện thoại'
+          type='text'
+          name='phone'
+        />
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '20px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '5px',
+            marginBottom: '20px',
           }}
         >
-          <FormInputGroup
-            register={register}
-            errors={errors}
-            validation={{
-              required: 'Vui lòng nhập tên!',
-            }}
-            labelChildren='name'
-            htmlFor='name'
-            id='name'
-            placeholder='Vui lòng nhập tên rạp'
-            type='text'
-            name='name'
-          />
-          <FormInputGroup
-            register={register}
-            errors={errors}
-            validation={{
-              required: 'Vui lòng nhập số điện thoại!',
-            }}
-            labelChildren='phone'
-            htmlFor='phone'
-            id='phone'
-            placeholder='Vui lòng nhập số điện thoại'
-            type='text'
-            name='phone'
-          />
-          <FormInputGroup
-            register={register}
-            errors={errors}
-            validation={{
-              required: 'Vui lòng nhập địa chỉ!',
-            }}
-            labelChildren='address'
-            htmlFor='address'
-            id='address'
-            placeholder='Vui lòng nhập địa chỉ'
-            type='text'
-            name='address'
-          />
-          <FormInputGroup
-            register={register}
-            errors={errors}
-            validation={{
-              required: 'Vui lòng nhập email!',
-              pattern: {
-                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                message: 'Vui lòng nhập đúng định dạng email!',
-              },
-            }}
-            labelChildren='email'
-            htmlFor='email'
-            id='email'
-            placeholder='Vui lòng nhập email'
-            type='text'
-            name='email'
-          />
+          <label
+            htmlFor=''
+            style={{ textTransform: 'capitalize', fontWeight: 700 }}
+          >
+            cụm rạp
+          </label>
+          <select
+            {...register('cinemaComplex', {
+              required: 'Vui lòng chọn cụm rạp',
+            })}
+            id='cinemaComplex'
+            name='cinemaComplex'
+            style={{ padding: '10px', outline: 'none' }}
+          >
+            <option value=''>Chọn cụm rạp</option>
+            {cinemaComplexes?.data?.map((item: any) => (
+              <option key={item?._id} value={item?._id}>
+                {item?.name}
+              </option>
+            ))}
+          </select>
         </div>
         <button
           type='submit'

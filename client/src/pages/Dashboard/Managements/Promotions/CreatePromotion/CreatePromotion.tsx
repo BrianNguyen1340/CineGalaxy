@@ -1,5 +1,5 @@
 const CreatePromotion = () => {
-  return <div>CreatePromotion</div>
+  return <div className='container'></div>
 }
 
 export default CreatePromotion

@@ -1,4 +1,4 @@
-.update-movie-category-container {
+.container {
   width: 100%;
   height: fit-content;
   position: relative;
@@ -15,10 +15,6 @@
     padding: 20px 0;
     background-color: #289ae7;
     color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
     border-radius: 12px;
     margin-bottom: 20px;
   }

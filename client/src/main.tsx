@@ -221,7 +221,7 @@ createRoot(document.getElementById('root')!).render(
                 element={<CreateMovie />}
               />
               <Route
-                path={paths.dashboardPaths.managements.cinemas.update}
+                path={paths.dashboardPaths.managements.movies.update}
                 element={<UpdateMovie />}
               />
               <Route
@@ -229,11 +229,11 @@ createRoot(document.getElementById('root')!).render(
                 element={<ListRoom />}
               />
               <Route
-                path={paths.dashboardPaths.managements.rooms.list}
+                path={paths.dashboardPaths.managements.rooms.create}
                 element={<CreateRoom />}
               />
               <Route
-                path={paths.dashboardPaths.managements.rooms.create}
+                path={paths.dashboardPaths.managements.rooms.update}
                 element={<UpdateRoom />}
               />
               <Route

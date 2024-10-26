@@ -105,7 +105,7 @@ const handleUpdate: RequestHandler = catchErrors(async (req, res) => {
     movieRating,
     subtitle,
     movieFormat,
-    genreId,
+    genres,
   } = req.body
 
   const objectID = new Types.ObjectId(id)
@@ -122,7 +122,7 @@ const handleUpdate: RequestHandler = catchErrors(async (req, res) => {
     movieRating,
     subtitle,
     movieFormat,
-    genreId,
+    genres,
   )
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)

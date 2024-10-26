@@ -7,6 +7,7 @@ const handleCreate = Joi.object({
   address: Joi.string().required().trim(),
   phone: Joi.string().required().trim(),
   email: Joi.string().required().trim(),
+  cinemaComplex: Joi.string().required().trim(),
 })
 
 const handleUpdate = Joi.object({
@@ -14,6 +15,7 @@ const handleUpdate = Joi.object({
   address: Joi.string().trim().optional(),
   phone: Joi.string().trim().optional(),
   email: Joi.string().trim().optional(),
+  cinemaComplex: Joi.string().trim().optional(),
 })
 
 export const cinemaValidation = {

@@ -24,7 +24,7 @@ const roomSchema = new Schema<RoomType>(
     },
     status: {
       type: String,
-      enum: ['available', 'maintenance'],
+      enum: ['có sẵn', 'bảo trì'],
       required: true,
       trim: true,
     },

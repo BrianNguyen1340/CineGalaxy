@@ -68,7 +68,7 @@ const ListAccount = () => {
   }
 
   return (
-    <div className='list-account-container'>
+    <div className='container'>
       <div className='title'>danh sách tài khoản</div>
       {users ? (
         <>
@@ -146,7 +146,9 @@ const ListAccount = () => {
                   </td>
                   <td>{item.role}</td>
                   <td>
-                    {item.role !== 0 && (
+                    {item.role === 0 ? (
+                      <FaTimes size='20' color='red' />
+                    ) : (
                       <Link to={`/update-account/${item._id}`}>
                         <SquarePen />
                       </Link>

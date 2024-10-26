@@ -1,5 +1,5 @@
 const CreateSeat = () => {
-  return <div>CreateSeat</div>
+  return <div className='container'></div>
 }
 
 export default CreateSeat

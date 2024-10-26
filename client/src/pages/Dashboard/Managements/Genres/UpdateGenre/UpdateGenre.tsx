@@ -9,18 +9,13 @@ import {
   useUpdateGenreMutation,
 } from '~/services/genre.service'
 import { paths } from '~/utils/paths'
-import './UpdateGenre.scss'
 import { FormInputGroup } from '~/components'
 import { HashLoader } from 'react-spinners'
 import { Star } from 'lucide-react'
-
-type GenreData = {
-  name: string
-}
+import './UpdateGenre.scss'
 
 const UpdateGenre = () => {
   const { id } = useParams()
-
   const navigate = useNavigate()
 
   const {
@@ -28,7 +23,7 @@ const UpdateGenre = () => {
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm<GenreData>()
+  } = useForm<{ name: string }>()
 
   const { data: genre, refetch } = useGetGenreQuery(id)
   const [updateApi, { isLoading }] = useUpdateGenreMutation()
@@ -43,7 +38,7 @@ const UpdateGenre = () => {
     refetch()
   }, [refetch])
 
-  const handleUpdate: SubmitHandler<GenreData> = async (reqBody) => {
+  const handleUpdate: SubmitHandler<{ name: string }> = async (reqBody) => {
     try {
       const { name } = reqBody
 
@@ -60,7 +55,7 @@ const UpdateGenre = () => {
   }
 
   return (
-    <div className='update-movie-category-container'>
+    <div className='container'>
       <div className='title'>
         <span>Cập nhật thể loại phim</span>
         <Star color='yellow' />

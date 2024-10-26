@@ -13,13 +13,8 @@ const UpdateAccount = () => {
   console.log(user)
 
   return (
-    <div className='update-account-container'>
-      <div className='title'>
-        <span>Cập nhật tài khoản</span>
-        <Star color='yellow' />
-        {user?.data?.name}
-        <Star color='yellow' />
-      </div>
+    <div className='container'>
+      <div className='title'>Cập nhật tài khoản</div>
     </div>
   )
 }

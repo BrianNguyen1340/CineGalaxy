@@ -42,9 +42,12 @@ const CreateCinemaComplex = () => {
   }
 
   return (
-    <div className='cinema-complex-container'>
+    <div className='container'>
       <div className='title'>tạo cụm rạp</div>
-      <form onSubmit={handleSubmit(handleCreate)}>
+      <form
+        onSubmit={handleSubmit(handleCreate)}
+        style={{ width: '500px', margin: '0 auto' }}
+      >
         <FormInputGroup
           register={register}
           errors={errors}

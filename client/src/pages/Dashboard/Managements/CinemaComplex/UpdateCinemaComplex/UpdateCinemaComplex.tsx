@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { HashLoader } from 'react-spinners'
-import { Star } from 'lucide-react'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
@@ -27,7 +26,6 @@ const UpdateCinemaComplex = () => {
   } = useForm<{ name: string }>()
 
   const { data: cinemaComplex, refetch } = useGetCinemaComplexQuery(id)
-  console.log(cinemaComplex)
 
   const [updateApi, { isLoading }] = useUpdateCinemaComplexMutation()
 
@@ -62,14 +60,12 @@ const UpdateCinemaComplex = () => {
   }
 
   return (
-    <div className='update-cinema-complex-container'>
-      <div className='title'>
-        <span>Cập nhật danh mục phim</span>
-        <Star color='yellow' />
-        {cinemaComplex?.data?.name}
-        <Star color='yellow' />
-      </div>
-      <form onSubmit={handleSubmit(handleUpdate)}>
+    <div className='container'>
+      <div className='title'>Cập nhật danh mục phim</div>
+      <form
+        onSubmit={handleSubmit(handleUpdate)}
+        style={{ width: '500px', margin: '0 auto' }}
+      >
         <FormInputGroup
           register={register}
           errors={errors}

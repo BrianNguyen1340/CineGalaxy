@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 import { SquarePen } from 'lucide-react'
 import ReactPaginate from 'react-paginate'
 
+import { Loader } from '~/components'
 import { useGetAllMoviesQuery } from '~/services/movie.service'
 import './ListMovie.scss'
-import { Loader } from '~/components'
 
 const ListMovie = () => {
   const { data: movies, isLoading, refetch } = useGetAllMoviesQuery({})
@@ -33,7 +33,7 @@ const ListMovie = () => {
   }
 
   return (
-    <div className='list-movie-container'>
+    <div className='container'>
       <div className='title'>danh sách phim</div>
       {movies ? (
         <>
@@ -83,7 +83,7 @@ const ListMovie = () => {
                     </div>
                   </td>
                   <td>
-                    <Link to={`/update-cinema/${item?._id}`}>
+                    <Link to={`/update-movie/${item?._id}`}>
                       <SquarePen />
                     </Link>
                   </td>

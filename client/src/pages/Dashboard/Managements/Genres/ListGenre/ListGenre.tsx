@@ -33,7 +33,7 @@ const ListGenre = () => {
   }
 
   return (
-    <div className='list-movie-category-container'>
+    <div className='container'>
       <div className='title'>danh sách thể loại phim</div>
       {genres ? (
         <>

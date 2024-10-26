@@ -10,6 +10,7 @@ const handleCreate = async (
   email: string,
   address: string,
   phone: string,
+  cinemaComplex: Types.ObjectId,
 ): Promise<{
   success: boolean
   message: string
@@ -33,6 +34,7 @@ const handleCreate = async (
       address,
       phone,
       email,
+      cinemaComplex,
     })
     if (!request) {
       return {
@@ -73,7 +75,7 @@ const handleGetOne = async (
   statusCode: number
 }> => {
   try {
-    const request = await cinemaModel.findById(id)
+    const request = await cinemaModel.findById(id).populate('cinemaComplex')
     if (!request) {
       return {
         success: false,
@@ -111,7 +113,7 @@ const handleGetAll = async (): Promise<{
   statusCode: number
 }> => {
   try {
-    const request = await cinemaModel.find()
+    const request = await cinemaModel.find().populate('cinemaComplex')
     if (!request || request.length === 0) {
       return {
         success: false,
@@ -148,6 +150,7 @@ const handleUpdate = async (
   email?: string,
   address?: string,
   phone?: string,
+  cinemaComplex?: Types.ObjectId,
 ): Promise<{
   success: boolean
   message: string
@@ -171,6 +174,7 @@ const handleUpdate = async (
         address,
         phone,
         email,
+        cinemaComplex,
       },
       {
         new: true,

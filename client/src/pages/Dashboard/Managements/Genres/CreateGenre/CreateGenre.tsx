@@ -42,7 +42,7 @@ const CreateGenre = () => {
   }
 
   return (
-    <div className='movie-category-container'>
+    <div className='container'>
       <div className='title'>tạo danh mục phim</div>
       <form
         onSubmit={handleSubmit(handleCreate)}

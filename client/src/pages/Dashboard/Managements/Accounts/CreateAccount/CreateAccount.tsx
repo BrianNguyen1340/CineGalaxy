@@ -1,7 +1,7 @@
 import './CreateAccount.scss'
 
 const CreateAccount = () => {
-  return <div>CreateAccount</div>
+  return <div></div>
 }
 
 export default CreateAccount

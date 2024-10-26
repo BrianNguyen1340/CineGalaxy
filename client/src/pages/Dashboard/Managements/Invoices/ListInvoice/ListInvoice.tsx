@@ -1,5 +1,5 @@
 const ListInvoice = () => {
-  return <div>ListInvoice</div>
+  return <div className='container'></div>
 }
 
 export default ListInvoice

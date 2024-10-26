@@ -36,7 +36,7 @@ const ListCinemaComplex = () => {
   }
 
   return (
-    <div className='list-cinema-complex-container'>
+    <div className='container'>
       <div className='title'>danh sách cụm rạp</div>
       {cinemaComplexes ? (
         <>

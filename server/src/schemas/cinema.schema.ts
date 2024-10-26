@@ -8,6 +8,7 @@ export type CinemaType = Document & {
   address: string
   phone: string
   email: string
+  cinemaComplex: Types.ObjectId
 }
 
 const cinemaSchema = new Schema<CinemaType>(
@@ -33,6 +34,11 @@ const cinemaSchema = new Schema<CinemaType>(
       required: true,
       trim: true,
       unique: true,
+    },
+    cinemaComplex: {
+      type: Schema.Types.ObjectId,
+      ref: 'CinemaComplex',
+      required: true,
     },
   },
   {
