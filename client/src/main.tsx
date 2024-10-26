@@ -37,7 +37,7 @@ import {
   PrivateResetPassword,
 
   // dashboard
-  Doashboard,
+  Dashboard,
   NotFound,
   ListAccount,
   CreateAccount,
@@ -74,11 +74,9 @@ import {
 } from '~/pages'
 import App from './App.tsx'
 import RequiredAuth from '~/routes/RequiredAuth'
-import AdminRoute from '~/routes/AdminRoute'
-import './index.scss'
-import ManagerRoute from './routes/ManagerRoute.tsx'
-import CashierRoute from './routes/CashierRoute.tsx'
 import PrivateProfile from './pages/Dashboard/PrivateProfile/PrivateProfile.tsx'
+import './index.scss'
+import ProtectedRoute from './routes/ProtectedRoute.tsx'
 
 // *****************************************************************************
 
@@ -153,12 +151,11 @@ createRoot(document.getElementById('root')!).render(
                 element={<TicketPurchaseHistory />}
               />
             </Route>
-            {/* ADMIN ROUTES */}
-            <Route element={<AdminRoute />}>
+            {/* PROTECTED ROUTES */}
+            <Route element={<ProtectedRoute />}>
               <Route
-                index
                 path={paths.dashboardPaths.dashboard}
-                element={<Doashboard />}
+                element={<Dashboard />}
               />
               <Route
                 path={paths.dashboardPaths.privateProfile}
@@ -248,17 +245,6 @@ createRoot(document.getElementById('root')!).render(
                 path={paths.dashboardPaths.managements.seats.update}
                 element={<UpdateSeat />}
               />
-            </Route>
-            <Route element={<ManagerRoute />}>
-              <Route
-                index
-                path={paths.dashboardPaths.dashboard}
-                element={<Doashboard />}
-              />
-              <Route
-                path={paths.dashboardPaths.privateProfile}
-                element={<PrivateProfile />}
-              />
               <Route
                 path={paths.dashboardPaths.managements.showtimes.list}
                 element={<ListShowtime />}
@@ -294,17 +280,6 @@ createRoot(document.getElementById('root')!).render(
               <Route
                 path={paths.dashboardPaths.managements.promotions.update}
                 element={<UpdatePromotion />}
-              />
-            </Route>
-            <Route element={<CashierRoute />}>
-              <Route
-                index
-                path={paths.dashboardPaths.dashboard}
-                element={<Doashboard />}
-              />
-              <Route
-                path={paths.dashboardPaths.privateProfile}
-                element={<PrivateProfile />}
               />
               <Route
                 path={paths.dashboardPaths.managements.sellServices.list}

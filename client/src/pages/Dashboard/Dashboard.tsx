@@ -1,5 +1,5 @@
-const Doashboard = () => {
+const Dashboard = () => {
   return <div className='dashboard-container'></div>
 }
 
-export default Doashboard
+export default Dashboard

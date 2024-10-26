@@ -18,7 +18,7 @@ const handleCreate = async (
   data?: Partial<RoomType>
 }> => {
   try {
-    const checkExist = await roomModel.findOne({ name })
+    const checkExist = await roomModel.findOne({ name, cinema })
     if (checkExist) {
       return {
         success: false,
@@ -156,23 +156,38 @@ const handleUpdate = async (
   statusCode: number
 }> => {
   try {
-    const checkExist = await roomModel.findOne(id)
-    if (!checkExist) {
+    const room = await roomModel.findById(id)
+    if (!room) {
       return {
         success: false,
         statusCode: StatusCodes.BAD_REQUEST,
-        message: 'Danh mục không tồn tại',
+        message: 'Thông tin phòng không tồn tại',
+      }
+    }
+
+    const checkExist = await roomModel.findOne({
+      name,
+      cinema,
+      _id: { $ne: id },
+    })
+    if (checkExist) {
+      return {
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'Thông tin phòng đã tồn tại',
       }
     }
 
     const request = await roomModel.findByIdAndUpdate(
       id,
       {
-        name,
-        opacity,
-        status,
-        screen,
-        cinema,
+        $set: {
+          name,
+          opacity,
+          status,
+          screen,
+          cinema,
+        },
       },
       {
         new: true,
@@ -182,14 +197,14 @@ const handleUpdate = async (
       return {
         success: false,
         statusCode: StatusCodes.BAD_REQUEST,
-        message: 'Cập nhật danh mục thất bại!',
+        message: 'Cập nhật thông tin phòng thất bại!',
       }
     }
 
     return {
       success: true,
       statusCode: StatusCodes.OK,
-      message: 'Cập nhật thành công!',
+      message: 'Cập nhật thông tin phòng thành công!',
       data: request,
     }
   } catch (error: unknown) {

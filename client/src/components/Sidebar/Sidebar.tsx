@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
@@ -27,14 +27,12 @@ import {
 import './Sidebar.scss'
 
 type SidebarProps = {
-  className?: string
   openSidebar: boolean
   setOpenSidebar: (open: boolean) => void
   style?: React.CSSProperties
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
-  className,
   openSidebar,
   setOpenSidebar,
   style,
@@ -48,10 +46,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [selectedMenuItem, setSelectedMenuItem] = useState(location.pathname)
 
   const [logoutApi, { isLoading }] = useLogoutMutation()
-
-  useEffect(() => {
-    setSelectedMenuItem(location.pathname)
-  }, [location])
 
   const handleLogout = async () => {
     const result = await Swal.fire({
@@ -86,7 +80,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   }
 
   return (
-    <aside className={`sidebar-container ${className}`} style={style}>
+    <aside className={`sidebar-container`} style={style}>
       <SidebarTop openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
       <div
         style={{

@@ -74,10 +74,14 @@ const updateProfile = async (
   data?: Partial<UserType>
 }> => {
   try {
-    const request = await userModel.findByIdAndUpdate(userId, params, {
-      new: true,
-      runValidators: true,
-    })
+    const request = await userModel.findByIdAndUpdate(
+      userId,
+      { $set: params },
+      {
+        new: true,
+        runValidators: true,
+      },
+    )
     if (!request) {
       return {
         success: false,
@@ -223,9 +227,13 @@ const updateUserByAdmin = async (
       }
     }
 
-    const request = await userModel.findByIdAndUpdate(id, userData, {
-      new: true,
-    })
+    const request = await userModel.findByIdAndUpdate(
+      id,
+      { $set: userData },
+      {
+        new: true,
+      },
+    )
     if (!request) {
       return {
         success: false,

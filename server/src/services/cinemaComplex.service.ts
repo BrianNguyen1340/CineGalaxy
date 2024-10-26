@@ -145,9 +145,30 @@ const handleUpdate = async (
   data?: Partial<CinemaComplexType>
 }> => {
   try {
+    const cinemaComplex = await cinemaComplexModel.findById(id)
+    if (!cinemaComplex) {
+      return {
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'Cụm rạp không tồn tại',
+      }
+    }
+
+    const checkExist = await cinemaComplexModel.findOne({
+      name,
+      _id: { $ne: id },
+    })
+    if (checkExist) {
+      return {
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'Cụm rạp đã tồn tại',
+      }
+    }
+
     const request = await cinemaComplexModel.findByIdAndUpdate(
       id,
-      { name },
+      { $set: { name } },
       { new: true },
     )
 

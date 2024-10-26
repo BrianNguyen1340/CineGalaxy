@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
+import { HashLoader } from 'react-spinners'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
@@ -10,8 +11,6 @@ import {
 } from '~/services/genre.service'
 import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
-import { HashLoader } from 'react-spinners'
-import { Star } from 'lucide-react'
 import './UpdateGenre.scss'
 
 const UpdateGenre = () => {
@@ -56,13 +55,11 @@ const UpdateGenre = () => {
 
   return (
     <div className='container'>
-      <div className='title'>
-        <span>Cập nhật thể loại phim</span>
-        <Star color='yellow' />
-        {genre.data.name}
-        <Star color='yellow' />
-      </div>
-      <form onSubmit={handleSubmit(handleUpdate)}>
+      <div className='title'>Cập nhật thể loại phim</div>
+      <form
+        onSubmit={handleSubmit(handleUpdate)}
+        style={{ width: '500px', margin: '0 auto' }}
+      >
         <FormInputGroup
           register={register}
           errors={errors}

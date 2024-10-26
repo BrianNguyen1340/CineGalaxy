@@ -1,66 +1,50 @@
 import { StatusCodes } from 'http-status-codes'
 import { Types } from 'mongoose'
 
-import { MovieType, movieModel } from '~/schemas/movie.schema'
+import { SeatType, seatModel } from '~/schemas/seat.schema'
 
 // *****************************************************************************
 
 const handleCreate = async (
-  name: string,
-  slug: string,
-  description: string,
-  director: string,
-  releaseDate: Date,
-  duration: number,
-  poster: string,
-  trailer: string,
-  movieRating: string,
-  subtitle: string,
-  movieFormat: string,
-  genres: Types.ObjectId[],
+  number: number,
+  row: string,
+  type: string,
+  status: string,
+  price: number,
 ): Promise<{
   success: boolean
   message: string
   statusCode: number
-  data?: Partial<MovieType>
+  data?: Partial<SeatType>
 }> => {
   try {
-    const checkExist = await movieModel.findOne({
-      name,
-    })
+    const checkExist = await seatModel.findOne({ number, row })
     if (checkExist) {
       return {
         success: false,
-        statusCode: StatusCodes.CONFLICT,
-        message: 'Phim đã tồn tại!',
+        message: 'Ghế đã tồn tại!',
+        statusCode: StatusCodes.BAD_REQUEST,
       }
     }
 
-    const request = await movieModel.create({
-      name,
-      slug,
-      description,
-      director,
-      releaseDate,
-      duration,
-      poster,
-      trailer,
-      movieRating,
-      subtitle,
-      movieFormat,
-      genres,
+    const request = await seatModel.create({
+      number,
+      row,
+      status,
+      type,
+      price,
     })
     if (!request) {
       return {
         success: false,
-        message: 'Có lỗi khi tạo phim!',
+        message: 'Có lỗi',
         statusCode: StatusCodes.BAD_REQUEST,
       }
     }
 
     return {
       success: true,
-      message: 'Tạo phim thành công!',
+      message: 'Tạo ghế mới thành công!',
       statusCode: StatusCodes.CREATED,
       data: request,
     }
@@ -85,23 +69,23 @@ const handleGetOne = async (
 ): Promise<{
   success: boolean
   message: string
-  data?: Partial<MovieType>
+  data?: Partial<SeatType>
   statusCode: number
 }> => {
   try {
-    const request = await movieModel.findById(id)
+    const request = await seatModel.findById(id)
     if (!request) {
       return {
         success: false,
         statusCode: StatusCodes.BAD_REQUEST,
-        message: 'Không tìm thấy phim!',
+        message: 'Không tìm thấy ghế!',
       }
     }
 
     return {
       success: true,
       statusCode: StatusCodes.OK,
-      message: 'Lấy thông tin phim thành công!',
+      message: 'Lấy ghế thành công!',
       data: request,
     }
   } catch (error: unknown) {
@@ -123,24 +107,24 @@ const handleGetOne = async (
 const handleGetAll = async (): Promise<{
   success: boolean
   message: string
-  data?: Partial<MovieType>[]
+  data?: Partial<SeatType>[]
   statusCode: number
 }> => {
   try {
-    const request = await movieModel.find().populate('genres')
+    const request = await seatModel.find()
     if (!request || request.length === 0) {
       return {
         success: false,
         statusCode: StatusCodes.BAD_REQUEST,
-        message: 'Không có phim nào!',
+        message: 'Không có ghế nào!',
       }
     }
 
     return {
       success: true,
       statusCode: StatusCodes.OK,
-      message: 'Lấy tất cả phim thành công!',
-      data: request.map((category) => category.toObject()),
+      message: 'Lấy tất cả ghế thành công!',
+      data: request.map((item) => item.toObject()),
     }
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -160,48 +144,49 @@ const handleGetAll = async (): Promise<{
 
 const handleUpdate = async (
   id: Types.ObjectId,
-  name: string,
-  description: string,
-  director: string,
-  releaseDate: Date,
-  duration: number,
-  poster: string,
-  trailer: string,
-  movieRating: string,
-  subtitle: string,
-  movieFormat: string,
-  genres: Types.ObjectId[],
+  number: number,
+  row: string,
+  type: string,
+  status: string,
+  price: number,
 ): Promise<{
   success: boolean
   message: string
-  data?: Partial<MovieType>
+  data?: Partial<SeatType>
   statusCode: number
 }> => {
   try {
-    const checkExist = await movieModel.findOne(id)
-    if (!checkExist) {
+    const seat = await seatModel.findById(id)
+    if (!seat) {
       return {
         success: false,
         statusCode: StatusCodes.BAD_REQUEST,
-        message: 'Phim không tồn tại',
+        message: 'Ghế không tồn tại',
       }
     }
 
-    const request = await movieModel.findByIdAndUpdate(
+    const checkExist = await seatModel.findOne({
+      number,
+      row,
+      _id: { $ne: id },
+    })
+    if (checkExist) {
+      return {
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'Ghế đã tồn tại',
+      }
+    }
+
+    const request = await seatModel.findByIdAndUpdate(
       id,
       {
         $set: {
-          name,
-          description,
-          director,
-          releaseDate,
-          duration,
-          poster,
-          trailer,
-          movieRating,
-          subtitle,
-          movieFormat,
-          genres,
+          number,
+          row,
+          type,
+          status,
+          price,
         },
       },
       {
@@ -212,14 +197,14 @@ const handleUpdate = async (
       return {
         success: false,
         statusCode: StatusCodes.BAD_REQUEST,
-        message: 'Cập nhật phim thất bại!',
+        message: 'Cập nhật ghế thất bại!',
       }
     }
 
     return {
       success: true,
       statusCode: StatusCodes.OK,
-      message: 'Cập nhật phim thành công!',
+      message: 'Cập nhật thông tin ghế thành công!',
       data: request,
     }
   } catch (error: unknown) {
@@ -238,7 +223,7 @@ const handleUpdate = async (
   }
 }
 
-export const movieService = {
+export const seatService = {
   handleCreate,
   handleGetOne,
   handleGetAll,

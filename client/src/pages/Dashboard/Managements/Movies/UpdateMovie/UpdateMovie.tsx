@@ -49,7 +49,7 @@ const UpdateMovie = () => {
     genres: { value: string; label: string }[]
   }>()
 
-  const { data: genres, refetch } = useGetAllGenresQuery({})
+  const { data: genres = [], refetch } = useGetAllGenresQuery({})
   const { data: movie, refetch: refetchMovie } = useGetMovieQuery(id)
 
   const [updateApi, { isLoading }] = useUpdateMovieMutation()
@@ -91,17 +91,17 @@ const UpdateMovie = () => {
       setValue('movieRating', movie?.data?.movieRating)
       setValue('subtitle', movie?.data?.subtitle)
       setValue('movieFormat', movie?.data?.movieFormat)
-      
+
       setValue('poster', movie?.data?.poster)
       setPosterURL(movie.data.poster)
 
       setValue('genres', movie?.data?.genres?._id)
       const defaultGenres = movie.data.genres
-      .map((genreId: string) => {
-        const genre = genres?.data?.find((g: any) => g._id === genreId)
-        return genre ? { value: genre._id, label: genre.name } : null
-      })
-      .filter(Boolean) as { value: string; label: string }[]
+        .map((genreId: string) => {
+          const genre = genres?.data?.find((g: any) => g._id === genreId)
+          return genre ? { value: genre._id, label: genre.name } : null
+        })
+        .filter(Boolean) as { value: string; label: string }[]
       setSelectedGenres(defaultGenres)
     }
   }, [movie, setValue, genres])
@@ -201,7 +201,7 @@ const UpdateMovie = () => {
       nProgress.done()
     }
   }
-  
+
   return (
     <div className='container'>
       <div className='title'>cập nhật phim</div>

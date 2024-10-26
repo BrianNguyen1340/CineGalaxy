@@ -85,8 +85,8 @@ const dashboardPaths = {
     seats: {
       list: '/list-seats',
       create: '/create-seats',
-      update: '/update-seats/:id',
-      delete: '/delete-seats/:id',
+      update: '/update-seat/:id',
+      delete: '/delete-seat/:id',
     },
     sellServices: {
       list: '/list-sell-services',

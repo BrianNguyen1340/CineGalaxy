@@ -158,7 +158,9 @@ const handleUpdate = async (
     const request = await genreModel.findByIdAndUpdate(
       id,
       {
-        name,
+        $set: {
+          name,
+        },
       },
       {
         new: true,

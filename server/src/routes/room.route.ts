@@ -10,6 +10,6 @@ const router = Router()
 router.post('/create', [authentication, isAdmin], roomController.handleCreate)
 router.get('/get/:id', roomController.handleGetOne)
 router.get('/get-all', roomController.handleGetAll)
-router.post('/update/:id', roomController.handleUpdate)
+router.put('/update/:id', roomController.handleUpdate)
 
 export const roomRoute = router

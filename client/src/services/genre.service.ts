@@ -2,7 +2,7 @@ import { apiSlice } from '~/redux/apiSlice'
 
 // *****************************************************************************
 
-export const movieCategoryAPISlice = apiSlice.injectEndpoints({
+export const genreAPISlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createGenre: builder.mutation({
       query: (data) => ({
@@ -36,4 +36,4 @@ export const {
   useGetAllGenresQuery,
   useGetGenreQuery,
   useUpdateGenreMutation,
-} = movieCategoryAPISlice
+} = genreAPISlice

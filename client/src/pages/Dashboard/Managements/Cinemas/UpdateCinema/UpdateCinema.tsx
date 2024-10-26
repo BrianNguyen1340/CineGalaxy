@@ -33,7 +33,7 @@ const UpdateCinema = () => {
   }>()
 
   const { data: cinema, refetch } = useGetCinemaQuery(id)
-  const { data: cinemaComplexes, isLoading: isLoadingCinemaComplexes } =
+  const { data: cinemaComplexes = [], isLoading: isLoadingCinemaComplexes } =
     useGetAllCinemaComplexesQuery({})
 
   const [updateApi, { isLoading }] = useUpdateCinemaMutation()
@@ -52,7 +52,7 @@ const UpdateCinema = () => {
     refetch()
   }, [refetch])
 
-  if (isLoading || isLoadingCinemaComplexes) {
+  if (isLoadingCinemaComplexes) {
     return <Loader />
   }
 

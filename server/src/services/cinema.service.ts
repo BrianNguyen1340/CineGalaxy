@@ -158,8 +158,8 @@ const handleUpdate = async (
   statusCode: number
 }> => {
   try {
-    const checkExist = await cinemaModel.findOne(id)
-    if (!checkExist) {
+    const cinema = await cinemaModel.findById(id)
+    if (!cinema) {
       return {
         success: false,
         statusCode: StatusCodes.BAD_REQUEST,
@@ -167,14 +167,29 @@ const handleUpdate = async (
       }
     }
 
+    const checkExist = await cinemaModel.findOne({
+      name,
+      cinemaComplex,
+      _id: { $ne: id },
+    })
+    if (checkExist) {
+      return {
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'Rạp đã tồn tại',
+      }
+    }
+
     const request = await cinemaModel.findByIdAndUpdate(
       id,
       {
-        name,
-        address,
-        phone,
-        email,
-        cinemaComplex,
+        $set: {
+          name,
+          address,
+          phone,
+          email,
+          cinemaComplex,
+        },
       },
       {
         new: true,

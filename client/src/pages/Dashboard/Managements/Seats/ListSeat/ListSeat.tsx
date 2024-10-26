@@ -1,5 +1,90 @@
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { SquarePen } from 'lucide-react'
+import ReactPaginate from 'react-paginate'
+
+import { Loader } from '~/components'
+import { useGetAllSeatsQuery } from '~/services/seat.service'
+import './ListSeat.scss'
+
 const ListSeat = () => {
-  return <div className='container'></div>
+  const { data: seats, isLoading, refetch } = useGetAllSeatsQuery({})
+
+  const [currentPage, setCurrentPage] = useState(0)
+  const itemsPerPage = 10
+  const offset = currentPage * itemsPerPage
+  const currentItems = seats
+    ? seats?.data
+        .slice()
+        .reverse()
+        .slice(offset, offset + itemsPerPage)
+    : []
+
+  const handlePageClick = (event: any) => {
+    setCurrentPage(event.selected)
+  }
+
+  useEffect(() => {
+    refetch()
+  }, [refetch])
+
+  if (isLoading) {
+    return <Loader />
+  }
+
+  return (
+    <div className='container'>
+      <div className='title'>danh sách ghế</div>
+      {seats ? (
+        <>
+          <table>
+            <thead>
+              <tr>
+                <th>stt</th>
+                <th>hàng ghế</th>
+                <th>số ghế</th>
+                <th>loại ghế</th>
+                <th>tình trạng ghế</th>
+                <th>giá ghế</th>
+                <th>quản lý</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentItems.map((item: any, index: number) => (
+                <tr key={index}>
+                  <td>{index + offset}</td>
+                  <td>{item.row}</td>
+                  <td>{item.number}</td>
+                  <td>{item.type}</td>
+                  <td>{item.status}</td>
+                  <td>{item.price} VNĐ</td>
+                  <td>
+                    <Link to={`/update-seat/${item?._id}`}>
+                      <SquarePen />
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <ReactPaginate
+            previousLabel={'<'}
+            nextLabel={'>'}
+            breakLabel={'...'}
+            breakClassName={'break-me'}
+            pageCount={Math.ceil(seats.data.length / itemsPerPage)}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={handlePageClick}
+            containerClassName={'pagination'}
+            activeClassName={'active'}
+          />
+        </>
+      ) : (
+        <div>Danh sách ghế trống!</div>
+      )}
+    </div>
+  )
 }
 
 export default ListSeat

@@ -5,8 +5,12 @@ type DashLayoutProps = {
   openSidebar: boolean
 }
 
-const DashLayout: React.FC<DashLayoutProps> = () => {
-  return <Outlet />
+const DashLayout: React.FC<DashLayoutProps> = ({ openSidebar }) => {
+  return (
+    <div className={`dash-layout ${openSidebar ? 'sidebar-open' : ''}`}>
+      <Outlet />
+    </div>
+  )
 }
 
 export default DashLayout

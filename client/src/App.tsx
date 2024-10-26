@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo, CSSProperties } from 'react'
 import { useLocation } from 'react-router-dom'
 import 'nprogress/nprogress.css'
 import 'react-circular-progressbar/dist/styles.css'
@@ -9,57 +9,67 @@ import {
   DashLayout,
   Footer,
   Header,
-  Loader,
   MainLayout,
   Sidebar,
 } from '~/components'
-import { getTitleFromPathname } from '~/utils/getTitleFromPathname'
 import { paths } from '~/utils/paths'
 import { useAppSelector } from '~/hooks/redux'
 import { NotFound } from '~/pages'
 
-// *****************************************************************************
-
 const App = () => {
   const { user } = useAppSelector((state) => state.user)
-
   const location = useLocation()
 
-  const [loader, setLoader] = useState(true)
-  const [openSidebar, setOpenSidebar] = useState<boolean>(true)
+  const [openSidebar, setOpenSidebar] = useState(true)
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setLoader(false)
-    }, 1000)
-    return () => clearTimeout(timeout)
-  }, [])
+  const hideHeaderFooterPaths = useMemo(
+    () => [
+      paths.userPaths.login,
+      paths.userPaths.register,
+      paths.userPaths.verifyOtp,
+      paths.userPaths.forgotPassword,
+      paths.userPaths.privateLogin,
+      paths.userPaths.privateForgotPassword,
+      paths.userPaths.privateResetPassword,
+      paths.dashboardPaths.dashboard,
+    ],
+    [],
+  )
 
-  const hideHeaderFooterPaths = [
-    paths.userPaths.login,
-    paths.userPaths.register,
-    paths.userPaths.verifyOtp,
-    paths.userPaths.forgotPassword,
-    paths.userPaths.privateLogin,
-    paths.userPaths.privateForgotPassword,
-    paths.userPaths.privateResetPassword,
-    paths.dashboardPaths.dashboard,
-  ]
+  const hideHeaderFooter = useMemo(
+    () => hideHeaderFooterPaths.includes(location.pathname),
+    [location.pathname, hideHeaderFooterPaths],
+  )
 
-  const hideHeaderFooter = hideHeaderFooterPaths.includes(location.pathname)
+  const isNotFound = useMemo(
+    () => location.pathname === paths.userPaths.notFound,
+    [location.pathname],
+  )
 
-  useEffect(() => {
-    document.title = getTitleFromPathname(location.pathname)
-    window.scrollTo(0, 0)
-  }, [location])
+  const sidebarStyle: CSSProperties = useMemo(
+    () => ({
+      width: openSidebar ? '288px' : '0',
+      left: openSidebar ? '0' : '-100%',
+      border: '1px solid #eee',
+    }),
+    [openSidebar],
+  )
 
-  const isNotFound = location.pathname === paths.userPaths.notFound
+  const mainStyle: CSSProperties = useMemo(
+    () => ({
+      display: 'flex',
+      flexDirection: 'column' as const,
+      backgroundColor: 'transparent',
+      position: 'relative',
+      width: openSidebar ? 'calc(100% - 288px)' : '100%',
+      marginLeft: openSidebar ? '304px' : '0',
+      gap: '10px',
+    }),
+    [openSidebar],
+  )
+
   if (isNotFound) {
     return <NotFound />
-  }
-
-  if (loader) {
-    return <Loader />
   }
 
   return (
@@ -69,23 +79,9 @@ const App = () => {
           <Sidebar
             openSidebar={openSidebar}
             setOpenSidebar={setOpenSidebar}
-            style={{
-              width: `${openSidebar ? '288px' : '0'}`,
-              left: `${openSidebar ? '0' : '-100%'}`,
-              border: '1px solid #eee',
-            }}
+            style={sidebarStyle}
           />
-          <main
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              backgroundColor: 'transparent',
-              position: 'relative',
-              width: `${openSidebar ? 'calc(100% - 288px)' : '100%'}`,
-              marginLeft: `${openSidebar ? '304px' : '0'}`,
-              gap: '10px',
-            }}
-          >
+          <main style={mainStyle}>
             <DashHeader
               openSidebar={openSidebar}
               setOpenSidebar={setOpenSidebar}

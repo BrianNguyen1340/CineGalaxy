@@ -6,12 +6,12 @@ import { paths } from '~/utils/paths'
 // *****************************************************************************
 
 const RequiredAuth = () => {
-  const { user, isAuthenticated } = useAppSelector((state) => state.user)
+  const { user } = useAppSelector((state) => state.user)
 
-  return user?.role === 3 && isAuthenticated ? (
+  return user?.role === 3 ? (
     <Outlet />
   ) : (
-    <Navigate to={paths.userPaths.login} />
+    <Navigate to={paths.userPaths.login} replace />
   )
 }
 

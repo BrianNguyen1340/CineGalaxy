@@ -31,7 +31,7 @@ import PrivateResetPassword from './Dashboard/PrivateAuth/PrivateLogin/PrivateRe
 import PrivateProfile from './Dashboard/PrivateProfile/PrivateProfile'
 
 // protected pages
-import Doashboard from './Dashboard/Doashboard'
+import Dashboard from './Dashboard/Dashboard'
 
 // admin
 import ListAccount from './Dashboard/Managements/Accounts/ListAccount/ListAccount'
@@ -113,7 +113,7 @@ export {
   PrivateProfile,
 
   // protected pages
-  Doashboard,
+  Dashboard,
 
   // admin
   ListAccount,
