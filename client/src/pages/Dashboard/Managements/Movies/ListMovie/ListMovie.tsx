@@ -46,9 +46,6 @@ const ListMovie = () => {
                 <th>poster</th>
                 <th>công chiếu</th>
                 <th>thời lượng</th>
-                <th>phụ đề</th>
-                <th style={{ width: '120px' }}>xếp hạng phim</th>
-                <th>định dạng</th>
                 <th>thể loại</th>
                 <th>hành động</th>
               </tr>
@@ -60,15 +57,12 @@ const ListMovie = () => {
                   <td>{item?.name}</td>
                   <td>{item?.director}</td>
                   <td>
-                    <img src={item?.poster} alt='poster' width='150' />
+                    <img src={item?.poster} alt='poster' width='200' />
                   </td>
                   <td>
                     {new Date(item?.releaseDate).toLocaleDateString('vi-VN')}
                   </td>
                   <td>{item?.duration} phút</td>
-                  <td>{item?.subtitle}</td>
-                  <td>{item?.movieRating}</td>
-                  <td>{item?.movieFormat}</td>
                   <td>
                     <div
                       style={{
@@ -78,7 +72,10 @@ const ListMovie = () => {
                       }}
                     >
                       {item?.genres?.map((genre: any, index: number) => (
-                        <span key={index}>{genre.name} </span>
+                        <span key={index}>
+                          {genre.name}
+                          {/* {index < item.genres.length - 1 && <span> / </span>} */}
+                        </span>
                       ))}
                     </div>
                   </td>

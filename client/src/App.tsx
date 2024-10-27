@@ -1,8 +1,10 @@
-import { useEffect, useState, useMemo, CSSProperties } from 'react'
+import { useState, useMemo, CSSProperties } from 'react'
 import { useLocation } from 'react-router-dom'
 import 'nprogress/nprogress.css'
 import 'react-circular-progressbar/dist/styles.css'
 import 'react-day-picker/style.css'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
 
 import {
   DashHeader,

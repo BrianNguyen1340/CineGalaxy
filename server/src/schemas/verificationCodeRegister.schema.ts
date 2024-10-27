@@ -1,8 +1,9 @@
-import { Document, Schema, model } from 'mongoose'
+import { Document, Schema, Types, model } from 'mongoose'
 
 // *****************************************************************************
 
 export type TVerificationCodeRegister = Document & {
+  _id: Types.ObjectId
   email: string
   password: string
   name: string
@@ -17,12 +18,12 @@ const verificationCodeRegisterSchema = new Schema<TVerificationCodeRegister>(
   {
     email: {
       type: String,
-      required: [true, 'email is required!'],
+      required: true,
       trim: true,
     },
     password: {
       type: String,
-      required: [true, 'password is required!'],
+      required: true,
       trim: true,
     },
     phone: {
@@ -32,18 +33,18 @@ const verificationCodeRegisterSchema = new Schema<TVerificationCodeRegister>(
     },
     name: {
       type: String,
-      required: [true, 'name is required!'],
+      required: true,
       trim: true,
     },
     verificationToken: {
       type: String,
-      required: [true, 'verificationToken is required!'],
+      required: true,
       trim: true,
       unique: true,
     },
     verificationTokenExpiresAt: {
       type: Date,
-      required: [true, 'verificationTokenExpiresAt is required!'],
+      required: true,
       expires: 0,
     },
   },

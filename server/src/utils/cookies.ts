@@ -24,7 +24,7 @@ const getAccessToken = (): CookieOptions => ({
 // giá trị mặc định của refreshToken
 const getRefreshToken = (): CookieOptions => ({
   ...defaults,
-  expires: getExpirationTime(60, 'days'),
+  expires: getExpirationTime(90, 'days'),
   path: refreshTokenPath,
 })
 

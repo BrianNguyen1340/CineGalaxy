@@ -93,12 +93,20 @@ const MenuDropdown = () => {
         {isOpen && (
           <ul className='menu-dropdown'>
             {user?.role === 3 && (
-              <li onClick={() => setIsOpen(false)}>
-                <Link to={paths.userPaths.account}>
-                  <User size='14' />
-                  <span>Tài khoản</span>
-                </Link>
-              </li>
+              <>
+                <li onClick={() => setIsOpen(false)}>
+                  <Link to={paths.userPaths.account}>
+                    <User size='14' />
+                    <span>Tài khoản</span>
+                  </Link>
+                </li>
+                <li onClick={() => setIsOpen(false)}>
+                  <Link to={paths.userPaths.membership}>
+                    <User size='14' />
+                    <span>Thẻ thành viên</span>
+                  </Link>
+                </li>
+              </>
             )}
             {user?.role === 0 && (
               <li onClick={() => setIsOpen(false)}>

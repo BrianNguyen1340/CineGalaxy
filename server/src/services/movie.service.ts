@@ -13,6 +13,7 @@ const handleCreate = async (
   releaseDate: Date,
   duration: number,
   poster: string,
+  banner: string,
   trailer: string,
   movieRating: string,
   subtitle: string,
@@ -44,6 +45,7 @@ const handleCreate = async (
       releaseDate,
       duration,
       poster,
+      banner,
       trailer,
       movieRating,
       subtitle,
@@ -89,7 +91,7 @@ const handleGetOne = async (
   statusCode: number
 }> => {
   try {
-    const request = await movieModel.findById(id)
+    const request = await movieModel.findById(id).populate('genres')
     if (!request) {
       return {
         success: false,
@@ -166,6 +168,7 @@ const handleUpdate = async (
   releaseDate: Date,
   duration: number,
   poster: string,
+  banner: string,
   trailer: string,
   movieRating: string,
   subtitle: string,
@@ -197,6 +200,7 @@ const handleUpdate = async (
           releaseDate,
           duration,
           poster,
+          banner,
           trailer,
           movieRating,
           subtitle,

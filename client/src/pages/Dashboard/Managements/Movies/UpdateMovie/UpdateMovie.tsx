@@ -37,6 +37,7 @@ const UpdateMovie = () => {
     setValue,
   } = useForm<{
     poster: string
+    banner: string
     name: string
     description: string
     director: string
@@ -49,7 +50,7 @@ const UpdateMovie = () => {
     genres: { value: string; label: string }[]
   }>()
 
-  const { data: genres = [], refetch } = useGetAllGenresQuery({})
+  const { data: genres = [], refetch: refetchGenres } = useGetAllGenresQuery({})
   const { data: movie, refetch: refetchMovie } = useGetMovieQuery(id)
 
   const [updateApi, { isLoading }] = useUpdateMovieMutation()
@@ -66,15 +67,6 @@ const UpdateMovie = () => {
   const [selectedGenres, setSelectedGenres] = useState<
     { value: string; label: string }[]
   >([])
-
-  const [posterURL, setPosterURL] = useState<string | null>(null)
-  const [file, setFile] = useState<File | null>(null)
-  const [posterUploadProgress, setPosterUploadProgress] = useState<
-    string | null
-  >(null)
-  const [posterUploadError, setPosterUploadError] = useState<null | string>(
-    null,
-  )
 
   useEffect(() => {
     if (movie?.data) {
@@ -93,27 +85,77 @@ const UpdateMovie = () => {
       setValue('movieFormat', movie?.data?.movieFormat)
 
       setValue('poster', movie?.data?.poster)
-      setPosterURL(movie.data.poster)
+      setPosterURL(movie?.data?.poster)
 
-      setValue('genres', movie?.data?.genres?._id)
-      const defaultGenres = movie.data.genres
-        .map((genreId: string) => {
-          const genre = genres?.data?.find((g: any) => g._id === genreId)
-          return genre ? { value: genre._id, label: genre.name } : null
-        })
-        .filter(Boolean) as { value: string; label: string }[]
+      setValue('banner', movie?.data?.banner)
+      setBannerURL(movie?.data?.banner)
+
+      const defaultGenres = movie?.data?.genres?.map((genre: any) => ({
+        value: genre._id,
+        label: genre.name,
+      }))
+
       setSelectedGenres(defaultGenres)
+      setValue('genres', defaultGenres)
     }
   }, [movie, setValue, genres])
 
-  useEffect(() => {
-    refetch()
-    refetchMovie()
-  }, [refetch, refetchMovie])
+  const [bannerURL, setBannerURL] = useState<string | null>(null)
+  const [banner, setBanner] = useState<File | null>(null)
+  const [bannerUploadProgress, setBannerUploadProgress] = useState<
+    string | null
+  >(null)
+  const [bannerUploadError, setBannerUploadError] = useState<null | string>(
+    null,
+  )
 
-  const handleUpload = () => {
+  const handleUploadBanner = () => {
     try {
-      if (!file) {
+      if (!banner) {
+        setBannerUploadError('Vui lòng chọn ảnh!')
+        return
+      }
+      setBannerUploadError(null)
+      const storage = getStorage(app)
+      const fileName = new Date().getTime() + '-' + banner.name
+      const storageRef = ref(storage, fileName)
+      const uploadTask = uploadBytesResumable(storageRef, banner)
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          setBannerUploadProgress(progress.toFixed(0))
+        },
+        (error: any) => {
+          setBannerUploadError(error)
+          setBannerUploadProgress(null)
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setBannerUploadProgress(null)
+            setBannerUploadError(null)
+            setBannerURL(downloadURL)
+          })
+        },
+      )
+    } catch (error) {
+      Swal.fire('Thất bại', 'Upload ảnh thất bại!', 'error')
+    }
+  }
+
+  const [posterURL, setPosterURL] = useState<string | null>(null)
+  const [poster, setPoster] = useState<File | null>(null)
+  const [posterUploadProgress, setPosterUploadProgress] = useState<
+    string | null
+  >(null)
+  const [posterUploadError, setPosterUploadError] = useState<null | string>(
+    null,
+  )
+
+  const handleUploadPoster = () => {
+    try {
+      if (!poster) {
         setPosterUploadError('Vui lòng chọn ảnh!')
         return
       }
@@ -121,9 +163,9 @@ const UpdateMovie = () => {
       setPosterUploadError(null)
 
       const storage = getStorage(app)
-      const fileName = new Date().getTime() + '-' + file.name
+      const fileName = new Date().getTime() + '-' + poster.name
       const storageRef = ref(storage, fileName)
-      const uploadTask = uploadBytesResumable(storageRef, file)
+      const uploadTask = uploadBytesResumable(storageRef, poster)
 
       uploadTask.on(
         'state_changed',
@@ -151,6 +193,7 @@ const UpdateMovie = () => {
 
   const handleUpdate: SubmitHandler<{
     poster: string
+    banner: string
     name: string
     description: string
     director: string
@@ -202,6 +245,11 @@ const UpdateMovie = () => {
     }
   }
 
+  useEffect(() => {
+    refetchGenres()
+    refetchMovie()
+  }, [refetchGenres, refetchMovie])
+
   return (
     <div className='container'>
       <div className='title'>cập nhật phim</div>
@@ -209,6 +257,7 @@ const UpdateMovie = () => {
         onSubmit={handleSubmit(handleUpdate)}
         style={{ width: '500px', margin: '0 auto' }}
       >
+        {/* name */}
         <FormInputGroup
           register={register}
           errors={errors}
@@ -223,6 +272,8 @@ const UpdateMovie = () => {
           name='name'
           icon={<FaRegStar color='red' />}
         />
+
+        {/* genres */}
         <div style={{ marginBottom: '20px' }}>
           <label
             htmlFor='genres'
@@ -253,6 +304,8 @@ const UpdateMovie = () => {
             components={animatedComponents}
           />
         </div>
+
+        {/* director */}
         <FormInputGroup
           register={register}
           errors={errors}
@@ -299,6 +352,8 @@ const UpdateMovie = () => {
             }}
           />
         </div>
+
+        {/* releaseDate */}
         <div style={{ marginBottom: '20px' }}>
           <label
             htmlFor='releaseDate'
@@ -313,6 +368,8 @@ const UpdateMovie = () => {
             onSelect={(date: Date | undefined) => handleDateChange(date)}
           />
         </div>
+
+        {/* duration */}
         <FormInputGroup
           register={register}
           errors={errors}
@@ -331,6 +388,8 @@ const UpdateMovie = () => {
           name='duration'
           icon={<FaRegStar color='red' />}
         />
+
+        {/* poster */}
         <div
           style={{
             display: 'flex',
@@ -354,7 +413,7 @@ const UpdateMovie = () => {
             id='poster'
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               if (e.target.files && e.target.files.length > 0) {
-                setFile(e.target.files[0])
+                setPoster(e.target.files[0])
               }
             }}
             hidden
@@ -367,7 +426,7 @@ const UpdateMovie = () => {
           <button
             type='button'
             disabled={posterUploadProgress ? true : false}
-            onClick={handleUpload}
+            onClick={handleUploadPoster}
             style={{ width: 'fit-content' }}
           >
             {posterUploadProgress ? (
@@ -392,6 +451,71 @@ const UpdateMovie = () => {
           </button>
           {posterUploadError && <div>{posterUploadError}</div>}
         </div>
+
+        {/* banner */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '5px',
+            marginBottom: '20px',
+          }}
+        >
+          <label style={{ textTransform: 'capitalize', fontWeight: 700 }}>
+            poster
+          </label>
+          <label
+            htmlFor='poster'
+            style={{ textTransform: 'capitalize', cursor: 'pointer' }}
+          >
+            <AiOutlineCloudUpload size='28' />
+          </label>
+          <input
+            type='file'
+            accept='image/*'
+            id='poster'
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              if (e.target.files && e.target.files.length > 0) {
+                setBanner(e.target.files[0])
+              }
+            }}
+            hidden
+          />
+          {bannerURL ? (
+            <img src={bannerURL} alt='poster' width='250' />
+          ) : (
+            <img src='images/movie.jpg' alt='poster' width='250' />
+          )}
+          <button
+            type='button'
+            disabled={bannerUploadProgress ? true : false}
+            onClick={handleUploadBanner}
+            style={{ width: 'fit-content' }}
+          >
+            {bannerUploadProgress ? (
+              <div style={{ width: '4rem', height: '4rem' }}>
+                <CircularProgressbar
+                  value={Number(bannerUploadProgress)}
+                  text={`${bannerUploadProgress || 0}%`}
+                />
+              </div>
+            ) : (
+              <div
+                style={{
+                  padding: '15px',
+                  textTransform: 'capitalize',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
+              >
+                upload
+              </div>
+            )}
+          </button>
+          {bannerUploadError && <div>{bannerUploadError}</div>}
+        </div>
+
+        {/* movie format */}
         <div
           style={{
             marginBottom: '25px',
@@ -400,7 +524,7 @@ const UpdateMovie = () => {
           }}
         >
           <label
-            htmlFor='subtitle'
+            htmlFor='movieFormat'
             style={{
               textTransform: 'capitalize',
               fontWeight: 700,
@@ -424,6 +548,8 @@ const UpdateMovie = () => {
             <option value='3D'>3D</option>
           </select>
         </div>
+
+        {/* subtitle */}
         <div
           style={{
             marginBottom: '25px',
@@ -457,6 +583,8 @@ const UpdateMovie = () => {
             <option value='Lồng tiếng'>Lồng tiếng</option>
           </select>
         </div>
+
+        {/* movie rating */}
         <div
           style={{
             marginBottom: '25px',
@@ -498,6 +626,8 @@ const UpdateMovie = () => {
             </option>
           </select>
         </div>
+
+        {/* trailer url */}
         <FormInputGroup
           register={register}
           errors={errors}

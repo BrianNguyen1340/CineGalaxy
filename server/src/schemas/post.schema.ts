@@ -3,6 +3,7 @@ import { Document, model, Types, Schema } from 'mongoose'
 // *****************************************************************************
 
 export type PostType = Document & {
+  _id: Types.ObjectId
   userId: Types.ObjectId
   content: string
   title: string

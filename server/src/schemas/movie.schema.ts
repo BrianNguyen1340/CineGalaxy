@@ -11,6 +11,7 @@ export type MovieType = Document & {
   releaseDate: Date
   duration: number
   poster: string
+  banner: string
   trailer: string
   movieRating: string
   subtitle: string
@@ -52,6 +53,12 @@ const movieSchema = new Schema<MovieType>(
     poster: {
       type: String,
       trim: true,
+      required: true,
+    },
+    banner: {
+      type: String,
+      trim: true,
+      required: true,
     },
     trailer: {
       type: String,

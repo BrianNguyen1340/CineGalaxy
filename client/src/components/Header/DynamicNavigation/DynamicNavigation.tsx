@@ -15,9 +15,6 @@ const DynamicNavigation = () => {
       ) : (
         <ul className='dynamic-navigation-menu'>
           <li>
-            <Link to={paths.userPaths.membership}>thành viên</Link>
-          </li>
-          <li>
             <Link to={paths.userPaths.support}>hỗ trợ</Link>
           </li>
           <li>

@@ -1,5 +1,7 @@
-const Account = () => {
-    return <div>Account</div>;
-};
+import './Account.scss'
 
-export default Account;
+const Account = () => {
+  return <div className='account-container'></div>
+}
+
+export default Account

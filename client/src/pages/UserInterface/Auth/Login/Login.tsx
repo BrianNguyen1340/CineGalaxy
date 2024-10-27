@@ -124,7 +124,7 @@ const Login = () => {
               type='text'
               id='email'
               name='email'
-              icon={<Mail />}
+              icon={<Mail size='16' />}
             />
             <FormInputGroup
               register={register}
@@ -143,10 +143,10 @@ const Login = () => {
                   className='btn-show-hide-password'
                   onClick={handleShowHidePassword}
                 >
-                  {showHidePassword ? <Eye size='20' /> : <EyeOff size='20' />}
+                  {showHidePassword ? <Eye size='16' /> : <EyeOff size='16' />}
                 </button>
               }
-              icon={<FileLock />}
+              icon={<FileLock size='16' />}
             />
             <button
               type='submit'
@@ -161,7 +161,7 @@ const Login = () => {
                   gap: '10px',
                 }}
               >
-                {isLoading && <HashLoader size='20' color='#fff' />}
+                {isLoading && <HashLoader size='16' color='#fff' />}
                 <span>{isLoading ? 'Đang đăng nhập' : 'Đăng nhập'}</span>
               </div>
             </button>

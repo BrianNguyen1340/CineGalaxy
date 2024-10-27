@@ -9,6 +9,7 @@ const handleCreate = Joi.object({
   releaseDate: Joi.date().required(),
   duration: Joi.number().required(),
   poster: Joi.string().required().trim(),
+  banner: Joi.string().required().trim(),
   trailer: Joi.string().required().trim(),
   movieRating: Joi.string().required().trim(),
   subtitle: Joi.string().required().trim(),
@@ -27,6 +28,7 @@ const handleUpdate = Joi.object({
   releaseDate: Joi.date().optional(),
   duration: Joi.number().optional(),
   poster: Joi.string().trim().optional(),
+  banner: Joi.string().trim().optional(),
   trailer: Joi.string().trim().optional(),
   movieRating: Joi.string().trim().optional(),
   subtitle: Joi.string()

@@ -1,239 +1,244 @@
 .register-container {
-    position: relative;
-    height: 100vh;
+  position: relative;
+  height: 100vh;
+  display: flex;
+  background: white;
+  justify-content: space-between;
+  align-items: center;
+  overflow-x: hidden;
+
+  .loading-screen {
     display: flex;
-    background: white;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    overflow-x: hidden;
+    background-color: #fff;
+    color: #fff;
+    width: 100%;
+    height: 100vh;
+  }
 
-    .loading-screen {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #fff;
+  .bg {
+    width: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    video {
+      object-fit: cover;
+      height: 100%;
+      width: 500px;
+      display: block;
+    }
+
+    @media (max-width: 1200px) {
+      display: none !important;
+    }
+  }
+
+  .bg.hidden {
+    display: none;
+  }
+
+  .bg.visible {
+    display: block;
+  }
+
+  .content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    .btn-change-tab {
+      cursor: pointer;
+      border: 2px solid #ddd;
+      background-color: white;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.5s all ease;
+      margin-top: 20px;
+      margin-left: 20px;
+
+      @media (max-width: 700px) {
+        display: none !important;
+      }
+
+      &:hover {
+        background-color: #000;
         color: #fff;
-        width: 100%;
-        height: 100vh;
+      }
     }
 
-    .bg {
-        width: 500px;
+    .auth-content,
+    form {
+      border-radius: 3px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+      opacity: 1;
+
+      @media (max-width: 600px) {
+        width: 400px !important;
+      }
+
+      @media (max-width: 420px) {
+        width: 280px !important;
+      }
+
+      &.hidden {
+        opacity: 0;
+        transform: translateX(100%);
+      }
+
+      &.show {
+        opacity: 1;
+        transform: translateX(-50%);
+      }
+    }
+
+    .auth-content {
+      width: 500px;
+      border-radius: 3px;
+      margin-top: 115px;
+      left: 50%;
+      transform: translateX(-50%) !important;
+
+      &.hidden {
+        transform: translateX(-100%);
+      }
+
+      &.show {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .title,
+      .sub-title {
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .title {
+        font-family: 'Dancing Script', sans-serif;
+        font-size: 50px;
+      }
+
+      .sub-title {
+        font-size: 20px;
+      }
+
+      hr.divider {
+        height: 1px;
+        margin: 30px 0;
+        padding: 0;
+        overflow: visible;
+        border: none;
+        background-color: #999;
+        color: #6e6d7a;
+        text-align: center;
+        width: 100%;
+
+        &::after {
+          content: 'OR';
+          display: inline-block;
+          position: relative;
+          top: -10px;
+          padding: 0 16px;
+          background: #fff;
+          border-radius: 40px;
+          font-weight: 600;
+        }
+      }
+
+      button.continue-with-email {
+        width: 100%;
+        background-color: white;
+        border: 2px solid #999;
+        padding: 24px;
+        border-radius: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 14px;
+        transition: 0.3s all ease-in-out;
+
+        &:hover {
+          background-color: #fb8500;
+          color: white;
+          border: 2px solid #fb8500;
+        }
+      }
+
+      p {
+        margin-top: 24px;
+        text-align: center;
+        text-transform: capitalize;
+
+        a {
+          margin-left: 5px;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    form {
+      width: 500px;
+      left: 50%;
+      position: relative;
+      display: block;
+
+      @media (max-width: 700px) {
+        padding: 20px 0;
+      }
+
+      &.hidden {
+        transform: translateX(100%);
+      }
+
+      .btn-submit-register {
+        width: 100%;
+        background-color: #f97417;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        padding: 20px;
+        cursor: pointer;
+        border-radius: 40px;
+        margin-top: 15px;
+        text-transform: capitalize;
+        transition: 0.5s ease;
         display: flex;
-        justify-content: center;
         align-items: center;
-        height: 100%;
-        video {
-            object-fit: cover;
-            height: 100%;
-            width: 500px;
-            display: block;
-        }
+        justify-content: center;
+        transition: 0.5s ease;
 
-        @media (max-width: 1200px) {
-            display: none !important;
+        &:disabled {
+          cursor: no-drop;
+          background-color: #ddd;
         }
+      }
+
+      p {
+        text-transform: capitalize;
+        text-align: center;
+        margin-top: 20px;
+
+        a {
+          margin-left: 5px;
+          text-decoration: underline;
+          transition: 0.5s ease;
+
+          &:hover {
+            color: red;
+          }
+        }
+      }
     }
-
-    .bg.hidden {
-        display: none;
-    }
-
-    .bg.visible {
-        display: block;
-    }
-
-    .content {
-        width: 100%;
-        height: 100%;
-        position: relative;
-
-        .btn-change-tab {
-            cursor: pointer;
-            border: 2px solid #ddd;
-            background-color: white;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.5s all ease;
-            margin-top: 20px;
-            margin-left: 20px;
-
-            @media (max-width: 700px) {
-                display: none !important;
-            }
-
-            &:hover {
-                background-color: #000;
-                color: #fff;
-            }
-        }
-
-        .auth-content,
-        form {
-            border-radius: 3px;
-            position: absolute;
-            top: 0;
-            left: 0;
-            transition:
-                opacity 0.3s ease,
-                transform 0.3s ease;
-            opacity: 1;
-
-            @media (max-width: 600px) {
-                width: 400px !important;
-            }
-
-            @media (max-width: 400px) {
-                width: 280px !important;
-            }
-
-            &.hidden {
-                opacity: 0;
-                transform: translateX(100%);
-            }
-
-            &.show {
-                opacity: 1;
-                transform: translateX(-50%);
-            }
-        }
-
-        .auth-content {
-            width: 500px;
-            border-radius: 3px;
-            margin-top: 115px;
-            left: 50%;
-            transform: translateX(-50%) !important;
-
-            &.hidden {
-                transform: translateX(-100%);
-            }
-
-            &.show {
-                opacity: 1;
-                transform: translateX(0);
-            }
-
-            .title,
-            .sub-title {
-                font-weight: 600;
-                text-align: center;
-                margin-bottom: 30px;
-            }
-
-            .title {
-                font-family: 'Dancing Script', sans-serif;
-                font-size: 50px;
-            }
-
-            .sub-title {
-                font-size: 20px;
-            }
-
-            hr.divider {
-                height: 1px;
-                margin: 30px 0;
-                padding: 0;
-                overflow: visible;
-                border: none;
-                background-color: #999;
-                color: #6e6d7a;
-                text-align: center;
-                width: 100%;
-
-                &::after {
-                    content: 'OR';
-                    display: inline-block;
-                    position: relative;
-                    top: -10px;
-                    padding: 0 16px;
-                    background: #fff;
-                    border-radius: 40px;
-                    font-weight: 600;
-                }
-            }
-
-            button.continue-with-email {
-                width: 100%;
-                background-color: white;
-                border: 2px solid #999;
-                padding: 24px;
-                border-radius: 40px;
-                font-weight: bold;
-                cursor: pointer;
-                font-size: 14px;
-                transition: 0.3s all ease-in-out;
-
-                &:hover {
-                    background-color: #fb8500;
-                    color: white;
-                    border: 2px solid #fb8500;
-                }
-            }
-
-            p {
-                margin-top: 24px;
-                text-align: center;
-                text-transform: capitalize;
-
-                a {
-                    margin-left: 5px;
-                    text-decoration: underline;
-                }
-            }
-        }
-
-        form {
-            padding: 20px 0;
-            width: 500px;
-            left: 50%;
-
-            &.hidden {
-                transform: translateX(100%);
-            }
-
-            .btn-submit-register {
-                width: 100%;
-                background-color: #f97417;
-                color: white;
-                font-size: 16px;
-                font-weight: 600;
-                padding: 20px;
-                cursor: pointer;
-                border-radius: 40px;
-                margin-top: 15px;
-                text-transform: capitalize;
-                transition: 0.5s ease;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                transition: 0.5s ease;
-
-                &:disabled {
-                    cursor: no-drop;
-                    background-color: #ddd;
-                }
-            }
-
-            p {
-                text-transform: capitalize;
-                text-align: center;
-                margin-top: 20px;
-
-                a {
-                    margin-left: 5px;
-                    text-decoration: underline;
-                    transition: 0.5s ease;
-
-                    &:hover {
-                        color: red;
-                    }
-                }
-            }
-        }
-    }
+  }
 }

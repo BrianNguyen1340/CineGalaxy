@@ -158,3 +158,23 @@ table {
     font-weight: 600;
   }
 }
+
+.slick-track {
+  display: flex !important;
+  gap: 20px !important;
+}
+
+.slick-prev,
+.slick-next {
+  opacity: 1 !important;
+
+  width: 30px;
+  height: 30px;
+
+  &::before {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000 !important;
+  }
+}

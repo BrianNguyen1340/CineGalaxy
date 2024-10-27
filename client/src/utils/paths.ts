@@ -11,7 +11,7 @@ const userPaths = {
   giftShop: '/gift-shop',
   home: '/',
   membership: '/membership',
-  movieDetails: '/movie/:movieId',
+  movieDetails: '/movie/:id',
   movieLists: '/movies',
   payments: '/payments',
   pointsHistory: '/point-history',
