@@ -1,7 +1,5 @@
 import { apiSlice } from '~/redux/apiSlice'
 
-// *****************************************************************************
-
 export const genreAPISlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createGenre: builder.mutation({

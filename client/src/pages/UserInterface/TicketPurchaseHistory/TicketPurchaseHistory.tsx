@@ -1,5 +1,5 @@
 const TicketPurchaseHistory = () => {
-    return <div>TicketPurchaseHistory</div>;
-};
+  return <div></div>
+}
 
-export default TicketPurchaseHistory;
+export default TicketPurchaseHistory

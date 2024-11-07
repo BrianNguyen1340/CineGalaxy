@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom'
 import Slider from 'react-slick'
 
 import { useGetAllMoviesQuery } from '~/services/movie.service'
-import './Home.scss'
 import { paths } from '~/utils/paths'
+import { Loader } from '~/components'
 
 const Home = () => {
   var settings = {
@@ -43,42 +43,35 @@ const Home = () => {
 
   const { data: movies, isLoading: isLoadingMovies } = useGetAllMoviesQuery({})
 
+  if (isLoadingMovies) {
+    return <Loader />
+  }
+
   return (
-    <div className='home-container'>
-      <section className='now-showing'>
-        <div className='title'>phim đang chiếu</div>
+    <div className='h-fit w-full'>
+      <section className='mx-auto w-[1300px] py-10'>
+        <div className='mb-10 text-center text-[24px] font-semibold capitalize'>
+          phim đang chiếu
+        </div>
         <Slider {...settings}>
           {movies?.data?.map((item: any, index: number) => (
-            <ul key={index} className='now-showing-list'>
+            <ul key={index} className='border border-[#ddd]'>
               {
                 <li>
-                  <figure>
+                  <figure className='group relative m-0 h-full w-full overflow-hidden'>
                     <img
                       src={item.poster}
                       alt='poster'
-                      style={{
-                        width: '100%',
-                        height: '412px',
-                        objectFit: 'cover',
-                      }}
+                      className='h-[412px] w-full object-cover'
                     />
-                    <figcaption>
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          position: 'relative',
-                          top: '50%',
-                          transform: 'translateY(-50%)',
-                          width: '150px',
-                          margin: '0 auto',
-                          gap: '20px',
-                        }}
-                      >
-                        <div className='link-to-movie-detail'>
-                          <Link to={`/movie/${item?._id}`}>xem chi tiết</Link>
+                    <figcaption className='absolute bottom-0 left-0 right-0 top-0 z-10 before:absolute before:z-[-1] before:bg-gray-700 before:opacity-0'>
+                      <div className='relative top-[50%] mx-auto flex w-[150px] translate-x-[-50%] flex-col gap-5'>
+                        <div className='border border-[#ffd60a] opacity-0 hover:bg-white hover:text-base'>
+                          <Link to={`/movie/${item?._id}`} className=''>
+                            xem chi tiết
+                          </Link>
                         </div>
-                        <div className='link-to-showtime'>
+                        <div className='border border-[#ffd60a] opacity-0 hover:bg-white hover:text-base'>
                           <Link to={paths.userPaths.showtimes}>đặt vé</Link>
                         </div>
                       </div>

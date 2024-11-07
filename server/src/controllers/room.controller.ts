@@ -10,8 +10,6 @@ import {
 import { handleJoiError } from '~/middlewares/joi.middleware'
 import { roomService } from '~/services/room.service'
 
-// *****************************************************************************
-
 const handleCreate = catchErrors(async (req, res) => {
   const { name, opacity, status, screen, cinema } = req.body
 

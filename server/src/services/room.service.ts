@@ -3,8 +3,6 @@ import { Types } from 'mongoose'
 
 import { RoomType, roomModel } from '~/schemas/room.schema'
 
-// *****************************************************************************
-
 const handleCreate = async (
   name: string,
   opacity: number,

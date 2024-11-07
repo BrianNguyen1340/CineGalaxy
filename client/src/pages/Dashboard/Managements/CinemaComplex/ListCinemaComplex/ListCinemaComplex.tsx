@@ -5,7 +5,6 @@ import ReactPaginate from 'react-paginate'
 
 import { useGetAllCinemaComplexesQuery } from '~/services/cinemaComplex.service'
 import { Loader } from '~/components'
-import './ListCinemaComplex.scss'
 
 const ListCinemaComplex = () => {
   const {
@@ -36,8 +35,10 @@ const ListCinemaComplex = () => {
   }
 
   return (
-    <div className='container'>
-      <div className='title'>danh sách cụm rạp</div>
+    <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
+      <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
+        danh sách cụm rạp
+      </div>
       {cinemaComplexes ? (
         <>
           <table>
@@ -52,11 +53,13 @@ const ListCinemaComplex = () => {
               {currentItems.map((item: any, index: number) => (
                 <tr key={index}>
                   <td>{index + offset}</td>
-                  <td>{item.name}</td>
+                  <td className='capitalize'>{item.name}</td>
                   <td>
-                    <Link to={`/update-cinema-complex/${item._id}`}>
-                      <SquarePen />
-                    </Link>
+                    <div className='flex items-center justify-center'>
+                      <Link to={`/update-cinema-complex/${item._id}`}>
+                        <SquarePen />
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))}

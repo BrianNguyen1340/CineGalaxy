@@ -3,10 +3,9 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 
 import { paths } from '~/utils/paths'
-import './MenuMobile.scss'
 
 type MenuMobileProps = {
-  className?: React.CSSProperties
+  className?: string
 }
 
 const MenuMobile: React.FC<MenuMobileProps> = ({ className }) => {
@@ -15,36 +14,131 @@ const MenuMobile: React.FC<MenuMobileProps> = ({ className }) => {
     visible: { opacity: 1, x: 0 },
   }
 
-  const menuItems = [
-    { to: paths.userPaths.giftShop, label: 'shop quà tặng' },
-    { to: paths.userPaths.showtimes, label: 'mua vé' },
-    { to: paths.userPaths.movieLists, label: 'phim' },
-    { to: paths.userPaths.cinemas, label: 'rạp chiếu phim' },
-    { to: paths.userPaths.promotions, label: 'khuyến mãi' },
-    { to: paths.userPaths.contact, label: 'liên hệ' },
-    { to: paths.userPaths.membership, label: 'thành viên' },
-    { to: paths.userPaths.support, label: 'hỗ trợ' },
-    { to: paths.userPaths.login, label: 'đăng nhập' },
-    { to: paths.userPaths.register, label: 'đăng ký' },
-  ]
-
   return (
-    <div className={`${className} menu-mobile`}>
+    <div
+      className={`${className} absolute left-0 top-[100%] z-20 mt-[1px] h-fit w-full bg-white 1000px:hidden`}
+    >
       <ul>
-        {menuItems.map((item, index) => (
-          <motion.li
-            key={item.to}
-            variants={listVariants}
-            initial='hidden'
-            animate='visible'
-            transition={{ duration: 0.3, delay: index * 0.1 }}
+        <motion.li
+          variants={listVariants}
+          initial='hidden'
+          animate='visible'
+          transition={{ duration: 0.3, delay: 0.1 }}
+          className='text-center'
+        >
+          <Link
+            to={paths.userPaths.giftShop}
+            className='block w-full py-4 font-semibold capitalize hover:bg-[#eee]'
+            style={{ transition: '0.5s ease' }}
           >
-            <Link to={item.to}>{item.label}</Link>
-          </motion.li>
-        ))}
-        <div style={{ padding: '10px 0' }} className='hr-menu-mobile'>
-          <hr />
-        </div>
+            shop quà tặng
+          </Link>
+        </motion.li>
+        <motion.li
+          variants={listVariants}
+          initial='hidden'
+          animate='visible'
+          transition={{ duration: 0.3, delay: 0.2 }}
+          className='text-center'
+        >
+          <Link
+            to={paths.userPaths.showtimes}
+            className='block w-full py-4 font-semibold capitalize hover:bg-[#eee]'
+            style={{ transition: '0.5s ease' }}
+          >
+            mua vé
+          </Link>
+        </motion.li>
+        <motion.li
+          variants={listVariants}
+          initial='hidden'
+          animate='visible'
+          transition={{ duration: 0.3, delay: 0.3 }}
+          className='text-center'
+        >
+          <Link
+            to={paths.userPaths.cinemas}
+            className='block w-full py-4 font-semibold capitalize hover:bg-[#eee]'
+            style={{ transition: '0.5s ease' }}
+          >
+            rạp chiếu phim
+          </Link>
+        </motion.li>
+        <motion.li
+          variants={listVariants}
+          initial='hidden'
+          animate='visible'
+          transition={{ duration: 0.3, delay: 0.4 }}
+          className='text-center'
+        >
+          <Link
+            to={paths.userPaths.promotions}
+            className='block w-full py-4 font-semibold capitalize hover:bg-[#eee]'
+            style={{ transition: '0.5s ease' }}
+          >
+            khuyến mãi
+          </Link>
+        </motion.li>
+        <motion.li
+          variants={listVariants}
+          initial='hidden'
+          animate='visible'
+          transition={{ duration: 0.3, delay: 0.5 }}
+          className='text-center'
+        >
+          <Link
+            to={paths.userPaths.contact}
+            className='block w-full py-4 font-semibold capitalize hover:bg-[#eee]'
+            style={{ transition: '0.5s ease' }}
+          >
+            liên hệ
+          </Link>
+        </motion.li>
+        <motion.li
+          variants={listVariants}
+          initial='hidden'
+          animate='visible'
+          transition={{ duration: 0.3, delay: 0.7 }}
+          className='text-center 600px:hidden'
+        >
+          <Link
+            to={paths.userPaths.support}
+            className='block w-full py-4 font-semibold capitalize hover:bg-[#eee]'
+            style={{ transition: '0.5s ease' }}
+          >
+            hỗ trợ
+          </Link>
+        </motion.li>
+        <motion.li
+          variants={listVariants}
+          initial='hidden'
+          animate='visible'
+          transition={{ duration: 0.3, delay: 0.8 }}
+          className='text-center 401px:hidden'
+        >
+          <Link
+            to={paths.userPaths.login}
+            className='block w-full py-4 font-semibold capitalize hover:bg-[#eee]'
+            style={{ transition: '0.5s ease' }}
+          >
+            đăng nhập
+          </Link>
+        </motion.li>
+        <motion.li
+          variants={listVariants}
+          initial='hidden'
+          animate='visible'
+          transition={{ duration: 0.3, delay: 0.9 }}
+          className='text-center 401px:hidden'
+        >
+          <Link
+            to={paths.userPaths.register}
+            className='block w-full py-4 font-semibold capitalize hover:bg-[#eee]'
+            style={{ transition: '0.5s ease' }}
+          >
+            đăng ký
+          </Link>
+        </motion.li>
       </ul>
     </div>
   )

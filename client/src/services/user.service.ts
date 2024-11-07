@@ -1,7 +1,5 @@
 import { apiSlice } from '~/redux/apiSlice'
 
-// *****************************************************************************
-
 export const userAPISlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     profile: builder.query({
@@ -18,17 +16,17 @@ export const userAPISlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    getUserByAdmin: builder.query({
+    getUser: builder.query({
       query: (id) => ({
         url: `/api/v1/user/get-user-by-admin/${id}`,
       }),
     }),
-    getAllUsersByAdmin: builder.query({
+    getUsers: builder.query({
       query: () => ({
         url: `/api/v1/user/get-all-users-by-admin`,
       }),
     }),
-    updateUserByAdmin: builder.mutation({
+    updateUser: builder.mutation({
       query: (data) => ({
         url: `/api/v1/user/update-user-by-admin/${data.id}`,
         method: 'PUT',
@@ -47,15 +45,23 @@ export const userAPISlice = apiSlice.injectEndpoints({
         method: 'PUT',
       }),
     }),
+    createUser: builder.mutation({
+      query: (data) => ({
+        url: `/api/v1/user/create-user`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 })
 
 export const {
   useProfileQuery,
   useUpdateProfileMutation,
-  useGetAllUsersByAdminQuery,
-  useGetUserByAdminQuery,
-  useUpdateUserByAdminMutation,
+  useGetUserQuery,
   useBlockAccountMutation,
   useUnblockAccountMutation,
+  useCreateUserMutation,
+  useGetUsersQuery,
+  useUpdateUserMutation,
 } = userAPISlice

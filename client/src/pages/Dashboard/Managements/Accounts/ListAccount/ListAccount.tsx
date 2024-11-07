@@ -7,15 +7,26 @@ import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
 import {
-  useGetAllUsersByAdminQuery,
+  useGetUsersQuery,
   useBlockAccountMutation,
   useUnblockAccountMutation,
 } from '~/services/user.service'
 import { Loader } from '~/components'
-import './ListAccount.scss'
+import useTitle from '~/hooks/useTitle'
 
 const ListAccount = () => {
-  const { data: users, refetch, isLoading } = useGetAllUsersByAdminQuery({})
+  useTitle('Admin | Danh sách tài khoản')
+
+  const {
+    data: users,
+    refetch,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useGetUsersQuery({})
+
+  let content
 
   const [blockAccount] = useBlockAccountMutation()
   const [unblockAccount] = useUnblockAccountMutation()
@@ -63,119 +74,139 @@ const ListAccount = () => {
     setCurrentPage(event.selected)
   }
 
-  if (isLoading) {
-    return <Loader />
+  if (isLoading) content = <Loader />
+
+  if (isSuccess) {
+    content = (
+      <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
+        <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
+          danh sách tài khoản
+        </div>
+        {users && (
+          <>
+            <table>
+              <thead>
+                <tr>
+                  <th>no.</th>
+                  <th>email</th>
+                  <th>name</th>
+                  <th>avatar</th>
+                  <th>last login</th>
+                  <th>isBlocked</th>
+                  <th>role</th>
+                  <th>action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentItems.map((item: any, index: number) => (
+                  <tr key={index}>
+                    <td>{index + offset}</td>
+                    <td>{item.email}</td>
+                    <td>{item.name}</td>
+                    <td>
+                      <div className='flex items-center justify-center'>
+                        <img
+                          src={item.photoURL}
+                          alt='avatar'
+                          width='70'
+                          height='70'
+                          className='rounded-full'
+                        />
+                      </div>
+                    </td>
+                    <td>
+                      {new Date(item.lastLogin).toLocaleDateString('vi-VN')}
+                      {' - '}
+                      {new Date(item.lastLogin).toLocaleTimeString('vi-VN')}
+                    </td>
+                    <td>
+                      {item.role === 0 ? (
+                        <div className='flex items-center justify-center'>
+                          <FaTimes size='20' color='red' />
+                        </div>
+                      ) : (
+                        <>
+                          {item.isBlocked ? (
+                            <div className='flex items-center justify-center'>
+                              <button
+                                className='cursor-pointer bg-white'
+                                onClick={() => handleUnblockAccount(item?._id)}
+                              >
+                                <FaLock
+                                  size='20'
+                                  color='red'
+                                  className='bg-white'
+                                />
+                              </button>
+                            </div>
+                          ) : (
+                            <div className='flex items-center justify-center'>
+                              <button
+                                className='cursor-pointer bg-white'
+                                onClick={() => handleBlockAccount(item?._id)}
+                              >
+                                <FaLockOpen
+                                  size='20'
+                                  color='green'
+                                  className='bg-white'
+                                />
+                              </button>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </td>
+                    <td>{item.role}</td>
+                    <td>
+                      {item.role === 0 ? (
+                        <div className='flex items-center justify-center'>
+                          <FaTimes size='20' color='red' />
+                        </div>
+                      ) : (
+                        <div className='flex items-center justify-center'>
+                          <Link to={`/update-account/${item._id}`}>
+                            <SquarePen />
+                          </Link>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <ReactPaginate
+              previousLabel={'<'}
+              nextLabel={'>'}
+              breakLabel={'...'}
+              breakClassName={'break-me'}
+              pageCount={Math.ceil(users.data.length / itemsPerPage)}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={handlePageClick}
+              containerClassName={'pagination'}
+              activeClassName={'active'}
+            />
+          </>
+        )}
+      </div>
+    )
   }
 
-  return (
-    <div className='container'>
-      <div className='title'>danh sách tài khoản</div>
-      {users ? (
-        <>
-          <table>
-            <thead>
-              <tr>
-                <th>stt</th>
-                <th>email</th>
-                <th>name</th>
-                <th>avatar</th>
-                <th>last login</th>
-                <th>isBlocked</th>
-                <th>role</th>
-                <th>action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentItems.map((item: any, index: number) => (
-                <tr key={index}>
-                  <td>{index + offset}</td>
-                  <td>{item.email}</td>
-                  <td>{item.name}</td>
-                  <td>
-                    <img
-                      src={item.photoURL}
-                      alt='avatar'
-                      width='70'
-                      height='70'
-                      style={{ borderRadius: '50%' }}
-                    />
-                  </td>
-                  <td>
-                    {new Date(item.lastLogin).toLocaleDateString('vi-VN')}
-                    {' - '}
-                    {new Date(item.lastLogin).toLocaleTimeString('vi-VN')}
-                  </td>
-                  <td>
-                    {item.role === 0 ? (
-                      <FaTimes size='20' color='red' />
-                    ) : (
-                      <>
-                        {item.isBlocked ? (
-                          <button
-                            style={{
-                              backgroundColor: 'white',
-                              cursor: 'pointer',
-                            }}
-                            onClick={() => handleUnblockAccount(item?._id)}
-                          >
-                            <FaLock
-                              size='20'
-                              color='red'
-                              style={{
-                                backgroundColor: 'white',
-                              }}
-                            />
-                          </button>
-                        ) : (
-                          <button
-                            style={{
-                              backgroundColor: 'white',
-                              cursor: 'pointer',
-                            }}
-                            onClick={() => handleBlockAccount(item?._id)}
-                          >
-                            <FaLockOpen
-                              size='20'
-                              color='green'
-                              style={{ backgroundColor: 'white' }}
-                            />
-                          </button>
-                        )}
-                      </>
-                    )}
-                  </td>
-                  <td>{item.role}</td>
-                  <td>
-                    {item.role === 0 ? (
-                      <FaTimes size='20' color='red' />
-                    ) : (
-                      <Link to={`/update-account/${item._id}`}>
-                        <SquarePen />
-                      </Link>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <ReactPaginate
-            previousLabel={'<'}
-            nextLabel={'>'}
-            breakLabel={'...'}
-            breakClassName={'break-me'}
-            pageCount={Math.ceil(users.data.length / itemsPerPage)}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={5}
-            onPageChange={handlePageClick}
-            containerClassName={'pagination'}
-            activeClassName={'active'}
-          />
-        </>
-      ) : (
-        <div>Danh sách tài khoản trống!</div>
-      )}
-    </div>
-  )
+  if (isError) {
+    const errorMessage =
+      error && 'message' in error ? error.message : 'An unknown error occurred.'
+
+    content = (
+      <div>
+        <p>{errorMessage}</p>
+        {error && 'data' in error && (
+          <pre>{JSON.stringify(error.data, null, 2)}</pre>
+        )}
+      </div>
+    )
+  }
+
+  return content
 }
 
 export default ListAccount

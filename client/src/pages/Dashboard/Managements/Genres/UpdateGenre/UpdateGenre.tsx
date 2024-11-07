@@ -11,7 +11,6 @@ import {
 } from '~/services/genre.service'
 import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
-import './UpdateGenre.scss'
 
 const UpdateGenre = () => {
   const { id } = useParams()
@@ -73,18 +72,11 @@ const UpdateGenre = () => {
         <button
           type='submit'
           disabled={isLoading ? true : false}
-          className='btn-update'
+          className='rounded bg-black px-4 py-3 font-semibold text-white transition duration-300 hover:opacity-70'
         >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '10px',
-            }}
-          >
+          <div className='flex items-center justify-center gap-3'>
             {isLoading && <HashLoader size='20' color='#fff' />}
-            <span>{isLoading ? 'Đang cập nhật' : 'Cập nhật'}</span>
+            <span className='capitalize'>{isLoading ? 'đang lưu' : 'lưu'}</span>
           </div>
         </button>
       </form>

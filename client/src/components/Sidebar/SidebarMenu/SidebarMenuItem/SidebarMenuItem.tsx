@@ -1,8 +1,6 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
-import './SidebarMenuItem.scss'
-
 type SidebarMenuItemProps = {
   icon?: React.ReactNode
   title?: string
@@ -26,40 +24,20 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
 
   return (
     <Link
-      className={`sidebar-menu-item-container ${isSelected ? 'selected' : ''}`}
+      className={`${isSelected && 'selected bg-[#fff6f6]'} flex w-full items-center justify-start gap-4 overflow-hidden rounded-[6px] p-2 font-semibold text-gray-800 transition duration-300 hover:bg-[#fff6f6]`}
       title={title}
       to={path}
       onClick={onSelect}
-      style={{
-        backgroundColor: `${isSelected ? '#fff6f6' : ''}`,
-        color: `${isSelected && '#000'}`,
-      }}
     >
-      <div className='content'>
+      <div className='flex items-center gap-4'>
         {icon
           ? icon
           : spanTitle && (
-              <div
-                style={{
-                  width: '30px',
-                  height: '30px',
-                  textAlign: 'center',
-                  fontWeight: 600,
-                  textTransform: 'capitalize',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: '4px',
-                  boxShadow: '0 3px 6px rgba(83, 108, 167, .16)',
-                  border: '2px solid #ccc',
-                }}
-              >
+              <div className='flex h-[30px] w-[30px] items-center justify-center rounded-[4px] border-2 border-[#ccc] text-center font-semibold capitalize shadow-md'>
                 {spanTitle}
               </div>
             )}
-        <span style={{ textTransform: 'capitalize', fontSize: '14px' }}>
-          {spanText}
-        </span>
+        <span className='text-sm capitalize'>{spanText}</span>
       </div>
     </Link>
   )

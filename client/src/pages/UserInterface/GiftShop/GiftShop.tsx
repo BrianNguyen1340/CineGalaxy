@@ -1,5 +1,5 @@
 const GiftShop = () => {
-    return <div>GiftShop</div>;
-};
+  return <div></div>
+}
 
-export default GiftShop;
+export default GiftShop

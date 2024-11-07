@@ -1,8 +1,6 @@
 import { ChevronDown } from 'lucide-react'
 import { FC, ReactNode, useState } from 'react'
 
-import './SidebarMenu.scss'
-
 type SidebarMenuProps = {
   img?: string
   user?: ReactNode
@@ -27,47 +25,43 @@ const SidebarMenu: FC<SidebarMenuProps> = ({
   const [openSidebarMenu, setOpenSidebarMenu] = useState<boolean>(false)
 
   return (
-    <div className={`sidebar-menu-container ${className}`} style={style}>
+    <div className={`${className} mb-1 flex flex-col px-4`} style={style}>
       <div
-        className={`upper-content ${openSidebarMenu ? 'mb-1' : 'mb-0'}`}
+        className={`${openSidebarMenu ? 'mb-1' : 'mb-0'} mb-1 flex cursor-pointer items-center justify-between rounded-[6px] bg-[#f4f4f4] p-2 transition duration-300`}
         onClick={() => setOpenSidebarMenu(!openSidebarMenu)}
       >
-        <div className='title'>
+        <div className='flex items-center gap-4'>
           {icon && (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '30px',
-                width: '30px',
-                borderRadius: '4px',
-                boxShadow: '0 3px 6px rgba(83, 108, 167, .16)',
-                border: '2px solid #4cc9f0',
-              }}
-            >
+            <div className='flex h-[30px] w-[30px] items-center justify-center rounded-[4px] border-2 border-[#4cc9f0] shadow-md'>
               {icon}
             </div>
           )}
-          {spanTitle && <span className='span-title'>{spanTitle}</span>}
-          {img && <img src={img} alt='avatar' />}
-          {user && <span className='duration-300 span-userdata'>{user}</span>}
+          {spanTitle && (
+            <span className='text-sm font-semibold capitalize'>
+              {spanTitle}
+            </span>
+          )}
+          {img && (
+            <img
+              src={img}
+              alt='avatar'
+              className='h-10 w-10 rounded-full text-sm'
+            />
+          )}
+          {user && (
+            <span className='text-sm font-semibold capitalize transition duration-300'>
+              {user}
+            </span>
+          )}
         </div>
         <div
-          style={{
-            transition: `${openSidebarMenu ? '0.3s ease' : '0.3s ease'}`,
-          }}
-          className={`dropdown-btn ${openSidebarMenu && 'rotate-180'}`}
+          className={`${openSidebarMenu && 'rotate-180'} flex cursor-pointer items-center justify-center transition duration-300`}
         >
           <ChevronDown size='20' color='#00acc1' />
         </div>
       </div>
       <div
-        className='lower-content'
-        style={{
-          height: `${openSidebarMenu ? 'fit-content' : '0'}`,
-          opacity: `${openSidebarMenu ? '1' : '0'}`,
-        }}
+        className={`${openSidebarMenu ? 'opacity-1 h-fit' : 'h-0 opacity-0'} flex w-full flex-col gap-1 overflow-hidden transition duration-300`}
       >
         {item}
         {button}

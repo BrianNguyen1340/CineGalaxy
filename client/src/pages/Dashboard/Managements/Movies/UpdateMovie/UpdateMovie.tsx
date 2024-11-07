@@ -24,7 +24,6 @@ import { FaRegStar } from 'react-icons/fa'
 import { DayPicker } from 'react-day-picker'
 import { AiOutlineCloudUpload } from 'react-icons/ai'
 import { CircularProgressbar } from 'react-circular-progressbar'
-import './UpdateMovie.scss'
 
 const UpdateMovie = () => {
   const { id } = useParams()
@@ -118,7 +117,7 @@ const UpdateMovie = () => {
       setBannerUploadError(null)
       const storage = getStorage(app)
       const fileName = new Date().getTime() + '-' + banner.name
-      const storageRef = ref(storage, fileName)
+      const storageRef = ref(storage, `banners/${fileName}`)
       const uploadTask = uploadBytesResumable(storageRef, banner)
       uploadTask.on(
         'state_changed',
@@ -164,7 +163,7 @@ const UpdateMovie = () => {
 
       const storage = getStorage(app)
       const fileName = new Date().getTime() + '-' + poster.name
-      const storageRef = ref(storage, fileName)
+      const storageRef = ref(storage, `posters/${fileName}`)
       const uploadTask = uploadBytesResumable(storageRef, poster)
 
       uploadTask.on(
@@ -451,7 +450,6 @@ const UpdateMovie = () => {
           </button>
           {posterUploadError && <div>{posterUploadError}</div>}
         </div>
-
         {/* banner */}
         <div
           style={{

@@ -6,7 +6,7 @@ import ReactModal from 'react-modal'
 
 import { useGetMovieQuery } from '~/services/movie.service'
 import { paths } from '~/utils/paths'
-import './MovieDetails.scss'
+import { Loader } from '~/components'
 
 ReactModal.setAppElement('#root')
 
@@ -18,16 +18,32 @@ const MovieDetails = () => {
   const openModal = () => setIsOpen(true)
   const closeModal = () => setIsOpen(false)
 
-  const { data: movie } = useGetMovieQuery(id)
+  const { data: movie, isLoading } = useGetMovieQuery(id)
+
+  if (isLoading) {
+    return <Loader />
+  }
 
   return (
-    <div className='movie-details-container'>
-      <div className='title'>phim hot tại rạp</div>
-      <div className='banner'>
-        <div className='movie-trailer'>
-          <img src={movie?.data?.banner} alt='' />
+    <div className='h-fit w-full'>
+      <div
+        className='bg-[#efebdb] py-5 text-center text-sm font-semibold uppercase tracking-[0.5px]'
+        style={{ fontFamily: 'Arial, Helvetica, sans-serif' }}
+      >
+        phim hot tại rạp
+      </div>
+      <div className='bg-[#231f20]'>
+        <div className='relative mx-auto h-[470px] w-[850px] overflow-hidden'>
+          <img
+            src={movie?.data?.banner}
+            alt=''
+            className='w-[850px] object-cover'
+          />
           {!isOpen && (
-            <button onClick={openModal} className='open-trailer'>
+            <button
+              onClick={openModal}
+              className='absolute left-[50%] top-[50%] z-10 h-[120px] w-[120px] translate-x-[-50%] translate-y-[-50%] cursor-pointer rounded-full border-[3px] border-white'
+            >
               <TbPlayerPlay size='50' color='white' />
             </button>
           )}
@@ -57,15 +73,19 @@ const MovieDetails = () => {
           />
         </ReactModal>
       </div>
-      <div className='wide-info-area'>
-        <div className='wide-top'>
-          <div className='thumb'>
+      <div className='mx-auto w-[980px] pb-[50px] pt-[30px]'>
+        <div className='flex items-start'>
+          <div className='mr-[30px]'>
             <div>
-              <img src={movie?.data?.poster} alt='poster' />
+              <img
+                src={movie?.data?.poster}
+                alt='poster'
+                className='w-[220px] object-cover'
+              />
             </div>
-            <div style={{ marginTop: '10px' }}>
+            <button className='btn-to-showtime mt-10px'>
               <Link to={paths.userPaths.showtimes}>đặt vé</Link>
-            </div>
+            </button>
           </div>
           <div className='info-main'>
             <div className='name'>{movie?.data?.name}</div>

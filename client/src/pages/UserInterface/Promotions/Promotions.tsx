@@ -1,5 +1,5 @@
 const Promotions = () => {
-    return <div>Promotions</div>;
-};
+  return <div></div>
+}
 
-export default Promotions;
+export default Promotions

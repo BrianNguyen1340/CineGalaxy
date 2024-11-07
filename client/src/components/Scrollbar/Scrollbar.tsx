@@ -28,8 +28,8 @@ const Scrollbar: React.FC<ScrollbarProps> = ({
   return (
     <div
       ref={containerRef}
-      style={{ position: 'relative', height: `${height}` }}
-      className={`${className}`}
+      style={{ height: `${height}` }}
+      className={`${className} relative`}
     >
       {content}
     </div>

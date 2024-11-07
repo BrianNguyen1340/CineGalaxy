@@ -1,10 +1,18 @@
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import Swal from 'sweetalert2'
-import nProgress from 'nprogress'
 import { GiFilmProjector } from 'react-icons/gi'
 import { MdCategory } from 'react-icons/md'
 import { SiShowtime } from 'react-icons/si'
+import {
+  Armchair,
+  CircleParking,
+  Clapperboard,
+  Film,
+  LogOut,
+  ShieldCheck,
+} from 'lucide-react'
+import Swal from 'sweetalert2'
+import nProgress from 'nprogress'
 
 import { useAppDispatch, useAppSelector } from '~/hooks/redux'
 import { useLogoutMutation } from '~/services/auth.service'
@@ -16,20 +24,12 @@ import {
   SidebarMenuItem,
   SidebarTop,
 } from '~/components'
-import {
-  Armchair,
-  CircleParking,
-  Clapperboard,
-  Film,
-  LogOut,
-  ShieldCheck,
-} from 'lucide-react'
-import './Sidebar.scss'
 
 type SidebarProps = {
   openSidebar: boolean
   setOpenSidebar: (open: boolean) => void
   style?: React.CSSProperties
+  className?: string
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -80,13 +80,12 @@ const Sidebar: React.FC<SidebarProps> = ({
   }
 
   return (
-    <aside className={`sidebar-container`} style={style}>
+    <aside
+      className='fixed flex h-screen flex-col overflow-hidden border border-[#eee] bg-white shadow-custom'
+      style={style}
+    >
       <SidebarTop openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
-      <div
-        style={{
-          padding: '0 16px',
-        }}
-      >
+      <div className='px-4'>
         <hr />
         <hr />
       </div>
@@ -95,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         content={
           <>
             <SidebarMenu
-              style={{ paddingTop: '16px' }}
+              className='pt-4'
               user={`${user?.name}`}
               img={user?.photoURL}
               item={
@@ -109,30 +108,14 @@ const Sidebar: React.FC<SidebarProps> = ({
               }
               button={
                 <button
-                  className='btn-logout'
+                  className='flex w-full cursor-pointer items-center gap-4 overflow-hidden rounded-[6px] bg-[#ff9696] p-2 text-white transition duration-300 hover:opacity-70'
                   type='submit'
                   onClick={handleLogout}
                 >
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '30px',
-                      height: '30px',
-                      borderRadius: '4px',
-                      boxShadow: '0 3px 6px rgba(83, 108, 167, .16)',
-                      border: '2px solid #f0f0f0',
-                    }}
-                  >
+                  <div className='flex h-[30px] w-[30px] items-center justify-center rounded-[4px] border-2 border-[#f0f0f0] shadow-md'>
                     <LogOut size='16' />
                   </div>
-                  <div
-                    style={{
-                      textTransform: 'capitalize',
-                      fontSize: '14px',
-                    }}
-                  >
+                  <div className='text-sm capitalize'>
                     {isLoading ? 'Đang đăng xuất' : 'Đăng xuất'}
                   </div>
                 </button>

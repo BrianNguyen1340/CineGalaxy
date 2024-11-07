@@ -5,7 +5,6 @@ import ReactPaginate from 'react-paginate'
 
 import { Loader } from '~/components'
 import { useGetAllRoomsQuery } from '~/services/room.service'
-import './ListRoom.scss'
 
 const ListRoom = () => {
   const { data: rooms, isLoading, refetch } = useGetAllRoomsQuery({})

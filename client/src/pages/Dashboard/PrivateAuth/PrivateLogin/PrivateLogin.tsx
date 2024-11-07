@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
-import { Eye, EyeOff, FileLock, Mail } from 'lucide-react'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Eye, EyeOff } from 'lucide-react'
 import { HashLoader } from 'react-spinners'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
@@ -15,30 +15,24 @@ import {
   loginSuccess,
 } from '~/redux/reducers/user.reducer'
 import { FormInputGroup } from '~/components'
-import './PrivateLogin.scss'
-
-type UserData = {
-  email: string
-  password: string
-}
 
 const PrivateLogin = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   const { user } = useAppSelector((state) => state.user)
-
-  useEffect(() => {
-    if (user) {
-      navigate(paths.dashboardPaths.dashboard)
-    }
-  }, [user, navigate])
+  if (user) {
+    return <Navigate to={paths.dashboardPaths.dashboard} replace />
+  }
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<UserData>()
+  } = useForm<{
+    email: string
+    password: string
+  }>()
 
   const [loginApi, { isLoading }] = useLoginMutation()
   const [showHidePassword, setShowHidePassword] = useState<boolean>(false)
@@ -47,7 +41,10 @@ const PrivateLogin = () => {
     setShowHidePassword((prevState) => !prevState)
   }
 
-  const handleLogin: SubmitHandler<UserData> = async (reqBody) => {
+  const handleLogin: SubmitHandler<{
+    email: string
+    password: string
+  }> = async (reqBody) => {
     try {
       const { email, password } = reqBody
       dispatch(loginStart())
@@ -73,9 +70,11 @@ const PrivateLogin = () => {
   }
 
   return (
-    <div className='private-login-container'>
-      <div className='content'>
-        <div className='title'>login panel</div>
+    <div className='relative flex h-screen w-full items-center justify-center bg-white'>
+      <div className='bordert-2 w-[500px] rounded-[20px] border-l-2 border-r-2 border-[#eee] p-5 shadow-md'>
+        <div className='mb-[30px] text-center text-xl font-semibold capitalize'>
+          login panel
+        </div>
         <form onSubmit={handleSubmit(handleLogin)}>
           <FormInputGroup
             register={register}
@@ -89,16 +88,13 @@ const PrivateLogin = () => {
             }}
             htmlFor='email'
             labelChildren={
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
+              <div className='flex items-center justify-between'>
                 <div>Email</div>
-                <div className='forgot-password-director-btn'>
-                  <Link to={paths.userPaths.privateForgotPassword}>
+                <div>
+                  <Link
+                    to={paths.userPaths.privateForgotPassword}
+                    className='italic hover:text-[red] hover:underline hover:opacity-80'
+                  >
                     quên mật khẩu?
                   </Link>
                 </div>
@@ -107,7 +103,7 @@ const PrivateLogin = () => {
             type='text'
             id='email'
             name='email'
-            icon={<Mail />}
+            placeholder='example@gmail.com'
           />
           <FormInputGroup
             register={register}
@@ -116,34 +112,27 @@ const PrivateLogin = () => {
               required: 'Vui lòng nhập mật khẩu!',
             }}
             htmlFor='password'
-            labelChildren='password'
+            labelChildren='mật khẩu'
             type={showHidePassword ? 'text' : 'password'}
             id='password'
             name='password'
             children={
               <button
                 type='button'
-                className='btn-show-hide-password'
+                className='absolute right-3 top-[50%] z-10 flex translate-y-[-50%] cursor-pointer items-center justify-center rounded-full bg-white p-3'
                 onClick={handleShowHidePassword}
               >
                 {showHidePassword ? <Eye size='20' /> : <EyeOff size='20' />}
               </button>
             }
-            icon={<FileLock />}
+            placeholder='Vui lòng nhập mật khẩu!'
           />
           <button
             type='submit'
             disabled={isLoading ? true : false}
-            className='btn-submit-login'
+            className='flex w-full cursor-pointer items-center justify-center rounded-[40px] bg-[#f97417] p-5 text-base font-semibold capitalize text-white transition duration-300 hover:opacity-80'
           >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '10px',
-              }}
-            >
+            <div className='flex items-center justify-center gap-[10px]'>
               {isLoading && <HashLoader size='20' color='#fff' />}
               <span>{isLoading ? 'Đang đăng nhập' : 'Đăng nhập'}</span>
             </div>

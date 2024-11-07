@@ -1,7 +1,5 @@
 import { apiSlice } from '~/redux/apiSlice'
 
-// *****************************************************************************
-
 export const cinemaComplexAPISlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createCinemaComplex: builder.mutation({

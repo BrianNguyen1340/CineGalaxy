@@ -1,5 +1,5 @@
 const Cinemas = () => {
-    return <div>Cinemas</div>;
-};
+  return <div></div>
+}
 
-export default Cinemas;
+export default Cinemas

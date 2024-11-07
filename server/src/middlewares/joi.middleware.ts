@@ -2,8 +2,6 @@ import { Request, Response, NextFunction } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { ObjectSchema } from 'joi'
 
-// *****************************************************************************
-
 type ValidationDataSchema = {
   body?: ObjectSchema
   params?: ObjectSchema

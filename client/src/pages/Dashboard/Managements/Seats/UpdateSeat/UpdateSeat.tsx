@@ -8,7 +8,6 @@ import { useGetSeatQuery, useUpdateSeatMutation } from '~/services/seat.service'
 import { FaRegStar } from 'react-icons/fa'
 import { FormInputGroup, Loader } from '~/components'
 import { paths } from '~/utils/paths'
-import './UpdateSeat.scss'
 
 const UpdateSeat = () => {
   const { id } = useParams()

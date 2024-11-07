@@ -1,5 +1,5 @@
 const WatchedMovies = () => {
-    return <div>WatchedMovies</div>;
-};
+  return <div></div>
+}
 
-export default WatchedMovies;
+export default WatchedMovies

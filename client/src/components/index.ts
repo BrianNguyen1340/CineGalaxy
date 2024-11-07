@@ -10,7 +10,6 @@ import Sidebar from './Sidebar/Sidebar'
 import SidebarTop from './Sidebar/SidebarTop/SidebarTop'
 import SidebarMenu from './Sidebar/SidebarMenu/SidebarMenu'
 import SidebarMenuItem from './Sidebar/SidebarMenu/SidebarMenuItem/SidebarMenuItem'
-import DashFooter from './DashFooter/DashFooter'
 import DashHeader from './DashHeader/DashHeader'
 import FloatingShape from './FloatingShape/FloatingShape'
 import DashLayout from './DashLayout/DashLayout'
@@ -22,12 +21,12 @@ import MenuDropdown from './Header/DynamicNavigation/MenuDropdown/MenuDropdown'
 import Loader from './Loader/Loader'
 import Loading from './Loading/Loading'
 import Scrollbar from './Scrollbar/Scrollbar'
+import BreadcrumbAccount from './BreadcrumbAccount/BreadcrumbAccount'
 
 export {
   Header,
   MainLayout,
   MainNavigation,
-  DashFooter,
   DashHeader,
   DashLayout,
   DynamicNavigation,
@@ -47,4 +46,5 @@ export {
   Scrollbar,
   SidebarMenu,
   SidebarMenuItem,
+  BreadcrumbAccount,
 }

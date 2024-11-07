@@ -21,7 +21,6 @@ import { paths } from '~/utils/paths'
 import { useGetAllGenresQuery } from '~/services/genre.service'
 import { FormInputGroup } from '~/components'
 import { app } from '~/firebase/firebase.config'
-import './CreateMovie.scss'
 
 const CreateMovie = () => {
   const navigate = useNavigate()
@@ -78,7 +77,7 @@ const CreateMovie = () => {
       setBannerUploadError(null)
       const storage = getStorage(app)
       const fileName = new Date().getTime() + '-' + banner.name
-      const storageRef = ref(storage, fileName)
+      const storageRef = ref(storage, `banners/${fileName}`)
       const uploadTask = uploadBytesResumable(storageRef, banner)
       uploadTask.on(
         'state_changed',
@@ -122,7 +121,7 @@ const CreateMovie = () => {
       setPosterUploadError(null)
       const storage = getStorage(app)
       const fileName = new Date().getTime() + '-' + poster.name
-      const storageRef = ref(storage, fileName)
+      const storageRef = ref(storage, `posters/${fileName}`)
       const uploadTask = uploadBytesResumable(storageRef, poster)
       uploadTask.on(
         'state_changed',

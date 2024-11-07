@@ -1,7 +1,5 @@
 import { apiSlice } from '~/redux/apiSlice'
 
-// *****************************************************************************
-
 export const seatAPISlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createSeat: builder.mutation({

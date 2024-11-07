@@ -3,8 +3,6 @@ import { Types } from 'mongoose'
 
 import { MovieType, movieModel } from '~/schemas/movie.schema'
 
-// *****************************************************************************
-
 const handleCreate = async (
   name: string,
   slug: string,

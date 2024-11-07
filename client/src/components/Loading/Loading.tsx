@@ -1,7 +1,5 @@
-import './Loading.scss'
-
 const Loading = () => {
-  return <div className='loading-container'></div>
+  return <div className=''></div>
 }
 
 export default Loading

@@ -3,8 +3,6 @@ import { Types } from 'mongoose'
 
 import { ShowtimeType, showtimeModel } from '~/schemas/showtime.schema'
 
-// *****************************************************************************
-
 const handleCreate = async (
   timeStart: Date,
   timeEnd: Date,

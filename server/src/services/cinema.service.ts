@@ -3,8 +3,6 @@ import { Types } from 'mongoose'
 
 import { CinemaType, cinemaModel } from '~/schemas/cinema.schema'
 
-// *****************************************************************************
-
 const handleCreate = async (
   name: string,
   email: string,

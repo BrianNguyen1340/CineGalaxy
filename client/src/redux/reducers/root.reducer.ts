@@ -5,8 +5,6 @@ import storage from 'redux-persist/lib/storage'
 import { apiSlice } from '~/redux/apiSlice'
 import userReducer from './user.reducer'
 
-// *****************************************************************************
-
 const userPersistConfig = {
   key: 'user',
   storage,

@@ -1,14 +1,13 @@
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { HashLoader } from 'react-spinners'
+import { FaRegStar } from 'react-icons/fa'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
 import { useCreateSeatMutation } from '~/services/seat.service'
 import { FormInputGroup } from '~/components'
 import { paths } from '~/utils/paths'
-import './CreateSeat.scss'
-import { FaRegStar } from 'react-icons/fa'
 
 const CreateSeat = () => {
   const {

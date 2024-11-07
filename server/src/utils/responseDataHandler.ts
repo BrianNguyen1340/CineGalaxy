@@ -1,7 +1,5 @@
 import { Response } from 'express'
 
-// *****************************************************************************
-
 type ErrorResponse = {
   success: boolean
   message: string
@@ -29,10 +27,12 @@ export const sendSuccessResponse = <T>(
   statusCode: number,
   message: string,
   data?: T,
+  accessToken?: string,
 ) => {
   return res.status(statusCode).json({
     success: true,
     message,
     ...(data && { data }),
+    ...(accessToken && { accessToken }),
   } as SuccessResponse<T>)
 }

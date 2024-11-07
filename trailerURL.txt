@@ -4,3 +4,24 @@ quy an tang: https://www.youtube.com/embed/xVVZvSybaEc?si=8lnTwLexXWSsZdNz
 venom: https://www.youtube.com/embed/HyIyd9joTTc?si=h3HPANkzo_ICYXg0
 tro choi nhan tinh: https://www.youtube.com/embed/KvmVQpkv4Pw?si=hQYiQ7n3ZG4ssdPx
 ngay xua co mot chuyen tinh: https://www.youtube.com/embed/qaeHlk0OXec?si=zr8ABG1Y0K8ZPw30
+
+********************************************************************************************
+
+BACKEND
+
+nodejs: https://nodejs.org/en
+expressjs: https://expressjs.com/
+mongodb: https://www.mongodb.com/
+socket.io: https://socket.io/
+jsonwebtoken: https://jwt.io/
+nodemailer: https://www.nodemailer.com/
+
+FRONTEND
+
+vitejs: https://vite.dev/
+redux-toolkit: https://redux-toolkit.js.org/
+firebase: https://firebase.google.com/
+tailwindcss: https://tailwindcss.com/
+socket.io: https://socket.io/
+
+* NOTE: cả 2 phía được viết bằng ngôn ngữ lập trình typescript

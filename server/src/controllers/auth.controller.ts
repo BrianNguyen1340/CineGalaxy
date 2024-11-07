@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express'
 import { StatusCodes } from 'http-status-codes'
+import jwt from 'jsonwebtoken'
 
 import { handleJoiError } from '~/middlewares/joi.middleware'
 import { authValidation } from '~/validations/auth.validation'
@@ -10,8 +11,9 @@ import {
 import { authService } from '~/services/auth.service'
 import { clearAuthCookies, setAuthCookies } from '~/utils/cookies'
 import { catchErrors } from '~/utils/catchErrors'
-
-// *****************************************************************************
+import { varEnv } from '~/configs/variableEnv.config'
+import { userModel } from '~/schemas/user.schema'
+import { generateToken } from '~/utils/jsonwebtoken'
 
 const register: RequestHandler = catchErrors(async (req, res) => {
   const { email, password, name } = req.body
@@ -129,6 +131,45 @@ const login: RequestHandler = catchErrors(async (req, res) => {
     response.statusCode,
     response.message,
     response.data,
+    response.accessToken,
+  )
+})
+
+const refresh = catchErrors(async (req, res) => {
+  const cookies = req.cookies
+
+  if (!cookies?.RT) {
+    return res.status(401).json({ message: 'Unauthorized' })
+  }
+
+  const refreshToken = cookies.RT
+
+  jwt.verify(
+    refreshToken,
+    varEnv.JWT_REFRESH_TOKEN_KEY,
+    async (error: any, decoded: any) => {
+      if (error) {
+        return res.status(403).json({ message: 'Forbidden' })
+      }
+
+      const user = await userModel.findOne({ _id: decoded._id })
+      if (!user) {
+        return res.status(401).json({ message: 'Unauthorized' })
+      }
+
+      const accessToken = generateToken(
+        {
+          _id: user._id,
+          role: user.role,
+        },
+        { secret: varEnv.JWT_ACCESS_TOKEN_KEY, expiresIn: '1d' },
+      )
+
+      return res.status(200).json({
+        message: `Token đã được làm mới thành công - ${new Date().toLocaleTimeString('vi-VN')} - ${new Date().toLocaleDateString('vi-VN')}`,
+        accessToken: accessToken,
+      })
+    },
   )
 })
 
@@ -198,6 +239,7 @@ const authController = {
     handleJoiError({ body: authValidation.gooleLogin }),
     googleLogin,
   ],
+  refresh,
 }
 
 export default authController

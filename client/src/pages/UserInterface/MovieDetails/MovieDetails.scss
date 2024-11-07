@@ -56,6 +56,16 @@
       .thumb {
         margin-right: 30px;
 
+        .btn-to-showtime {
+          width: 100%;
+          font-size: 16px;
+          transition: 0.5s ease;
+
+          &:hover {
+            opacity: 0.9;
+          }
+        }
+
         img {
           width: 220px;
           object-fit: cover;

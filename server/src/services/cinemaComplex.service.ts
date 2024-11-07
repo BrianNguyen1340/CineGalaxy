@@ -6,8 +6,6 @@ import {
   cinemaComplexModel,
 } from '~/schemas/cinemaComplex.schema'
 
-// *****************************************************************************
-
 const handleCreate = async (
   name: string,
 ): Promise<{

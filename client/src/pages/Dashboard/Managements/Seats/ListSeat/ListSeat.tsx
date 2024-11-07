@@ -5,7 +5,6 @@ import ReactPaginate from 'react-paginate'
 
 import { Loader } from '~/components'
 import { useGetAllSeatsQuery } from '~/services/seat.service'
-import './ListSeat.scss'
 
 const ListSeat = () => {
   const { data: seats, isLoading, refetch } = useGetAllSeatsQuery({})

@@ -9,8 +9,6 @@ import { movieRoute } from './movie.route'
 import { roomRoute } from './room.route'
 import { seatRoute } from './seat.route'
 
-// *****************************************************************************
-
 const router = Router()
 
 export const initAPIRoutes = (app: Application) => {

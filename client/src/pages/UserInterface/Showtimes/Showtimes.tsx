@@ -1,5 +1,5 @@
 const Showtimes = () => {
-    return <div>Showtimes</div>;
-};
+  return <div></div>
+}
 
-export default Showtimes;
+export default Showtimes

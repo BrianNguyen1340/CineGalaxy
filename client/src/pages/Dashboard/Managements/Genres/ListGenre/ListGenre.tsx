@@ -5,7 +5,6 @@ import ReactPaginate from 'react-paginate'
 
 import { useGetAllGenresQuery } from '~/services/genre.service'
 import { Loader } from '~/components'
-import './ListGenre.scss'
 
 const ListGenre = () => {
   const { data: genres, refetch, isLoading } = useGetAllGenresQuery({})

@@ -12,11 +12,6 @@ import {
   useResendOTPMutation,
 } from '~/services/auth.service'
 import { useAppSelector } from '~/hooks/redux'
-import './VerifyOTP.scss'
-
-type OTP = {
-  code?: number
-}
 
 const VerifyOTP = () => {
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
@@ -81,7 +76,7 @@ const VerifyOTP = () => {
     }
   }
 
-  const handleVerifyOTP: SubmitHandler<OTP> = async () => {
+  const handleVerifyOTP: SubmitHandler<{ code?: number }> = async () => {
     const otpCode = code.join('')
     if (otpCode.length < 8) {
       setError('code', {
@@ -130,20 +125,19 @@ const VerifyOTP = () => {
   }
 
   return (
-    <div className='verify-otp-container'>
+    <div className='relative flex h-screen w-full items-center justify-center overflow-hidden text-center'>
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className='content'
+        className='w-fit overflow-hidden border-t border-[#ddd] bg-white p-5 shadow-md backdrop-blur-[24px]'
       >
-        <h2>Xác minh OTP của bạn</h2>
-        <p>Nhập 8 mã số đã được gửi tới email của bạn!</p>
-        <form
-          className='verify-otp-register-form'
-          onSubmit={handleSubmit(handleVerifyOTP)}
-        >
-          <div className='input-fields'>
+        <div className='text-xl font-semibold capitalize'>
+          Xác minh OTP của bạn
+        </div>
+        <p className='my-5'>Nhập 8 mã số đã được gửi tới email của bạn!</p>
+        <form onSubmit={handleSubmit(handleVerifyOTP)}>
+          <div className='flex items-center justify-center gap-[10px]'>
             {code.map((digit, index) => (
               <input
                 {...register('code', {
@@ -161,40 +155,30 @@ const VerifyOTP = () => {
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
                 autoComplete='off'
+                className='h-12 w-12 rounded border-2 border-[#ccc] bg-[#f8f7f4] text-center font-semibold leading-8 outline-none focus:border-2 focus:border-[red]'
               />
             ))}
           </div>
           {errors.code && typeof errors.code.message === 'string' && (
-            <div
-              style={{
-                marginTop: '10px',
-                fontSize: '15px',
-                fontStyle: 'italic',
-                color: 'red',
-              }}
-            >
-              {errors.code.message}
-            </div>
+            <div className='mt-3 italic text-[red]'>{errors.code.message}</div>
           )}
-          <button type='submit'>
+          <button
+            type='submit'
+            className='mt-5 flex w-full cursor-pointer items-center justify-center rounded-[40px] bg-[#f97417] p-5 text-base font-semibold capitalize text-white transition duration-300 hover:opacity-80'
+          >
             {isLoadingVerifyRegister ? 'Đang xác nhận' : 'Xác nhận'}
           </button>
         </form>
         <button
-          className='resend-otp-form'
+          className='mt-5 cursor-pointer bg-white p-1 capitalize transition duration-300'
           onClick={handleResendOTP}
           disabled={isLoadingResendOTP ? true : false}
         >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '10px',
-            }}
-          >
+          <div className='flex items-center justify-center gap-3'>
             {isLoadingResendOTP && <HashLoader size='20' color='#fff' />}
-            <span>{isLoadingResendOTP ? 'Đang đăng ký' : 'Đăng ký'}</span>
+            <span className='capitalize italic hover:text-[red] hover:underline'>
+              {isLoadingResendOTP ? 'đang gửi lại otp' : 'gửi lại mã OTP'}
+            </span>
           </div>
         </button>
       </motion.div>

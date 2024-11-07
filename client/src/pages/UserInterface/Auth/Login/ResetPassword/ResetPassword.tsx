@@ -11,7 +11,6 @@ import { FormInputGroup } from '~/components'
 import { useResetPasswordMutation } from '~/services/auth.service'
 import { paths } from '~/utils/paths'
 import { useAppSelector } from '~/hooks/redux'
-import './ResetPassword.scss'
 
 type ResetPasswordData = {
   password: string
@@ -19,12 +18,8 @@ type ResetPasswordData = {
 
 const ResetPassword = () => {
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
-  if (isAuthenticated) {
-    if (user?.role === 3) {
-      return <Navigate to={paths.userPaths.home} />
-    } else if (user?.role === 0 || user?.role === 1 || user?.role === 2) {
-      return <Navigate to={paths.dashboardPaths.dashboard} />
-    }
+  if (isAuthenticated && user) {
+    return <Navigate to={paths.userPaths.home} />
   }
 
   const {
@@ -77,18 +72,19 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className='reset-password-container'>
+    <div className='relative flex h-screen w-full items-center justify-center overflow-x-hidden bg-white'>
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className='content'
+        className='w-[500px] overflow-hidden border-t border-[#ddd] bg-white p-5 shadow-md backdrop-blur-[24px]'
       >
-        <div className='auth-content'>
-          <div className='title'>CineGalaxy</div>
-          <div className='sub-title'>Thay đổi mật khẩu của bạn</div>
+        <div className='w-full'>
+          <div className='mb-[30px] text-center text-[30px] font-semibold'>
+            Thay đổi mật khẩu của bạn
+          </div>
         </div>
-        <form onSubmit={handleSubmit(handleResetPassword)}>
+        <form onSubmit={handleSubmit(handleResetPassword)} className='w-full'>
           <FormInputGroup
             register={register}
             errors={errors}
@@ -96,7 +92,7 @@ const ResetPassword = () => {
               required: 'Vui lòng nhập mật khẩu!',
             }}
             htmlFor='password'
-            labelChildren='password'
+            labelChildren='mật khẩu'
             type={showHidePassword ? 'text' : 'password'}
             id='password'
             placeholder='Nhập mật khẩu mới'
@@ -104,7 +100,7 @@ const ResetPassword = () => {
             children={
               <button
                 type='button'
-                className='btn-show-hide-password'
+                className='absolute right-3 top-[50%] z-10 flex translate-y-[-50%] cursor-pointer items-center justify-center bg-transparent p-3'
                 onClick={handleShowHidePassword}
               >
                 {showHidePassword ? <Eye size='20' /> : <EyeOff size='20' />}
@@ -129,7 +125,7 @@ const ResetPassword = () => {
             children={
               <button
                 type='button'
-                className='btn-show-hide-password'
+                className='absolute right-3 top-[50%] z-10 flex translate-y-[-50%] cursor-pointer items-center justify-center bg-transparent p-3'
                 onClick={handleShowHideConfirmPassword}
               >
                 {showHideConfirmPassword ? (
@@ -143,17 +139,10 @@ const ResetPassword = () => {
           />
           <button
             type='submit'
-            className='btn-submit-reset-password'
+            className='flex w-full cursor-pointer items-center justify-center rounded-[40px] bg-[#f97417] p-5 text-base font-semibold capitalize text-white transition duration-300 hover:opacity-80'
             disabled={isLoading ? true : false}
           >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '10px',
-              }}
-            >
+            <div className='flex items-center justify-center gap-[10px]'>
               {isLoading && <HashLoader size='20' color='#fff' />}
               <span>
                 {isLoading ? 'Đang thay đổi mật khẩu' : 'Thay đổi mật khẩu'}

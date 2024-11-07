@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { Mail } from 'lucide-react'
@@ -8,9 +7,8 @@ import nProgress from 'nprogress'
 
 import { useAppSelector } from '~/hooks/redux'
 import { paths } from '~/utils/paths'
-import { FormInputGroup, Loader } from '~/components'
+import { FormInputGroup } from '~/components'
 import { useForgotPasswordMutation } from '~/services/auth.service'
-import './PrivateForgotPassword.scss'
 
 type ForgotPasswordData = {
   email: string
@@ -18,12 +16,8 @@ type ForgotPasswordData = {
 
 const PrivateForgotPassword = () => {
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
-  if (isAuthenticated) {
-    if (user?.role === 0 || user?.role === 1 || user?.role === 2) {
-      return <Navigate to={paths.dashboardPaths.dashboard} />
-    } else if (user?.role === 3) {
-      return <Navigate to={paths.userPaths.home} />
-    }
+  if (isAuthenticated && user) {
+    return <Navigate to={paths.dashboardPaths.dashboard} />
   }
 
   const {
@@ -54,12 +48,17 @@ const PrivateForgotPassword = () => {
   }
 
   return (
-    <div className='private-forgot-password-container'>
-      <div className='content'>
-        <div className='auth-content'>
-          <div className='title'>quên mật khẩu</div>
+    <div className='relative flex h-screen w-full items-center justify-center'>
+      <div className='relative flex h-full w-full flex-col items-center justify-center'>
+        <div className='w-[280px] 400px:w-[400px] 600px:w-[500px]'>
+          <div className='mb-[30px] text-center text-xl font-semibold capitalize'>
+            quên mật khẩu
+          </div>
         </div>
-        <form onSubmit={handleSubmit(handleForgotPassword)}>
+        <form
+          onSubmit={handleSubmit(handleForgotPassword)}
+          className='flex w-[280px] flex-col gap-[10px] 400px:w-[400px] 600px:w-[500px]'
+        >
           <FormInputGroup
             register={register}
             errors={errors}
@@ -80,17 +79,10 @@ const PrivateForgotPassword = () => {
           />
           <button
             type='submit'
-            className='btn-submit-forgot-password'
+            className='flex w-full cursor-pointer items-center justify-center rounded-[40px] bg-[#f97417] p-5 text-base font-semibold capitalize text-white transition duration-300 hover:opacity-80'
             disabled={isLoading ? true : false}
           >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '10px',
-              }}
-            >
+            <div className='flex items-center justify-center gap-[10px]'>
               {isLoading && <HashLoader size='20' color='#fff' />}
               <span>{isLoading ? 'Đang gửi yêu cầu' : 'Xác nhận email'}</span>
             </div>

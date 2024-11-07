@@ -3,27 +3,21 @@ import nodemailer, { Transporter } from 'nodemailer'
 
 import { varEnv } from '~/configs/variableEnv.config'
 
-// *****************************************************************************
-
-// khai báo kiểu dữ liệu của email
 type EmailOptions = {
-  to: string // gửi cho ai (email người nhận)
-  subject: string // chủ đề email
-  text?: string // nội dung văn bản thuần của email
-  html?: string // nội dung HTML (tùy chọn) để hiển thị đẹp hơn
+  to: string
+  subject: string
+  text?: string
+  html?: string
 }
 
-// cấu hình dịch vụ gmail
 const transporter: Transporter = nodemailer.createTransport({
-  service: 'gmail', // Dịch vụ Gmail.
+  service: 'gmail',
   auth: {
-    // Xác thực với Gmail bằng tên người dùng và mật khẩu.
     user: varEnv.EMAIL_USERNAME,
     pass: varEnv.EMAIL_PASSWORD,
   },
 })
 
-// hàm gửi email
 export const sendEmail = async (options: EmailOptions) => {
   try {
     await transporter.sendMail({
@@ -34,7 +28,6 @@ export const sendEmail = async (options: EmailOptions) => {
       html: options.html || '',
     })
   } catch (error: unknown) {
-    // xử lý lỗi không xác định
     if (error instanceof Error) {
       return {
         success: false,

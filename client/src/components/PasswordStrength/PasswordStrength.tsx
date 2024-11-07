@@ -1,7 +1,5 @@
 import { Check, X } from 'lucide-react'
 
-import './PasswordStrength.scss'
-
 const PasswordCriteria = ({ password }: { password: string }) => {
   const criteria = [
     {
@@ -10,51 +8,33 @@ const PasswordCriteria = ({ password }: { password: string }) => {
     },
     {
       label: 'Chứa ký tự viết hoa!',
-      met: /[A-Z]/.test(password),
+      met: password && /[A-Z]/.test(password),
     },
     {
       label: 'Chứa ký tự viết thường!',
-      met: /[a-z]/.test(password),
+      met: password && /[a-z]/.test(password),
     },
     {
       label: 'Chứa số!',
-      met: /\d/.test(password),
+      met: password && /\d/.test(password),
     },
     {
       label: 'Chứa ký tự đặc biệt!',
-      met: /[^A-Za-z0-9]/.test(password),
+      met: password && /[^A-Za-z0-9]/.test(password),
     },
   ]
 
   return (
-    <div className='password-criteria'>
+    <div className='mt-[10px]'>
       {criteria.map((item) => (
-        <div className='password-criteria-item' key={item.label}>
+        <div className='flex items-center' key={item.label}>
           {item.met ? (
-            <Check
-              style={{
-                width: '1rem',
-                height: '1rem',
-                marginRight: '0.5rem',
-                color: 'green',
-              }}
-            />
+            <Check className='mr-2 h-4 w-4 text-[green]' />
           ) : (
-            <X
-              style={{
-                width: '1rem',
-                height: '1rem',
-                marginRight: '0.5rem',
-                color: 'red',
-              }}
-            />
+            <X className='mr-2 h-4 w-4 text-[red]' />
           )}
           <span
-            style={{
-              color: `${item.met ? 'green' : 'red'}`,
-              fontWeight: '600',
-              marginBottom: '1px',
-            }}
+            className={`mr-[1px] font-semibold ${item.met ? 'text-[green]' : 'text-[red]'}`}
           >
             {item.label}
           </span>
@@ -69,7 +49,7 @@ const PasswordStrength = ({ password }: { password: string }) => {
     if (!pass) return 0
 
     let strength = 0
-    if (pass?.length >= 8 && pass?.length <= 30) strength++
+    if (pass.length >= 8 && pass.length <= 30) strength++
     if (pass.match(/[A-Z]/)) strength++
     if (pass.match(/[a-z]/)) strength++
     if (pass.match(/\d/)) strength++
@@ -113,17 +93,19 @@ const PasswordStrength = ({ password }: { password: string }) => {
   }
 
   return (
-    <div className='password-strength'>
-      <div className='password-strength-text'>
-        <span className='title' style={{ margin: '0' }}>
+    <div className='mt-[30px]'>
+      <div className='mb-1 flex items-center justify-between'>
+        <span className='m-0 font-semibold capitalize text-[gray]'>
           độ mạnh mật khẩu
         </span>
-        <span className='get-strength-text'>{getStrengthText(strength)}</span>
+        <span className='font-semibold text-[gray]'>
+          {getStrengthText(strength)}
+        </span>
       </div>
-      <div className='password-strength-length'>
+      <div className='flex gap-1'>
         {[...Array(5)].map((_, index) => (
           <div
-            className='password-strength-length-item'
+            className='h-2 w-[25%] transition duration-300'
             key={index}
             style={{
               backgroundColor:

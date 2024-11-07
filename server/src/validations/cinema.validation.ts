@@ -1,7 +1,5 @@
 import Joi from 'joi'
 
-// *****************************************************************************
-
 const handleCreate = Joi.object({
   name: Joi.string().required().trim(),
   address: Joi.string().required().trim(),

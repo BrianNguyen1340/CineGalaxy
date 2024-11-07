@@ -10,8 +10,6 @@ import {
 import { genreService } from '~/services/genre.service'
 import { catchErrors } from '~/utils/catchErrors'
 
-// *****************************************************************************
-
 const handleCreate: RequestHandler = catchErrors(async (req, res) => {
   const { name } = req.body
 

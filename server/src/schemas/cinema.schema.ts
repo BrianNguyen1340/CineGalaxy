@@ -1,7 +1,5 @@
 import { Document, Schema, Types, model } from 'mongoose'
 
-// *****************************************************************************
-
 export type CinemaType = Document & {
   _id: Types.ObjectId
   name: string

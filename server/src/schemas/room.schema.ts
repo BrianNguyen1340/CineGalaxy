@@ -1,7 +1,5 @@
 import { Document, model, Schema, Types } from 'mongoose'
 
-// *****************************************************************************
-
 export type RoomType = Document & {
   _id: Types.ObjectId
   name: string

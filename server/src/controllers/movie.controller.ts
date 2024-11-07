@@ -11,8 +11,6 @@ import {
 import { movieService } from '~/services/movie.service'
 import { catchErrors } from '~/utils/catchErrors'
 
-// *****************************************************************************
-
 const handleCreate: RequestHandler = catchErrors(async (req, res) => {
   const {
     name,

@@ -1,18 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
-// *****************************************************************************
+import { RootState } from '../store'
 
 export type UserState = {
   user: {
     id: string
     email: string
-    phone: string
     name: string
-    dateOfBirth: {
-      day: number
-      month: number
-      year: number
-    }
+    phone: string
     gender: string
     address: string
     photoURL: string
@@ -21,6 +15,7 @@ export type UserState = {
   isAuthenticated: boolean
   loading: boolean
   error: string | null
+  token: string | null
 }
 
 const initialState: UserState = {
@@ -28,6 +23,7 @@ const initialState: UserState = {
   isAuthenticated: false,
   loading: false,
   error: null,
+  token: null,
 }
 
 const userSlice = createSlice({
@@ -42,10 +38,16 @@ const userSlice = createSlice({
       state,
       action: PayloadAction<{
         user: UserState['user']
+        // accessToken: string
       }>,
     ) => {
+      const {
+        user,
+        // accessToken
+      } = action.payload
+      // state.token = accessToken
       state.isAuthenticated = true
-      state.user = action.payload.user
+      state.user = user
       state.loading = false
       state.error = null
     },
@@ -60,6 +62,8 @@ const userSlice = createSlice({
     },
   },
 })
+
+export const selectCurrentToken = (state: RootState) => state.user.token
 
 export const { loginStart, loginSuccess, loginFailure, logout } =
   userSlice.actions

@@ -7,6 +7,7 @@ declare global {
     interface Request {
       files?: Express.Multer.File[]
       user: UserType
+      role: number
     }
   }
 }

@@ -1,7 +1,5 @@
 import { Document, Schema, Types, model } from 'mongoose'
 
-// *****************************************************************************
-
 export type TVerificationCodeRegister = Document & {
   _id: Types.ObjectId
   email: string

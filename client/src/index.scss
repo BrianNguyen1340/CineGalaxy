@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
+@import 'normalize.css';
 
 * {
   margin: 0;
@@ -13,25 +14,13 @@ html {
 
 body {
   font-family: 'Figtree', sans-serif;
-  background-color: #f8f7f4;
-}
-
-ul,
-li {
-  list-style: none;
 }
 
 a {
-  text-decoration: none;
   color: #0d0c22;
 }
 
-button,
-input {
-  outline: none;
-  border: none;
-}
-
+// dark overlay
 .dark-overlay {
   content: '';
   position: fixed;
@@ -51,15 +40,6 @@ input {
   }
 }
 
-label,
-input {
-  width: 100%;
-}
-
-.rotate-180 {
-  transform: rotate(180deg);
-}
-
 button {
   &:disabled {
     cursor: no-drop;
@@ -67,28 +47,7 @@ button {
   }
 }
 
-.mb-1 {
-  margin-bottom: 0.25rem;
-}
-
-.mb-0 {
-  margin-bottom: 0px;
-}
-
-.duration-300 {
-  transition-duration: 300ms;
-}
-
-.transition-all {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
-.ease-in-out {
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
+// pagination
 .pagination {
   display: flex;
   list-style: none;
@@ -146,10 +105,13 @@ table {
   padding: 20px;
   border-collapse: collapse;
 
+  th {
+    text-transform: capitalize;
+  }
+
   th,
   td {
     border: 1px solid #000;
-    text-transform: capitalize;
     padding: 10px;
   }
 
@@ -159,6 +121,7 @@ table {
   }
 }
 
+// slick track
 .slick-track {
   display: flex !important;
   gap: 20px !important;
@@ -177,4 +140,14 @@ table {
     justify-content: center;
     color: #000 !important;
   }
+}
+
+input[type='radio'] {
+  accent-color: red;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+input {
+  width: 100%;
 }

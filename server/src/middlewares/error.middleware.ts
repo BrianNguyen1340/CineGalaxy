@@ -4,8 +4,6 @@ import { StatusCodes } from 'http-status-codes'
 import { varEnv } from '~/configs/variableEnv.config'
 import { logEvents } from '~/logs/customLoggers'
 
-// *****************************************************************************
-
 type CustomError = Error & {
   statusCode?: number
 }

@@ -1,5 +1,5 @@
 const SelectSeats = () => {
-    return <div>SelectSeats</div>;
-};
+  return <div></div>
+}
 
-export default SelectSeats;
+export default SelectSeats

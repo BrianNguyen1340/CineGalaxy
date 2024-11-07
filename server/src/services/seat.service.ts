@@ -3,8 +3,6 @@ import { Types } from 'mongoose'
 
 import { SeatType, seatModel } from '~/schemas/seat.schema'
 
-// *****************************************************************************
-
 const handleCreate = async (
   number: number,
   row: string,

@@ -3,8 +3,6 @@ import { Outlet, Navigate } from 'react-router-dom'
 import { useAppSelector } from '~/hooks/redux'
 import { paths } from '~/utils/paths'
 
-// *****************************************************************************
-
 const RequiredAuth = () => {
   const { user } = useAppSelector((state) => state.user)
 

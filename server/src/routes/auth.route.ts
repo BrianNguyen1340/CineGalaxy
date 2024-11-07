@@ -5,8 +5,6 @@ import authController from '~/controllers/auth.controller'
 import { loginLimiter } from '~/middlewares/loginLimiter.middleware'
 import { userModel } from '~/schemas/user.schema'
 
-// *****************************************************************************
-
 const router = Router()
 
 router.post('/create-account', async (req, res) => {
@@ -31,5 +29,6 @@ router.post('/login', [loginLimiter], authController.login)
 router.post('/forgot-password', authController.forgotPassword)
 router.post('/reset-password/:token', authController.resetPassword)
 router.post('/logout', authController.logout)
+router.get('/refresh', authController.refresh)
 
 export const authRoute = router

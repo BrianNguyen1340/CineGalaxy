@@ -9,8 +9,6 @@ import userValidation from '~/validations/user.validation'
 import { catchErrors } from '~/utils/catchErrors'
 import { Types } from 'mongoose'
 
-// *****************************************************************************
-
 const profile: RequestHandler = catchErrors(async (req, res) => {
   const { _id } = req.user
 
@@ -29,9 +27,17 @@ const profile: RequestHandler = catchErrors(async (req, res) => {
 
 const updateProfile: RequestHandler = catchErrors(async (req, res) => {
   const userId = req.user._id
-  const userInfo = req.body
+  const { name, email, phone, gender, address, photoURL } = req.body
 
-  const response = await userService.updateProfile(userId, userInfo)
+  const response = await userService.updateProfile(
+    userId,
+    name,
+    email,
+    phone,
+    gender,
+    address,
+    photoURL,
+  )
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -120,6 +126,22 @@ const unblockAccount = catchErrors(async (req, res) => {
   return sendSuccessResponse(res, response.statusCode, response.message)
 })
 
+const createUser = catchErrors(async (req, res) => {
+  const { email, name, password, role } = req.body
+
+  const response = await userService.createUserByAdmin(
+    email,
+    name,
+    password,
+    role,
+  )
+  if (!response.success) {
+    return sendErrorResponse(res, response.statusCode, response.message)
+  }
+
+  return sendSuccessResponse(res, response.statusCode, response.message)
+})
+
 const userController = {
   profile,
   updateProfile: [
@@ -131,6 +153,7 @@ const userController = {
   getAllUsersByAdmin,
   blockAccount,
   unblockAccount,
+  createUser: [handleJoiError({ body: userValidation.createUser }), createUser],
 }
 
 export default userController

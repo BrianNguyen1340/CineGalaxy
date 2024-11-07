@@ -7,7 +7,6 @@ import nProgress from 'nprogress'
 import { useCreateCinemaComplexMutation } from '~/services/cinemaComplex.service'
 import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
-import './CreateCinemaComplex.scss'
 
 const CreateCinemaComplex = () => {
   const {
@@ -27,10 +26,6 @@ const CreateCinemaComplex = () => {
 
       const response = await createApi({ name }).unwrap()
 
-      if (!response.success) {
-        Swal.fire('Thất bại', response.message, 'error')
-      }
-
       Swal.fire('Thành công', response.message, 'success')
 
       navigate(paths.dashboardPaths.managements.cinemaComplexes.list)
@@ -42,40 +37,43 @@ const CreateCinemaComplex = () => {
   }
 
   return (
-    <div className='container'>
-      <div className='title'>tạo cụm rạp</div>
-      <form
-        onSubmit={handleSubmit(handleCreate)}
-        style={{ width: '500px', margin: '0 auto' }}
-      >
+    <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
+      <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
+        tạo cụm rạp
+      </div>
+      <form onSubmit={handleSubmit(handleCreate)} className='mx-auto w-[500px]'>
         <FormInputGroup
           register={register}
           errors={errors}
           validation={{
-            required: 'Vui lòng nhập tên!',
+            required: 'Vui lòng nhập họ tên!',
+            minLength: {
+              value: 6,
+              message: 'Họ tên có tối thiểu 6 ký tự!',
+            },
+            maxLength: {
+              value: 50,
+              message: 'Họ tên có tối đa 50 ký tự!',
+            },
+            pattern: {
+              value: /^[a-zA-Z0-9\s]*$/,
+              message: 'Họ tên không được chứa ký tự đặc biệt!',
+            },
           }}
-          labelChildren='name'
           htmlFor='name'
-          id='name'
-          placeholder='Vui lòng nhập tên danh mục'
+          labelChildren='name'
           type='text'
+          id='name'
           name='name'
         />
         <button
           type='submit'
           disabled={isLoading ? true : false}
-          className='btn-create'
+          className='rounded bg-black px-4 py-3 font-semibold text-white transition duration-300 hover:opacity-70'
         >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '10px',
-            }}
-          >
+          <div className='flex items-center justify-center gap-3'>
             {isLoading && <HashLoader size='20' color='#fff' />}
-            <span>{isLoading ? 'Đang tạo' : 'Tạo'}</span>
+            <span className='capitalize'>{isLoading ? 'đang lưu' : 'lưu'}</span>
           </div>
         </button>
       </form>

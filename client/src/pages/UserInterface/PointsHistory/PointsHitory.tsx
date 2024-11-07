@@ -1,5 +1,5 @@
 const PointsHitory = () => {
-    return <div>PointsHitory</div>;
-};
+  return <div></div>
+}
 
-export default PointsHitory;
+export default PointsHitory

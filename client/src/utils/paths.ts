@@ -27,7 +27,7 @@ const userPaths = {
   // private auth
   privateLogin: '/private-login',
   privateForgotPassword: '/private-forgot-password',
-  privateResetPassword: '/private-reset-password',
+  privateResetPassword: '/private-reset-password/:token',
 }
 
 const dashboardPaths = {

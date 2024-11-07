@@ -1,7 +1,5 @@
 import 'dotenv/config'
 
-// *****************************************************************************
-
 // hàm kiểm tra và lấy biến môi trường
 const getEnv = (key: string, defaultValue?: string): string => {
   const value = process.env[key] ?? defaultValue

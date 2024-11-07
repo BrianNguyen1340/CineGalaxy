@@ -1,7 +1,5 @@
 import { Document, model, Schema, Types } from 'mongoose'
 
-// *****************************************************************************
-
 export type MovieTicketType = Document & {
   _id: Types.ObjectId
   totalPrice: number

@@ -13,7 +13,6 @@ import {
   loginStart,
   loginSuccess,
 } from '~/redux/reducers/user.reducer'
-import './GoogleAuth.scss'
 
 const GoogleAuth = () => {
   const dispatch = useAppDispatch()
@@ -61,7 +60,7 @@ const GoogleAuth = () => {
   return (
     <button
       type='button'
-      className='google-login-btn'
+      className='flex w-full cursor-pointer items-center justify-center gap-3 rounded-[40px] bg-[#0d0c22] p-6 text-sm font-semibold capitalize text-white transition duration-500 hover:opacity-70'
       onClick={handleGoogleClick}
       disabled={isLoading ? true : false}
     >

@@ -8,7 +8,6 @@ import { useCreateRoomMutation } from '~/services/room.service'
 import { useGetAllCinemaQuery } from '~/services/cinema.service'
 import { paths } from '~/utils/paths'
 import { FormInputGroup, Loader } from '~/components'
-import './CreateRoom.scss'
 
 const CreateRoom = () => {
   const {

@@ -10,8 +10,6 @@ import {
 import { cinemaComplexService } from '~/services/cinemaComplex.service'
 import { cinemaComplexValidation } from '~/validations/cinemaComplex.validation'
 
-// *****************************************************************************
-
 const handleCreate: RequestHandler = catchErrors(async (req, res) => {
   const { name } = req.body
 

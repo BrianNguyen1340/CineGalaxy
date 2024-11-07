@@ -1,20 +1,13 @@
 import { Document, Schema, Types, model } from 'mongoose'
 
-// *****************************************************************************
-
 export type UserType = Document & {
   _id: Types.ObjectId
   email: string
-  password: string
   name: string
+  password: string
   phone: string
-  dateOfBirth?: {
-    day?: number
-    month?: number
-    year?: number
-  }
   gender?: string
-  address?: AddressType
+  address?: string
   photoURL?: string
   role: number
   isBlocked: boolean
@@ -26,49 +19,12 @@ export type UserType = Document & {
   updatedAt: Date
 }
 
-export type AddressType = {
-  street: string
-  ward?: string
-  district: string
-  city: string
-  zipCode?: string
-}
-
-const addressSchema = new Schema<AddressType>({
-  street: {
-    type: String,
-    required: false,
-  },
-  ward: {
-    type: String,
-    required: false,
-  },
-  district: {
-    type: String,
-    required: false,
-  },
-  city: {
-    type: String,
-    required: false,
-  },
-  zipCode: {
-    type: String,
-    required: false,
-  },
-})
-
 const userSchema = new Schema<UserType>(
   {
-    address: addressSchema,
     email: {
       type: String,
       required: true,
       unique: true,
-      trim: true,
-    },
-    password: {
-      type: String,
-      required: true,
       trim: true,
     },
     name: {
@@ -76,23 +32,19 @@ const userSchema = new Schema<UserType>(
       required: true,
       trim: true,
     },
-    dateOfBirth: {
-      day: {
-        type: Number,
-        required: false,
-      },
-      month: {
-        type: Number,
-        required: false,
-      },
-      year: {
-        type: Number,
-        require: false,
-      },
+    password: {
+      type: String,
+      required: true,
+      trim: true,
     },
     gender: {
       type: String,
       enum: ['male', 'female', 'other'],
+      trim: true,
+    },
+    address: {
+      type: String,
+      required: false,
       trim: true,
     },
     photoURL: {

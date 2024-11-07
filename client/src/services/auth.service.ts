@@ -1,6 +1,5 @@
 import { apiSlice } from '~/redux/apiSlice'
-
-// *****************************************************************************
+// import { logout } from '~/redux/reducers/user.reducer'
 
 export const authAPISlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -58,6 +57,17 @@ export const authAPISlice = apiSlice.injectEndpoints({
         url: `/api/v1/auth/logout`,
         method: 'POST',
       }),
+      // async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      //   try {
+      //     const { data } = await queryFulfilled
+      //     dispatch(logout())
+      //     setTimeout(() => {
+      //       dispatch(apiSlice.util.resetApiState())
+      //     }, 1000)
+      //   } catch (error: any) {
+      //     console.log(error)
+      //   }
+      // },
     }),
     checkEmailExist: builder.mutation({
       query: (data) => ({

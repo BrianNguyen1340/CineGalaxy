@@ -2,8 +2,6 @@ import { CorsOptions } from 'cors'
 
 import { varEnv } from './variableEnv.config'
 
-// *****************************************************************************
-
 const allowedOrigins = [varEnv.CLIENT_URI]
 
 export const corsOptions: CorsOptions = {

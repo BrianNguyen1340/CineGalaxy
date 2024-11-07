@@ -5,7 +5,6 @@ import ReactPaginate from 'react-paginate'
 
 import { useGetAllCinemaQuery } from '~/services/cinema.service'
 import { Loader } from '~/components'
-import './ListCinema.scss'
 
 const ListCinema = () => {
   const { data: cinemas, refetch, isLoading } = useGetAllCinemaQuery({})

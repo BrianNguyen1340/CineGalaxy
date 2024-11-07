@@ -1,8 +1,6 @@
 import React from 'react'
 import { UseFormRegister, FieldErrors, RegisterOptions } from 'react-hook-form'
 
-import './FormInputGroup.scss'
-
 type FormInputGroupType = {
   htmlFor: string
   labelChildren: React.ReactNode
@@ -29,16 +27,19 @@ const FormInputGroup: React.FC<FormInputGroupType> = ({
   name,
   id,
   onBlur,
-  icon,
   children,
 }) => {
   const errorMessage = errors[name]?.message
 
   return (
-    <div className='form-input-group'>
-      <label htmlFor={htmlFor}>{labelChildren}</label>
-      <div className='form-input'>
-        <div className='icon'>{icon}</div>
+    <div className='relative mb-6 flex flex-col'>
+      <label
+        htmlFor={htmlFor}
+        className='mb-1 text-base font-semibold capitalize'
+      >
+        {labelChildren}
+      </label>
+      <div className='relative w-full'>
         <input
           type={type}
           placeholder={placeholder}
@@ -46,6 +47,7 @@ const FormInputGroup: React.FC<FormInputGroupType> = ({
           id={id}
           name={name}
           autoComplete='off'
+          className='appearance-none rounded-xl border-2 border-[#ddd] p-5 text-base text-[#222] outline-none transition placeholder:text-sm focus:border-[#00b4d8]'
           style={{
             backgroundColor: errorMessage ? '#ffe5ec' : 'white',
             borderColor: errorMessage && 'rgba(234, 100, 217, 0.4)',
@@ -55,7 +57,9 @@ const FormInputGroup: React.FC<FormInputGroupType> = ({
         />
         {children}
       </div>
-      <span>{errorMessage && String(errorMessage)}</span>
+      <span className='absolute top-[100%] pl-3 pt-[2px] text-sm italic text-[red]'>
+        {errorMessage && String(errorMessage)}
+      </span>
     </div>
   )
 }

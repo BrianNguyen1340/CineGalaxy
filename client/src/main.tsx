@@ -75,10 +75,9 @@ import {
 import App from './App.tsx'
 import RequiredAuth from '~/routes/RequiredAuth'
 import PrivateProfile from './pages/Dashboard/PrivateProfile/PrivateProfile.tsx'
-import './index.scss'
 import ProtectedRoute from './routes/ProtectedRoute.tsx'
-
-// *****************************************************************************
+import './index.scss'
+import './index.css'
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>

@@ -1,10 +1,12 @@
-import { useState, useMemo, CSSProperties } from 'react'
+import { useState, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
 import 'nprogress/nprogress.css'
 import 'react-circular-progressbar/dist/styles.css'
 import 'react-day-picker/style.css'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
+import 'react-toastify/dist/ReactToastify.css'
 
 import {
   DashHeader,
@@ -30,6 +32,7 @@ const App = () => {
       paths.userPaths.register,
       paths.userPaths.verifyOtp,
       paths.userPaths.forgotPassword,
+      paths.userPaths.resetPassword,
       paths.userPaths.privateLogin,
       paths.userPaths.privateForgotPassword,
       paths.userPaths.privateResetPassword,
@@ -48,28 +51,6 @@ const App = () => {
     [location.pathname],
   )
 
-  const sidebarStyle: CSSProperties = useMemo(
-    () => ({
-      width: openSidebar ? '288px' : '0',
-      left: openSidebar ? '0' : '-100%',
-      border: '1px solid #eee',
-    }),
-    [openSidebar],
-  )
-
-  const mainStyle: CSSProperties = useMemo(
-    () => ({
-      display: 'flex',
-      flexDirection: 'column' as const,
-      backgroundColor: 'transparent',
-      position: 'relative',
-      width: openSidebar ? 'calc(100% - 288px)' : '100%',
-      marginLeft: openSidebar ? '304px' : '0',
-      gap: '10px',
-    }),
-    [openSidebar],
-  )
-
   if (isNotFound) {
     return <NotFound />
   }
@@ -77,18 +58,24 @@ const App = () => {
   return (
     <>
       {user?.role === 0 || user?.role === 1 || user?.role === 2 ? (
-        <div style={{ display: 'flex', width: '100%' }}>
+        <div className='flex w-full'>
           <Sidebar
             openSidebar={openSidebar}
             setOpenSidebar={setOpenSidebar}
-            style={sidebarStyle}
+            style={{ width: `${openSidebar ? '288px' : '0'}` }}
           />
-          <main style={mainStyle}>
+          <main
+            className='relative flex flex-col bg-transparent'
+            style={{
+              width: `${openSidebar ? 'calc(100% - 288px)' : '100%'}`,
+              marginLeft: `${openSidebar ? '304px' : '0'}`,
+            }}
+          >
             <DashHeader
               openSidebar={openSidebar}
               setOpenSidebar={setOpenSidebar}
             />
-            <div style={{ height: '100vh' }}>
+            <div className='mt-4 h-screen'>
               <DashLayout openSidebar={openSidebar} />
             </div>
           </main>
@@ -98,6 +85,7 @@ const App = () => {
           {!hideHeaderFooter && <Header />}
           <main>
             <MainLayout />
+            <ToastContainer />
           </main>
           {!hideHeaderFooter && <Footer />}
         </>

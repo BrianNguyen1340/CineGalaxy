@@ -7,7 +7,6 @@ type TimeUnit =
   | 'months'
   | 'years'
 
-// hàm tính toán giá trị millisecond
 const calculateMilliseconds = (value: number, unit: TimeUnit): number => {
   switch (unit) {
     case 'seconds':
@@ -25,7 +24,6 @@ const calculateMilliseconds = (value: number, unit: TimeUnit): number => {
   }
 }
 
-// hàm tính toán ngày
 const calculateDateByUnit = (
   value: number,
   unit: TimeUnit,

@@ -9,7 +9,6 @@ import { paths } from '~/utils/paths'
 import { FormInputGroup, Loader } from '~/components'
 import { useUpdateRoomMutation, useGetRoomQuery } from '~/services/room.service'
 import { useGetAllCinemaQuery } from '~/services/cinema.service'
-import './UpdateRoom.scss'
 
 const UpdateRoom = () => {
   const { id } = useParams()

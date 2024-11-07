@@ -1,9 +1,8 @@
 import { StatusCodes } from 'http-status-codes'
 import { Types } from 'mongoose'
+import bcrypt from 'bcrypt'
 
-import { AddressType, userModel, UserType } from '~/schemas/user.schema'
-
-// *****************************************************************************
+import { userModel, UserType } from '~/schemas/user.schema'
 
 const profile = async (
   id: Types.ObjectId,
@@ -48,35 +47,33 @@ const profile = async (
   }
 }
 
-type UpdateProfileParams = {
-  id: Types.ObjectId
-  email?: string
-  name?: string
-  phone?: string
-  dateOfBirth?: {
-    day?: number
-    month?: number
-    year?: number
-  }
-  gender?: string
-  address?: AddressType
-  avatar?: string
-}
-
 const updateProfile = async (
   userId: Types.ObjectId,
-  params: UpdateProfileParams,
+  email: string,
+  name: string,
+  phone: string,
+  gender: string,
+  address: string,
+  photoURL: string,
 ): Promise<{
   success: boolean
   message: string
   statusCode: number
-
   data?: Partial<UserType>
 }> => {
   try {
     const request = await userModel.findByIdAndUpdate(
       userId,
-      { $set: params },
+      {
+        $set: {
+          name,
+          email,
+          phone,
+          gender,
+          address,
+          photoURL,
+        },
+      },
       {
         new: true,
         runValidators: true,
@@ -99,6 +96,65 @@ const updateProfile = async (
       statusCode: StatusCodes.OK,
       message: 'Cập nhật tài khoản thành công!',
       data,
+    }
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return {
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: `Lỗi hệ thống: ${error.message}`,
+      }
+    }
+    return {
+      success: false,
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Đã xảy ra lỗi không xác định!',
+    }
+  }
+}
+
+const createUserByAdmin = async (
+  email: string,
+  name: string,
+  password: string,
+  role: number,
+): Promise<{
+  success: boolean
+  message: string
+  statusCode: number
+  data?: Partial<UserType>
+}> => {
+  try {
+    const checkExist = await userModel.findOne({ email })
+    if (checkExist) {
+      return {
+        success: false,
+        message: 'Người dùng đã tồn tại!',
+        statusCode: StatusCodes.CONFLICT,
+      }
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12)
+
+    const request = await userModel.create({
+      email,
+      name,
+      password: hashedPassword,
+      role,
+    })
+    if (!request) {
+      return {
+        success: false,
+        message: 'Tạo người dùng thất bại!',
+        statusCode: StatusCodes.BAD_REQUEST,
+      }
+    }
+
+    return {
+      success: true,
+      message: 'Tạo người dùng thành công!',
+      statusCode: StatusCodes.CREATED,
+      data: request,
     }
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -201,13 +257,8 @@ const updateUserByAdmin = async (
     password?: string
     name?: string
     phone?: string
-    dateOfBirth?: {
-      day?: number
-      month?: number
-      year?: number
-    }
     gender?: string
-    address?: AddressType
+    address?: string
     photoURL?: string
     role?: number
   },
@@ -379,6 +430,7 @@ const unblockAccount = async (
 const userService = {
   profile,
   updateProfile,
+  createUserByAdmin,
   getUserByAdmin,
   getAllUsersByAdmin,
   updateUserByAdmin,
