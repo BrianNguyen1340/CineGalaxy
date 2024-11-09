@@ -14,7 +14,7 @@ export const seatAPISlice = apiSlice.injectEndpoints({
         url: `/api/v1/seat/get/${id}`,
       }),
     }),
-    getAllSeats: builder.query({
+    getSeats: builder.query({
       query: () => ({
         url: `/api/v1/seat/get-all`,
       }),
@@ -32,6 +32,6 @@ export const seatAPISlice = apiSlice.injectEndpoints({
 export const {
   useCreateSeatMutation,
   useGetSeatQuery,
-  useGetAllSeatsQuery,
+  useGetSeatsQuery,
   useUpdateSeatMutation,
 } = seatAPISlice

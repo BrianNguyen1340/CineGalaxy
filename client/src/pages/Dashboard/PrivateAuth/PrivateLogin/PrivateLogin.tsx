@@ -50,6 +50,10 @@ const PrivateLogin = () => {
         password,
       }).unwrap()
 
+      if (data.role === 3) {
+        Swal.fire('Thất bại', 'Access Denied!', 'error')
+      }
+
       dispatch(
         setCredentials({
           user: data,

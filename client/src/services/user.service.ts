@@ -16,6 +16,13 @@ export const userAPISlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    updatePassword: builder.mutation({
+      query: (data) => ({
+        url: `/api/v1/user/update-password`,
+        method: 'PUT',
+        body: data,
+      }),
+    }),
     getUser: builder.query({
       query: (id) => ({
         url: `/api/v1/user/get-user-by-admin/${id}`,
@@ -64,4 +71,5 @@ export const {
   useCreateUserMutation,
   useGetUsersQuery,
   useUpdateUserMutation,
+  useUpdatePasswordMutation,
 } = userAPISlice

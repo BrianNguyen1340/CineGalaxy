@@ -14,7 +14,7 @@ export const genreAPISlice = apiSlice.injectEndpoints({
         url: `/api/v1/genre/get/${id}`,
       }),
     }),
-    getAllGenres: builder.query({
+    getGenres: builder.query({
       query: () => ({
         url: `/api/v1/genre/get-all`,
       }),
@@ -31,7 +31,7 @@ export const genreAPISlice = apiSlice.injectEndpoints({
 
 export const {
   useCreateGenreMutation,
-  useGetAllGenresQuery,
+  useGetGenresQuery,
   useGetGenreQuery,
   useUpdateGenreMutation,
 } = genreAPISlice

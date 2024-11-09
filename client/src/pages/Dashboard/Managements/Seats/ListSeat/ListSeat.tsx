@@ -4,10 +4,10 @@ import { SquarePen } from 'lucide-react'
 import ReactPaginate from 'react-paginate'
 
 import { Loader } from '~/components'
-import { useGetAllSeatsQuery } from '~/services/seat.service'
+import { useGetSeatsQuery } from '~/services/seat.service'
 
 const ListSeat = () => {
-  const { data: seats, isLoading, refetch } = useGetAllSeatsQuery({})
+  const { data: seats, isLoading, refetch } = useGetSeatsQuery({})
 
   const [currentPage, setCurrentPage] = useState(0)
   const itemsPerPage = 10

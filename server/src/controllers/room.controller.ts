@@ -1,4 +1,3 @@
-import { RequestHandler } from 'express'
 import { Types } from 'mongoose'
 
 import { catchErrors } from '~/utils/catchErrors'

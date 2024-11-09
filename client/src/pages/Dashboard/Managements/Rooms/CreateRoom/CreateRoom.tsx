@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
 import { useCreateRoomMutation } from '~/services/room.service'
-import { useGetAllCinemaQuery } from '~/services/cinema.service'
+import { useGetCinemasQuery } from '~/services/cinema.service'
 import { paths } from '~/utils/paths'
 import { FormInputGroup, Loader } from '~/components'
 
@@ -25,9 +25,7 @@ const CreateRoom = () => {
   const navigate = useNavigate()
 
   const [createApi, { isLoading }] = useCreateRoomMutation()
-  const { data: cinemas, isLoading: isLoadingCinemas } = useGetAllCinemaQuery(
-    {},
-  )
+  const { data: cinemas, isLoading: isLoadingCinemas } = useGetCinemasQuery({})
 
   const handleCreate: SubmitHandler<{
     name: string
@@ -47,10 +45,6 @@ const CreateRoom = () => {
         screen,
         cinema,
       }).unwrap()
-
-      if (!response.success) {
-        Swal.fire('Thất bại', response.message, 'error')
-      }
 
       Swal.fire('Thành công', response.message, 'success')
 

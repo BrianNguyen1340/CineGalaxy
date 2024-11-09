@@ -70,7 +70,7 @@ const Login = () => {
 
       navigate(paths.userPaths.home)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.message, 'error')
+      Swal.fire('Thất bại', error.data.message, 'error')
     } finally {
       nProgress.done()
     }

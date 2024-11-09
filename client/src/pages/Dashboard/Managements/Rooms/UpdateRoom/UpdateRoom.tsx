@@ -8,7 +8,7 @@ import nProgress from 'nprogress'
 import { paths } from '~/utils/paths'
 import { FormInputGroup, Loader } from '~/components'
 import { useUpdateRoomMutation, useGetRoomQuery } from '~/services/room.service'
-import { useGetAllCinemaQuery } from '~/services/cinema.service'
+import { useGetCinemasQuery } from '~/services/cinema.service'
 
 const UpdateRoom = () => {
   const { id } = useParams()
@@ -33,10 +33,10 @@ const UpdateRoom = () => {
     isLoading: isLoadingRoom,
   } = useGetRoomQuery(id)
   const {
-    data: cinemas = [],
+    data: cinemas ,
     refetch: refetchCinema,
     isLoading: isLoadingCinema,
-  } = useGetAllCinemaQuery({})
+  } = useGetCinemasQuery({})
   const [updateApi, { isLoading: isLoadingUpdate }] = useUpdateRoomMutation()
 
   useEffect(() => {
@@ -218,12 +218,12 @@ const UpdateRoom = () => {
         </div>
         <button
           type='submit'
-          disabled={isLoading ? true : false}
+          disabled={isLoadingUpdate ? true : false}
           className='rounded bg-black px-4 py-3 font-semibold text-white transition duration-300 hover:opacity-70'
         >
           <div className='flex items-center justify-center gap-3'>
-            {isLoading && <HashLoader size='20' color='#fff' />}
-            <span className='capitalize'>{isLoading ? 'đang lưu' : 'lưu'}</span>
+            {isLoadingUpdate && <HashLoader size='20' color='#fff' />}
+            <span className='capitalize'>{isLoadingUpdate ? 'đang lưu' : 'lưu'}</span>
           </div>
         </button>
       </form>

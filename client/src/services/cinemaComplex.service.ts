@@ -14,7 +14,7 @@ export const cinemaComplexAPISlice = apiSlice.injectEndpoints({
         url: `/api/v1/cinema-complex/get/${id}`,
       }),
     }),
-    getAllCinemaComplexes: builder.query({
+    getCinemaComplexes: builder.query({
       query: () => ({
         url: `/api/v1/cinema-complex/get-all`,
       }),
@@ -32,6 +32,6 @@ export const cinemaComplexAPISlice = apiSlice.injectEndpoints({
 export const {
   useCreateCinemaComplexMutation,
   useGetCinemaComplexQuery,
-  useGetAllCinemaComplexesQuery,
+  useGetCinemaComplexesQuery,
   useUpdateCinemaComplexMutation,
 } = cinemaComplexAPISlice

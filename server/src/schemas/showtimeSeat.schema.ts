@@ -1,7 +1,7 @@
 import { Document, model, Types, Schema } from 'mongoose'
 
 export type ShowtimeSeatType = Document & {
-  _id: Types.ObjectId
+  readonly _id: Types.ObjectId
   seat: Types.ObjectId
   showtimeDetail: Types.ObjectId
   status: string

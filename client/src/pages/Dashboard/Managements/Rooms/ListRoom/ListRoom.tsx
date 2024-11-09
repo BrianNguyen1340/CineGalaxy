@@ -4,10 +4,10 @@ import { SquarePen } from 'lucide-react'
 import ReactPaginate from 'react-paginate'
 
 import { Loader } from '~/components'
-import { useGetAllRoomsQuery } from '~/services/room.service'
+import { useGetRoomsQuery } from '~/services/room.service'
 
 const ListRoom = () => {
-  const { data: rooms, isLoading, refetch } = useGetAllRoomsQuery({})
+  const { data: rooms, isLoading, refetch } = useGetRoomsQuery({})
 
   useEffect(() => {
     refetch()
@@ -56,7 +56,7 @@ const ListRoom = () => {
                   <td>{item.name}</td>
                   <td>{item.opacity}</td>
                   <td>{item.status}</td>
-                  <td>{item.cinema.name}</td>
+                  <td className='capitalize'>{item.cinema.name}</td>
                   <td>
                     <div className='flex items-center justify-center'>
                       <Link to={`/update-room/${item?._id}`}>

@@ -1,7 +1,7 @@
 import { Link, Navigate } from 'react-router-dom'
 import Slider from 'react-slick'
 
-import { useGetAllMoviesQuery } from '~/services/movie.service'
+import { useGetMoviesQuery } from '~/services/movie.service'
 import { paths } from '~/utils/paths'
 import { Loader } from '~/components'
 import { useAppSelector } from '~/hooks/redux'
@@ -17,7 +17,7 @@ const Home = () => {
   }
 
   var settings = {
-    dots: true,
+    // dots: true,
     infinite: false,
     speed: 500,
     slidesToShow: 4,
@@ -30,7 +30,7 @@ const Home = () => {
           slidesToShow: 3,
           slidesToScroll: 3,
           infinite: true,
-          dots: true,
+          // dots: true,
         },
       },
       {
@@ -51,7 +51,7 @@ const Home = () => {
     ],
   }
 
-  const { data: movies, isLoading: isLoadingMovies } = useGetAllMoviesQuery({})
+  const { data: movies, isLoading: isLoadingMovies } = useGetMoviesQuery({})
 
   if (isLoadingMovies) {
     return <Loader />

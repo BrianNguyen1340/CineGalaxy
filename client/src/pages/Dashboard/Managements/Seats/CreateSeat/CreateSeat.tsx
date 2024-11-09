@@ -6,7 +6,7 @@ import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
 import { useCreateSeatMutation } from '~/services/seat.service'
-import { useGetAllRoomsQuery } from '~/services/room.service'
+import { useGetRoomsQuery } from '~/services/room.service'
 import { FormInputGroup, Loader } from '~/components'
 import { paths } from '~/utils/paths'
 
@@ -24,7 +24,7 @@ const CreateSeat = () => {
 
   const navigate = useNavigate()
 
-  const { data: rooms, isLoading: isLoadingRooms } = useGetAllRoomsQuery({})
+  const { data: rooms, isLoading: isLoadingRooms } = useGetRoomsQuery({})
   console.log(rooms)
   const [createApi, { isLoading }] = useCreateSeatMutation()
 

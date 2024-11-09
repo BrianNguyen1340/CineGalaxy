@@ -17,7 +17,7 @@ import nProgress from 'nprogress'
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated'
 
-import { useGetAllGenresQuery } from '~/services/genre.service'
+import { useGetGenresQuery } from '~/services/genre.service'
 import {
   useUpdateMovieMutation,
   useGetMovieQuery,
@@ -50,7 +50,7 @@ const UpdateMovie = () => {
     genres: { value: string; label: string }[]
   }>()
 
-  const { data: genres = [], refetch: refetchGenres } = useGetAllGenresQuery({})
+  const { data: genres = [], refetch: refetchGenres } = useGetGenresQuery({})
   const { data: movie, refetch: refetchMovie } = useGetMovieQuery(id)
 
   const [updateApi, { isLoading }] = useUpdateMovieMutation()

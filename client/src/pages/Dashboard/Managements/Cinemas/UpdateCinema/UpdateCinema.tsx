@@ -10,7 +10,7 @@ import {
   useGetCinemaQuery,
   useUpdateCinemaMutation,
 } from '~/services/cinema.service'
-import { useGetAllCinemaComplexesQuery } from '~/services/cinemaComplex.service'
+import { useGetCinemaComplexesQuery } from '~/services/cinemaComplex.service'
 import { paths } from '~/utils/paths'
 
 const UpdateCinema = () => {
@@ -33,7 +33,7 @@ const UpdateCinema = () => {
 
   const { data: cinema, refetch } = useGetCinemaQuery(id)
   const { data: cinemaComplexes = [], isLoading: isLoadingCinemaComplexes } =
-    useGetAllCinemaComplexesQuery({})
+    useGetCinemaComplexesQuery({})
 
   const [updateApi, { isLoading }] = useUpdateCinemaMutation()
 

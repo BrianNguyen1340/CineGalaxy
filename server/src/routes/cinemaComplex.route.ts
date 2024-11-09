@@ -12,6 +12,10 @@ router.post(
 )
 router.get('/get/:id', cinemaComplexController.handleGetOne)
 router.get('/get-all', cinemaComplexController.handleGetAll)
-router.put('/update/:id', cinemaComplexController.handleUpdate)
+router.put(
+  '/update/:id',
+  [authentication, isAdmin],
+  cinemaComplexController.handleUpdate,
+)
 
 export const cinemaComplexRoute = router

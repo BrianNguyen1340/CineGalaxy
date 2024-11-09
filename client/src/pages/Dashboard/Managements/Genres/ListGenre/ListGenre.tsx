@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom'
 import { SquarePen } from 'lucide-react'
 import ReactPaginate from 'react-paginate'
 
-import { useGetAllGenresQuery } from '~/services/genre.service'
+import { useGetGenresQuery } from '~/services/genre.service'
 import { Loader } from '~/components'
 
 const ListGenre = () => {
-  const { data: genres, refetch, isLoading } = useGetAllGenresQuery({})
+  const { data: genres, refetch, isLoading } = useGetGenresQuery({})
 
   useEffect(() => {
     refetch()

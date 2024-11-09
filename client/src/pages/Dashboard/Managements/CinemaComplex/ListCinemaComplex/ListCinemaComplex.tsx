@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { SquarePen } from 'lucide-react'
 import ReactPaginate from 'react-paginate'
 
-import { useGetAllCinemaComplexesQuery } from '~/services/cinemaComplex.service'
+import { useGetCinemaComplexesQuery } from '~/services/cinemaComplex.service'
 import { Loader } from '~/components'
 
 const ListCinemaComplex = () => {
@@ -11,7 +11,7 @@ const ListCinemaComplex = () => {
     data: cinemaComplexes,
     refetch,
     isLoading,
-  } = useGetAllCinemaComplexesQuery({})
+  } = useGetCinemaComplexesQuery({})
 
   useEffect(() => {
     refetch()

@@ -22,6 +22,7 @@ import Loader from './Loader/Loader'
 import Loading from './Loading/Loading'
 import Scrollbar from './Scrollbar/Scrollbar'
 import BreadcrumbAccount from './BreadcrumbAccount/BreadcrumbAccount'
+import DateSelector from './DateSelector/DateSelector'
 
 export {
   Header,
@@ -47,4 +48,5 @@ export {
   SidebarMenu,
   SidebarMenuItem,
   BreadcrumbAccount,
+  DateSelector,
 }

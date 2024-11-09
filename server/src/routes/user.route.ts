@@ -10,15 +10,12 @@ const router = Router()
 router.post('/create-account', async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body
-
     const hashedPassword = await bcrypt.hash(password, 12)
-
     const response = await userModel.create({
       name,
       email,
       password: hashedPassword,
     })
-
     res.status(201).json({ response })
   } catch (error) {
     console.log(error)
@@ -40,10 +37,12 @@ router.put(
   [authentication, isAdmin],
   userController.unblockAccount,
 )
-router.post(
-  '/create-user',
-  [authentication, isAdmin],
-  userController.createUser,
-)
+// router.post(
+//   '/create-user',
+//   [authentication, isAdmin],
+//   userController.createUser,
+// )
+
+router.put('/update-password', [authentication], userController.updatePassword)
 
 export const userRouter = router

@@ -14,7 +14,7 @@ export const roomAPISlice = apiSlice.injectEndpoints({
         url: `/api/v1/room/get/${id}`,
       }),
     }),
-    getAllRooms: builder.query({
+    getRooms: builder.query({
       query: () => ({
         url: `/api/v1/room/get-all`,
       }),
@@ -31,7 +31,7 @@ export const roomAPISlice = apiSlice.injectEndpoints({
 
 export const {
   useCreateRoomMutation,
-  useGetAllRoomsQuery,
+  useGetRoomsQuery,
   useGetRoomQuery,
   useUpdateRoomMutation,
 } = roomAPISlice

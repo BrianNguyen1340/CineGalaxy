@@ -14,7 +14,7 @@ export const movieAPISlice = apiSlice.injectEndpoints({
         url: `/api/v1/movie/get/${id}`,
       }),
     }),
-    getAllMovies: builder.query({
+    getMovies: builder.query({
       query: () => ({
         url: `/api/v1/movie/get-all`,
       }),
@@ -38,7 +38,7 @@ export const movieAPISlice = apiSlice.injectEndpoints({
 
 export const {
   useCreateMovieMutation,
-  useGetAllMoviesQuery,
+  useGetMoviesQuery,
   useGetMovieQuery,
   useUpdateMovieMutation,
   useUploadMovieMutation,

@@ -1,7 +1,7 @@
 import { Document, model, Types, Schema } from 'mongoose'
 
 export type PostCommentType = Document & {
-  _id: Types.ObjectId
+  readonly _id: Types.ObjectId
   content: string
   postId: Types.ObjectId
   userId: Types.ObjectId

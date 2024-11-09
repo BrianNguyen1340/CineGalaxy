@@ -1,9 +1,9 @@
 import { Document, Schema, Types, model } from 'mongoose'
 
 export type UserType = Document & {
-  _id: Types.ObjectId
-  email: string
+  readonly _id: Types.ObjectId
   name: string
+  email: string
   password: string
   phone: string
   gender?: string
@@ -19,15 +19,15 @@ export type UserType = Document & {
 
 const userSchema = new Schema<UserType>(
   {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     email: {
       type: String,
       required: true,
       unique: true,
-      trim: true,
-    },
-    name: {
-      type: String,
-      required: true,
       trim: true,
     },
     password: {

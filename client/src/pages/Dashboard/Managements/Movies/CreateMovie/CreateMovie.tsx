@@ -19,7 +19,7 @@ import makeAnimated from 'react-select/animated'
 
 import { useCreateMovieMutation } from '~/services/movie.service'
 import { paths } from '~/utils/paths'
-import { useGetAllGenresQuery } from '~/services/genre.service'
+import { useGetGenresQuery } from '~/services/genre.service'
 import { FormInputGroup } from '~/components'
 import { app } from '~/firebase/firebase.config'
 
@@ -48,7 +48,7 @@ const CreateMovie = () => {
 
   const [createApi, { isLoading }] = useCreateMovieMutation()
 
-  const { data: genres } = useGetAllGenresQuery({})
+  const { data: genres } = useGetGenresQuery({})
 
   const [selectedGenres, setSelectedGenres] = useState<
     { value: string; label: string }[]

@@ -35,6 +35,7 @@ const updateProfile: RequestHandler = catchErrors(async (req, res) => {
   }
 
   const _id = req.user._id
+
   const { name, email, phone, gender, address, photoURL } = req.body
 
   const response = await userService.updateProfile(
@@ -46,6 +47,29 @@ const updateProfile: RequestHandler = catchErrors(async (req, res) => {
     address,
     photoURL,
   )
+  if (!response.success) {
+    return sendErrorResponse(res, response.statusCode, response.message)
+  }
+
+  return sendSuccessResponse(
+    res,
+    response.statusCode,
+    response.message,
+    response.data,
+  )
+})
+
+const updatePassword: RequestHandler = catchErrors(async (req, res) => {
+  if (!req.user || !req.user._id) {
+    return sendErrorResponse(res, 400, 'Không tìm thấy ID người dùng!')
+  }
+
+  const _id = req.user._id
+
+  const { password } = req.body
+
+  const response = await userService.updatePassword(_id, password)
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -134,21 +158,21 @@ const unblockAccount = catchErrors(async (req, res) => {
   return sendSuccessResponse(res, response.statusCode, response.message)
 })
 
-const createUser = catchErrors(async (req, res) => {
-  const { email, name, password, role } = req.body
+// const createUserByAdmin = catchErrors(async (req, res) => {
+//   const { email, name, password, role } = req.body
 
-  const response = await userService.createUserByAdmin(
-    email,
-    name,
-    password,
-    role,
-  )
-  if (!response.success) {
-    return sendErrorResponse(res, response.statusCode, response.message)
-  }
+//   const response = await userService.createUserByAdmin(
+//     email,
+//     name,
+//     password,
+//     role,
+//   )
+//   if (!response.success) {
+//     return sendErrorResponse(res, response.statusCode, response.message)
+//   }
 
-  return sendSuccessResponse(res, response.statusCode, response.message)
-})
+//   return sendSuccessResponse(res, response.statusCode, response.message)
+// })
 
 const userController = {
   profile,
@@ -161,7 +185,8 @@ const userController = {
   getAllUsersByAdmin,
   blockAccount,
   unblockAccount,
-  createUser: [handleJoiError({ body: userValidation.createUser }), createUser],
+  // createUserByAdmin: [handleJoiError({ body: userValidation.createUserByAdmin }), createUserByAdmin],
+  updatePassword,
 }
 
 export default userController

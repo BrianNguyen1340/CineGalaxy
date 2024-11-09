@@ -1,7 +1,7 @@
 import { Document, Schema, Types, model } from 'mongoose'
 
 export type MovieType = Document & {
-  _id: Types.ObjectId
+  readonly _id: Types.ObjectId
   name: string
   slug: string
   description: string

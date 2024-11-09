@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { StatusCodes } from 'http-status-codes'
 import { Types } from 'mongoose'
-import bcrypt from 'bcrypt'
+import bcrypt, { genSalt } from 'bcrypt'
 
 import { userModel, UserType } from '~/schemas/user.schema'
 
@@ -73,12 +73,20 @@ const updateProfile = async (
     const request = await userModel.findByIdAndUpdate(
       _id,
       {
-        $set: { name, email, phone, gender, address, photoURL },
+        $set: {
+          name,
+          email,
+          phone,
+          gender,
+          address,
+          photoURL,
+        },
       },
       {
         new: true,
       },
     )
+
     if (!request) {
       return {
         success: false,
@@ -88,12 +96,74 @@ const updateProfile = async (
       }
     }
 
-    const { password, isVerified, __v, ...data } = request.toObject()
+    const { isVerified, __v, ...data } = request.toObject()
 
     return {
       success: true,
       statusCode: StatusCodes.OK,
       message: 'Cập nhật tài khoản thành công!',
+      data,
+    }
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return {
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: `Lỗi hệ thống: ${error.message}`,
+      }
+    }
+    return {
+      success: false,
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Đã xảy ra lỗi không xác định!',
+    }
+  }
+}
+
+const updatePassword = async (
+  _id: Types.ObjectId,
+  password: string,
+): Promise<{
+  success: boolean
+  message: string
+  statusCode: number
+  data?: Partial<UserType>
+}> => {
+  try {
+    if (!Types.ObjectId.isValid(_id)) {
+      return {
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'ID người dùng không hợp lệ!',
+      }
+    }
+
+    const salt = await bcrypt.genSalt(12)
+    const hashedPassword = await bcrypt.hash(password, salt)
+
+    const request = await userModel.findOneAndUpdate(
+      _id,
+      {
+        password: hashedPassword,
+      },
+      { new: true },
+    )
+
+    if (!request) {
+      return {
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message:
+          'Người dùng không tồn tại hoặc có lỗi trong quá trình cập nhật!',
+      }
+    }
+
+    const { isVerified, __v, ...data } = request.toObject()
+
+    return {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: 'Cập nhật mật khẩu thành công!',
       data,
     }
   } catch (error: unknown) {
@@ -337,6 +407,7 @@ const blockAccount = async (
       { isBlocked: true },
       { new: true },
     )
+
     if (!response) {
       return {
         success: false,
@@ -392,6 +463,7 @@ const unblockAccount = async (
       { isBlocked: false },
       { new: true },
     )
+
     if (!response) {
       return {
         success: false,
@@ -433,6 +505,7 @@ const userService = {
   updateUserByAdmin,
   blockAccount,
   unblockAccount,
+  updatePassword,
 }
 
 export default userService

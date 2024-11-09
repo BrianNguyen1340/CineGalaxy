@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
 import { useCreateCinemaMutation } from '~/services/cinema.service'
-import { useGetAllCinemaComplexesQuery } from '~/services/cinemaComplex.service'
+import { useGetCinemaComplexesQuery } from '~/services/cinemaComplex.service'
 import { FormInputGroup, Loader } from '~/components'
 import { paths } from '~/utils/paths'
 
@@ -26,7 +26,7 @@ const CreateCinema = () => {
 
   const [createApi, { isLoading }] = useCreateCinemaMutation()
   const { data: cinemaComplexes, isLoading: isLoadingCinemaComplexes } =
-    useGetAllCinemaComplexesQuery({})
+    useGetCinemaComplexesQuery({})
 
   const handleCreate: SubmitHandler<{
     name: string

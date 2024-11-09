@@ -4,10 +4,10 @@ import { SquarePen } from 'lucide-react'
 import ReactPaginate from 'react-paginate'
 
 import { Loader } from '~/components'
-import { useGetAllMoviesQuery } from '~/services/movie.service'
+import { useGetMoviesQuery } from '~/services/movie.service'
 
 const ListMovie = () => {
-  const { data: movies, isLoading, refetch } = useGetAllMoviesQuery({})
+  const { data: movies, isLoading, refetch } = useGetMoviesQuery({})
 
   useEffect(() => {
     refetch()

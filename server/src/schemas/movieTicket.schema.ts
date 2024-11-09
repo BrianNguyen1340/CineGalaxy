@@ -1,7 +1,7 @@
 import { Document, model, Schema, Types } from 'mongoose'
 
 export type MovieTicketType = Document & {
-  _id: Types.ObjectId
+  readonly _id: Types.ObjectId
   totalPrice: number
   quantity: number
   datetime: Date

@@ -1,7 +1,7 @@
 import { Document, model, Schema, Types } from 'mongoose'
 
 export type InvoiceType = Document & {
-  _id: Types.ObjectId
+  readonly _id: Types.ObjectId
   name: string
   totalPrice: number
   datetime: Date

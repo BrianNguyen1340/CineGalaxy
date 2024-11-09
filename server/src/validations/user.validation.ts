@@ -1,6 +1,6 @@
 import Joi from 'joi'
 
-const createUser = Joi.object({
+const createUserByAdmin = Joi.object({
   email: Joi.string().email().trim().max(50).required(),
   password: Joi.string()
     .trim()
@@ -26,7 +26,7 @@ const updateProfile = Joi.object({
 })
 
 const userValidation = {
-  createUser,
+  createUserByAdmin,
   updateProfile,
 }
 
