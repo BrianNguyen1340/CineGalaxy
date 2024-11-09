@@ -151,3 +151,14 @@ input[type='radio'] {
 input {
   width: 100%;
 }
+
+select {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  cursor: pointer;
+  outline: none;
+}
+
+option {
+  text-transform: capitalize;
+}

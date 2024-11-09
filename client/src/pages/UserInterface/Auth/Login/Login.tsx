@@ -10,16 +10,20 @@ import { useAppDispatch, useAppSelector } from '~/hooks/redux'
 import { FormInputGroup, GoogleAuth } from '~/components'
 import { useLoginMutation } from '~/services/auth.service'
 import { paths } from '~/utils/paths'
-import {
-  loginStart,
-  loginSuccess,
-  loginFailure,
-} from '~/redux/reducers/user.reducer'
+import { setCredentials } from '~/redux/reducers/user.reducer'
 
 const Login = () => {
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
   if (isAuthenticated && user) {
     return <Navigate to={paths.userPaths.home} />
+  }
+
+  const isAuthorized =
+    isAuthenticated &&
+    (user?.role === 0 || user?.role === 1 || user?.role === 2)
+
+  if (isAuthorized) {
+    return <Navigate to={paths.dashboardPaths.dashboard} replace />
   }
 
   const {
@@ -48,23 +52,25 @@ const Login = () => {
   }> = async (reqBody) => {
     try {
       const { email, password } = reqBody
-      dispatch(loginStart())
       nProgress.start()
 
-      const response = await loginApi({ email, password }).unwrap()
+      const { accessToken, data, message } = await loginApi({
+        email,
+        password,
+      }).unwrap()
 
       dispatch(
-        loginSuccess({
-          user: response.data,
+        setCredentials({
+          user: data,
+          token: accessToken,
         }),
       )
 
-      Swal.fire('Thành công', response.message, 'success')
+      Swal.fire('Thành công', message, 'success')
 
       navigate(paths.userPaths.home)
     } catch (error: any) {
-      dispatch(loginFailure(error.data.message))
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error.message, 'error')
     } finally {
       nProgress.done()
     }

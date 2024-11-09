@@ -85,12 +85,11 @@ const UpdateCinema = () => {
   }
 
   return (
-    <div className='container'>
-      <div className='title'>cập nhật rạp</div>
-      <form
-        onSubmit={handleSubmit(handleUpdate)}
-        style={{ width: '500px', margin: '0 auto' }}
-      >
+    <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
+      <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
+        cập nhật rạp
+      </div>
+      <form onSubmit={handleSubmit(handleUpdate)} className='mx-auto w-[500px]'>
         <FormInputGroup
           register={register}
           errors={errors}
@@ -144,18 +143,8 @@ const UpdateCinema = () => {
           type='text'
           name='phone'
         />
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '5px',
-            marginBottom: '20px',
-          }}
-        >
-          <label
-            htmlFor=''
-            style={{ textTransform: 'capitalize', fontWeight: 700 }}
-          >
+        <div className='mb-5 flex flex-col gap-1'>
+          <label htmlFor='cinemaComplex' className='font-semibold capitalize'>
             cụm rạp
           </label>
           <select
@@ -164,7 +153,7 @@ const UpdateCinema = () => {
             })}
             id='cinemaComplex'
             name='cinemaComplex'
-            style={{ padding: '10px', outline: 'none' }}
+            className='p-2'
           >
             <option value=''>Chọn cụm rạp</option>
             {cinemaComplexes?.data?.map((item: any) => (

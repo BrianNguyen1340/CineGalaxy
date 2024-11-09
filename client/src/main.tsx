@@ -74,10 +74,11 @@ import {
 } from '~/pages'
 import App from './App.tsx'
 import RequiredAuth from '~/routes/RequiredAuth'
-import PrivateProfile from './pages/Dashboard/PrivateProfile/PrivateProfile.tsx'
-import ProtectedRoute from './routes/ProtectedRoute.tsx'
+import PrivateProfile from '~/pages/Dashboard/PrivateProfile/PrivateProfile.tsx'
+import ProtectedRoute from '~/routes/ProtectedRoute.tsx'
 import './index.scss'
 import './index.css'
+// import PersistLogin from '~/features/PersistLogin.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
@@ -123,6 +124,7 @@ createRoot(document.getElementById('root')!).render(
               path={paths.userPaths.privateResetPassword}
               element={<PrivateResetPassword />}
             />
+            {/* <Route element={<PersistLogin />}></Route> */}
             {/* REQUIRED AUTH ROUTES */}
             <Route element={<RequiredAuth />}>
               <Route path={paths.userPaths.coupons} element={<Coupons />} />

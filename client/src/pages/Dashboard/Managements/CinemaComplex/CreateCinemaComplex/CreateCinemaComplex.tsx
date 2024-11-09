@@ -47,24 +47,13 @@ const CreateCinemaComplex = () => {
           errors={errors}
           validation={{
             required: 'Vui lòng nhập họ tên!',
-            minLength: {
-              value: 6,
-              message: 'Họ tên có tối thiểu 6 ký tự!',
-            },
-            maxLength: {
-              value: 50,
-              message: 'Họ tên có tối đa 50 ký tự!',
-            },
-            pattern: {
-              value: /^[a-zA-Z0-9\s]*$/,
-              message: 'Họ tên không được chứa ký tự đặc biệt!',
-            },
           }}
           htmlFor='name'
-          labelChildren='name'
+          labelChildren='tên cụm rạp'
           type='text'
           id='name'
           name='name'
+          placeholder='Vui lòng nhập tên cụm rạp'
         />
         <button
           type='submit'

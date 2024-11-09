@@ -1,27 +1,38 @@
-robot hoang da: https://www.youtube.com/embed/NuYnY_P3npY?si=AvKdJNBUJiX8Rjc3
-ac quy truy hon: https://www.youtube.com/embed/IPhJ5T1cCHw?si=SfsQn8wM1HxHyO9I
-quy an tang: https://www.youtube.com/embed/xVVZvSybaEc?si=8lnTwLexXWSsZdNz
-venom: https://www.youtube.com/embed/HyIyd9joTTc?si=h3HPANkzo_ICYXg0
-tro choi nhan tinh: https://www.youtube.com/embed/KvmVQpkv4Pw?si=hQYiQ7n3ZG4ssdPx
-ngay xua co mot chuyen tinh: https://www.youtube.com/embed/qaeHlk0OXec?si=zr8ABG1Y0K8ZPw30
+name: VENOM: KÈO CUỐI
 
-********************************************************************************************
+director: Kelly Marcel
 
-BACKEND
+desciption: Đây là phần phim cuối cùng và hoành tráng nhất về cặp đôi Venom và Eddie Brock (Tom Hardy). Sau khi dịch chuyển từ Vũ trụ Marvel trong ‘Spider-man: No way home’ (2021) trở về thực tại, Eddie Brock giờ đây cùng Venom sẽ phải đối mặt với ác thần Knull hùng mạnh - kẻ tạo ra cả chủng tộc Symbiote và những thế lực đang rình rập khác. Cặp đôi Eddie và Venom sẽ phải đưa ra lựa quyết định khốc liệt để hạ màn kèo cuối này.
 
-nodejs: https://nodejs.org/en
-expressjs: https://expressjs.com/
-mongodb: https://www.mongodb.com/
-socket.io: https://socket.io/
-jsonwebtoken: https://jwt.io/
-nodemailer: https://www.nodemailer.com/
+trailerUrl: https://www.youtube.com/embed/HyIyd9joTTc?si=h3HPANkzo_ICYXg0
 
-FRONTEND
+********************************************************************************************************************
 
-vitejs: https://vite.dev/
-redux-toolkit: https://redux-toolkit.js.org/
-firebase: https://firebase.google.com/
-tailwindcss: https://tailwindcss.com/
-socket.io: https://socket.io/
+name: NGÀY XƯA CÓ MỘT CHUYỆN TÌNH
 
-* NOTE: cả 2 phía được viết bằng ngôn ngữ lập trình typescript
+director: Trịnh Đình Lê Minh
+
+desciption: Ngày Xưa Có Một Chuyện Tình xoay quanh câu chuyện tình bạn, tình yêu giữa hai chàng trai và một cô gái từ thuở ấu thơ cho đến khi trưởng thành, phải đối mặt với những thử thách của số phận. Trải dài trong 4 giai đoạn từ năm 1987 - 2000, ba người bạn cùng tuổi - Vinh, Miền, Phúc đã cùng yêu, cùng bỡ ngỡ bước vào đời, va vấp và vượt qua.
+
+trailerUrl: https://www.youtube.com/embed/qaeHlk0OXec?si=zr8ABG1Y0K8ZPw30
+
+********************************************************************************************************************
+
+name: ĐÔI BẠN HỌC YÊU
+
+director: E.Oni
+
+desciption: Bộ phim xoay quanh đôi bạn ngỗ nghịch Jae-hee và Heung-soo cùng những khoảnh khắc “dở khóc dở cười” khi cùng chung sống trong một ngôi nhà. Jae-hee là một cô gái “cờ xanh” với tâm hồn tự do, sống hết mình với tình yêu. Ngược lại, Heung-soo lại là một “cờ đỏ” chính hiệu khi cho rằng tình yêu là sự lãng phí cảm xúc không cần thiết. Bỏ qua những tin đồn lan tràn do người khác tạo ra, Jae-hee và Heung-soo chọn sống chung nhưng yêu theo cách riêng của họ. Hai quan điểm tình yêu trái ngược sẽ đẩy cả hai sang những ngã rẽ và kết cục khác nhau. Sau cùng, Jae-hee hay Heung-soo sẽ về đích trong hành trình “học yêu” này?
+
+trailerUrl: https://www.youtube.com/embed/EIARKqcXILM?si=r3x80NFdKlY8yBGr
+
+********************************************************************************************************************
+
+name: AI OÁN TRONG VƯỜN XUÂN
+
+director: Koo Tae-jin
+
+desciption: Phim xoay quanh So-hee, người đã mất đi gia đình hạnh phúc của mình vì cái chết đột ngột của chồng, và trải qua những điều kỳ lạ, rùng rợn sau khi đến thăm Neulbom Garden, một ngôi biệt thự nông thôn bí ẩn do chồng cô để lại.
+
+trailerUrl: https://www.youtube.com/embed/QeDo1uPujSc?si=YEZqrbFbs4Zyvx9l
+

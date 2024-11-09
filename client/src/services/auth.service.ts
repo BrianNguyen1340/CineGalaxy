@@ -1,4 +1,5 @@
 import { apiSlice } from '~/redux/apiSlice'
+// import { loginSuccess } from '~/redux/reducers/user.reducer'
 // import { logout } from '~/redux/reducers/user.reducer'
 
 export const authAPISlice = apiSlice.injectEndpoints({
@@ -57,17 +58,6 @@ export const authAPISlice = apiSlice.injectEndpoints({
         url: `/api/v1/auth/logout`,
         method: 'POST',
       }),
-      // async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-      //   try {
-      //     const { data } = await queryFulfilled
-      //     dispatch(logout())
-      //     setTimeout(() => {
-      //       dispatch(apiSlice.util.resetApiState())
-      //     }, 1000)
-      //   } catch (error: any) {
-      //     console.log(error)
-      //   }
-      // },
     }),
     checkEmailExist: builder.mutation({
       query: (data) => ({
@@ -76,6 +66,21 @@ export const authAPISlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    // refresh: builder.mutation({
+    //   query: () => ({
+    //     url: '/auth/refresh',
+    //     method: 'GET',
+    //   }),
+    //   async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+    //     try {
+    //       const { data } = await queryFulfilled
+    //       const { accessToken } = data
+    //       dispatch(loginSuccess({ token: accessToken, user: data }))
+    //     } catch (error) {
+    //       console.log(error)
+    //     }
+    //   },
+    // }),
   }),
 })
 
@@ -89,4 +94,5 @@ export const {
   useLogoutMutation,
   useCheckEmailExistMutation,
   useGoogleLoginMutation,
+  // useRefreshMutation,
 } = authAPISlice

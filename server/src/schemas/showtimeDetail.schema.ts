@@ -5,6 +5,8 @@ export type ShowtimeDetailType = Document & {
   room: Types.ObjectId
   showtime: Types.ObjectId
   seat: Types.ObjectId[]
+  movie: Types.ObjectId
+  cinema: Types.ObjectId
 }
 
 const showtimeDetailSchema = new Schema<ShowtimeDetailType>(
@@ -19,11 +21,25 @@ const showtimeDetailSchema = new Schema<ShowtimeDetailType>(
       ref: 'Showtime',
       required: true,
     },
-    seat: {
-      type: [Schema.Types.ObjectId],
-      ref: 'Seat',
+    movie: {
+      type: Schema.Types.ObjectId,
+      ref: 'Movie',
       required: true,
     },
+    cinema: {
+      type: Schema.Types.ObjectId,
+      ref: 'Cinema',
+      required: true,
+    },
+    seat: [
+      {
+        seat: {
+          type: Schema.Types.ObjectId,
+          ref: 'Seat',
+          required: true,
+        },
+      },
+    ],
   },
   { timestamps: true },
 )

@@ -41,6 +41,7 @@ const verifyOTPRegister: RequestHandler = catchErrors(async (req, res) => {
   }
 
   await new Promise<void>((resolve, reject) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     req.session.destroy((error: any) => {
       if (error) {
         reject(new Error('Xóa session không thành công!'))
@@ -147,6 +148,7 @@ const refresh = catchErrors(async (req, res) => {
   jwt.verify(
     refreshToken,
     varEnv.JWT_REFRESH_TOKEN_KEY,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async (error: any, decoded: any) => {
       if (error) {
         return res.status(403).json({ message: 'Forbidden' })

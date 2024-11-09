@@ -7,6 +7,11 @@ import {
   ref,
   uploadBytesResumable,
 } from 'firebase/storage'
+import { FaRegStar } from 'react-icons/fa'
+import { DayPicker } from 'react-day-picker'
+import { AiOutlineCloudUpload } from 'react-icons/ai'
+import { CircularProgressbar } from 'react-circular-progressbar'
+import { HashLoader } from 'react-spinners'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 import Select from 'react-select'
@@ -20,10 +25,6 @@ import {
 import { app } from '~/firebase/firebase.config'
 import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
-import { FaRegStar } from 'react-icons/fa'
-import { DayPicker } from 'react-day-picker'
-import { AiOutlineCloudUpload } from 'react-icons/ai'
-import { CircularProgressbar } from 'react-circular-progressbar'
 
 const UpdateMovie = () => {
   const { id } = useParams()
@@ -250,12 +251,11 @@ const UpdateMovie = () => {
   }, [refetchGenres, refetchMovie])
 
   return (
-    <div className='container'>
-      <div className='title'>cập nhật phim</div>
-      <form
-        onSubmit={handleSubmit(handleUpdate)}
-        style={{ width: '500px', margin: '0 auto' }}
-      >
+    <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
+      <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
+        cập nhật phim
+      </div>
+      <form onSubmit={handleSubmit(handleUpdate)} className='mx-auto w-[500px]'>
         {/* name */}
         <FormInputGroup
           register={register}
@@ -276,12 +276,7 @@ const UpdateMovie = () => {
         <div style={{ marginBottom: '20px' }}>
           <label
             htmlFor='genres'
-            style={{
-              textTransform: 'capitalize',
-              marginBottom: '5px',
-              fontWeight: 700,
-              display: 'block',
-            }}
+            className='block gap-1 font-semibold capitalize'
           >
             thể loại phim
           </label>
@@ -319,19 +314,10 @@ const UpdateMovie = () => {
           name='director'
           icon={<FaRegStar color='red' />}
         />
-        <div
-          style={{
-            marginBottom: '20px',
-          }}
-        >
+        <div className='mb-5'>
           <label
             htmlFor='description'
-            style={{
-              textTransform: 'capitalize',
-              fontWeight: 700,
-              marginBottom: '5px',
-              display: 'block',
-            }}
+            className='mb-1 block font-semibold capitalize'
           >
             mô tả
           </label>
@@ -342,22 +328,13 @@ const UpdateMovie = () => {
             placeholder={movie?.description}
             id='description'
             name='description'
-            style={{
-              width: '100%',
-              outline: 'none',
-              height: '300px',
-              padding: '10px',
-              fontSize: '16px',
-            }}
+            className='h-[300px] w-full rounded border-2 p-3 text-base outline-none'
           />
         </div>
 
         {/* releaseDate */}
-        <div style={{ marginBottom: '20px' }}>
-          <label
-            htmlFor='releaseDate'
-            style={{ textTransform: 'capitalize', fontWeight: 700 }}
-          >
+        <div className='mb-5'>
+          <label htmlFor='releaseDate' className='font-semibold capitalize'>
             Chọn ngày công chiếu
           </label>
           <DayPicker
@@ -389,21 +366,9 @@ const UpdateMovie = () => {
         />
 
         {/* poster */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '5px',
-            marginBottom: '20px',
-          }}
-        >
-          <label style={{ textTransform: 'capitalize', fontWeight: 700 }}>
-            poster
-          </label>
-          <label
-            htmlFor='poster'
-            style={{ textTransform: 'capitalize', cursor: 'pointer' }}
-          >
+        <div className='mb-5 flex flex-col gap-1'>
+          <label className='font-semibold capitalize'>poster</label>
+          <label htmlFor='poster' className='cursor-pointer capitalize'>
             <AiOutlineCloudUpload size='28' />
           </label>
           <input
@@ -426,24 +391,17 @@ const UpdateMovie = () => {
             type='button'
             disabled={posterUploadProgress ? true : false}
             onClick={handleUploadPoster}
-            style={{ width: 'fit-content' }}
+            className='w-fit'
           >
             {posterUploadProgress ? (
-              <div style={{ width: '4rem', height: '4rem' }}>
+              <div className='h-16 w-16'>
                 <CircularProgressbar
                   value={Number(posterUploadProgress)}
                   text={`${posterUploadProgress || 0}%`}
                 />
               </div>
             ) : (
-              <div
-                style={{
-                  padding: '15px',
-                  textTransform: 'capitalize',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                }}
-              >
+              <div className='cursor-pointer rounded bg-black p-3 font-semibold capitalize text-white'>
                 upload
               </div>
             )}
@@ -451,21 +409,9 @@ const UpdateMovie = () => {
           {posterUploadError && <div>{posterUploadError}</div>}
         </div>
         {/* banner */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '5px',
-            marginBottom: '20px',
-          }}
-        >
-          <label style={{ textTransform: 'capitalize', fontWeight: 700 }}>
-            poster
-          </label>
-          <label
-            htmlFor='poster'
-            style={{ textTransform: 'capitalize', cursor: 'pointer' }}
-          >
+        <div className='mb-5 flex flex-col gap-1'>
+          <label className='font-semibold capitalize'>poster</label>
+          <label htmlFor='poster' className='cursor-pointer capitalize'>
             <AiOutlineCloudUpload size='28' />
           </label>
           <input
@@ -480,7 +426,7 @@ const UpdateMovie = () => {
             hidden
           />
           {bannerURL ? (
-            <img src={bannerURL} alt='poster' width='250' />
+            <img src={bannerURL} alt='poster' width='400' />
           ) : (
             <img src='images/movie.jpg' alt='poster' width='250' />
           )}
@@ -488,24 +434,17 @@ const UpdateMovie = () => {
             type='button'
             disabled={bannerUploadProgress ? true : false}
             onClick={handleUploadBanner}
-            style={{ width: 'fit-content' }}
+            className='w-fit'
           >
             {bannerUploadProgress ? (
-              <div style={{ width: '4rem', height: '4rem' }}>
+              <div className='h-16 w-16'>
                 <CircularProgressbar
                   value={Number(bannerUploadProgress)}
                   text={`${bannerUploadProgress || 0}%`}
                 />
               </div>
             ) : (
-              <div
-                style={{
-                  padding: '15px',
-                  textTransform: 'capitalize',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                }}
-              >
+              <div className='cursor-pointer rounded bg-black p-3 font-semibold capitalize text-white'>
                 upload
               </div>
             )}
@@ -514,20 +453,10 @@ const UpdateMovie = () => {
         </div>
 
         {/* movie format */}
-        <div
-          style={{
-            marginBottom: '25px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
+        <div className='mb-5 flex flex-col'>
           <label
             htmlFor='movieFormat'
-            style={{
-              textTransform: 'capitalize',
-              fontWeight: 700,
-              marginBottom: '5px',
-            }}
+            className='mb-1 font-semibold capitalize'
           >
             định dạng phim
           </label>
@@ -537,7 +466,7 @@ const UpdateMovie = () => {
             })}
             id='movieFormat'
             name='movieFormat'
-            style={{ padding: '8px', outline: 'none' }}
+            className='p-2'
           >
             <option value='' aria-hidden='true'>
               Chọn định dạng phim
@@ -554,15 +483,9 @@ const UpdateMovie = () => {
             display: 'flex',
             flexDirection: 'column',
           }}
+          className='mb-6 flex flex-col'
         >
-          <label
-            htmlFor='subtitle'
-            style={{
-              textTransform: 'capitalize',
-              fontWeight: 700,
-              marginBottom: '5px',
-            }}
-          >
+          <label htmlFor='subtitle' className='mb-1 font-semibold capitalize'>
             phụ đề
           </label>
           <select
@@ -571,7 +494,7 @@ const UpdateMovie = () => {
             })}
             id='subtitle'
             name='subtitle'
-            style={{ padding: '8px', outline: 'none' }}
+            className='p-2'
           >
             <option value='' aria-hidden='true'>
               Chọn phụ đề
@@ -583,20 +506,10 @@ const UpdateMovie = () => {
         </div>
 
         {/* movie rating */}
-        <div
-          style={{
-            marginBottom: '25px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
+        <div className='mb-6 flex flex-col'>
           <label
             htmlFor='movieRating'
-            style={{
-              textTransform: 'capitalize',
-              fontWeight: 700,
-              marginBottom: '5px',
-            }}
+            className='mb-1 font-semibold capitalize'
           >
             xếp hạng độ tuổi
           </label>
@@ -606,7 +519,7 @@ const UpdateMovie = () => {
             })}
             id='movieRating'
             name='movieRating'
-            style={{ padding: '8px', outline: 'none' }}
+            className='p-2'
           >
             <option value='' aria-hidden='true'>
               Chọn xếp hạng độ tuổi
@@ -648,9 +561,12 @@ const UpdateMovie = () => {
         <button
           type='submit'
           disabled={isLoading ? true : false}
-          className='btn-create'
+          className='rounded bg-black px-4 py-3 font-semibold text-white transition duration-300 hover:opacity-70'
         >
-          {isLoading ? 'Đang cập nhật' : 'Cập nhật'}
+          <div className='flex items-center justify-center gap-3'>
+            {isLoading && <HashLoader size='20' color='#fff' />}
+            <span className='capitalize'>{isLoading ? 'đang lưu' : 'lưu'}</span>
+          </div>
         </button>
       </form>
     </div>

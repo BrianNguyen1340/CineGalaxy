@@ -20,6 +20,14 @@ const ForgotPassword = () => {
     return <Navigate to={paths.userPaths.home} />
   }
 
+  const isAuthorized =
+    isAuthenticated &&
+    (user?.role === 0 || user?.role === 1 || user?.role === 2)
+
+  if (isAuthorized) {
+    return <Navigate to={paths.dashboardPaths.dashboard} replace />
+  }
+
   const {
     register,
     handleSubmit,

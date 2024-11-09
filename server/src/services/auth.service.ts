@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { StatusCodes } from 'http-status-codes'
 import bcrypt from 'bcrypt'
 
@@ -109,15 +110,7 @@ const verifyOTPRegister = async (
 
     await verificationCodeRegister.deleteOne({ _id: tempUser._id })
 
-    const {
-      password,
-      isVerified,
-      createdAt,
-      updatedAt,
-      isBlocked,
-      __v,
-      ...data
-    } = newUser.toObject()
+    const { password, isVerified, isBlocked, __v, ...data } = newUser.toObject()
 
     return {
       success: true,
@@ -237,15 +230,7 @@ const googleLogin = async (
       user.lastLogin = new Date()
       await user.save()
 
-      const {
-        password,
-        createdAt,
-        updatedAt,
-        isVerified,
-        isBlocked,
-        __v,
-        ...data
-      } = user.toObject()
+      const { password, isVerified, isBlocked, __v, ...data } = user.toObject()
 
       return {
         success: true,
@@ -288,15 +273,8 @@ const googleLogin = async (
       newUser.lastLogin = new Date()
       await newUser.save()
 
-      const {
-        password,
-        createdAt,
-        updatedAt,
-        isVerified,
-        isBlocked,
-        __v,
-        ...data
-      } = newUser.toObject()
+      const { password, isVerified, isBlocked, __v, ...data } =
+        newUser.toObject()
 
       return {
         success: true,
@@ -378,15 +356,7 @@ const login = async (
     user.lastLogin = new Date()
     await user.save()
 
-    const {
-      password,
-      createdAt,
-      updatedAt,
-      isVerified,
-      isBlocked,
-      __v,
-      ...data
-    } = user.toObject()
+    const { password, isVerified, isBlocked, __v, ...data } = user.toObject()
 
     return {
       success: true,

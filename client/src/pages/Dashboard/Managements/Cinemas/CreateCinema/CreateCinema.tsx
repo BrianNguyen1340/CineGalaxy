@@ -47,10 +47,6 @@ const CreateCinema = () => {
         cinemaComplex,
       }).unwrap()
 
-      if (!response.success) {
-        Swal.fire('Thất bại', response.message, 'error')
-      }
-
       Swal.fire('Thành công', response.message, 'success')
 
       navigate(paths.dashboardPaths.managements.cinemas.list)
@@ -66,19 +62,18 @@ const CreateCinema = () => {
   }
 
   return (
-    <div className='container'>
-      <div className='title'>tạo rạp</div>
-      <form
-        onSubmit={handleSubmit(handleCreate)}
-        style={{ width: '500px', margin: '0 auto' }}
-      >
+    <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
+      <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
+        tạo rạp
+      </div>
+      <form onSubmit={handleSubmit(handleCreate)} className='mx-auto w-[500px]'>
         <FormInputGroup
           register={register}
           errors={errors}
           validation={{
-            required: 'Vui lòng nhập tên!',
+            required: 'Vui lòng nhập tên rạp!',
           }}
-          labelChildren='name'
+          labelChildren='tên rạp'
           htmlFor='name'
           id='name'
           placeholder='Vui lòng nhập tên rạp'
@@ -106,12 +101,12 @@ const CreateCinema = () => {
           register={register}
           errors={errors}
           validation={{
-            required: 'Vui lòng nhập địa chỉ!',
+            required: 'Vui lòng nhập địa chỉ rạp!',
           }}
           labelChildren='address'
           htmlFor='address'
           id='address'
-          placeholder='Vui lòng nhập địa chỉ'
+          placeholder='Vui lòng nhập địa chỉ rạp'
           type='text'
           name='address'
         />
@@ -119,27 +114,17 @@ const CreateCinema = () => {
           register={register}
           errors={errors}
           validation={{
-            required: 'Vui lòng nhập số điện thoại!',
+            required: 'Vui lòng nhập số điện thoại rạp!',
           }}
           labelChildren='phone'
           htmlFor='phone'
           id='phone'
-          placeholder='Vui lòng nhập số điện thoại'
+          placeholder='Vui lòng nhập số điện thoại rạp'
           type='text'
           name='phone'
         />
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '5px',
-            marginBottom: '20px',
-          }}
-        >
-          <label
-            htmlFor=''
-            style={{ textTransform: 'capitalize', fontWeight: 700 }}
-          >
+        <div className='mb-5 flex flex-col gap-1'>
+          <label htmlFor='cinemaComplex' className='font-semibold capitalize'>
             cụm rạp
           </label>
           <select
@@ -148,11 +133,11 @@ const CreateCinema = () => {
             })}
             id='cinemaComplex'
             name='cinemaComplex'
-            style={{ padding: '10px', outline: 'none' }}
+            className='p-2'
           >
             <option value=''>Chọn cụm rạp</option>
             {cinemaComplexes?.data?.map((item: any) => (
-              <option key={item?._id} value={item?._id}>
+              <option key={item?._id} value={item?._id} className='capitalize'>
                 {item?.name}
               </option>
             ))}

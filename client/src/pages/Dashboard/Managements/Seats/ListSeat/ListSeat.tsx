@@ -32,8 +32,10 @@ const ListSeat = () => {
   }
 
   return (
-    <div className='container'>
-      <div className='title'>danh sách ghế</div>
+    <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
+      <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
+        danh sách ghế
+      </div>
       {seats ? (
         <>
           <table>
@@ -44,7 +46,6 @@ const ListSeat = () => {
                 <th>số ghế</th>
                 <th>loại ghế</th>
                 <th>tình trạng ghế</th>
-                <th>giá ghế</th>
                 <th>quản lý</th>
               </tr>
             </thead>
@@ -56,11 +57,12 @@ const ListSeat = () => {
                   <td>{item.number}</td>
                   <td>{item.type}</td>
                   <td>{item.status}</td>
-                  <td>{item.price} VNĐ</td>
                   <td>
-                    <Link to={`/update-seat/${item?._id}`}>
-                      <SquarePen />
-                    </Link>
+                    <div className='flex items-center justify-center'>
+                      <Link to={`/update-seat/${item?._id}`}>
+                        <SquarePen />
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))}

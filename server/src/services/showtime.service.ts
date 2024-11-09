@@ -94,7 +94,7 @@ const handleGetOne = async (
       .findById(id)
       .populate('movie')
       .populate('cinema')
-      .populate('cinemaComplex')
+      // .populate('cinemaComplex')
       .populate({
         path: 'room',
         populate: {
@@ -142,7 +142,7 @@ const handleGetAll = async (): Promise<{
       .find()
       .populate('movie')
       .populate('cinema')
-      .populate('cinemaComplex')
+      // .populate('cinemaComplex')
       .populate({
         path: 'room',
         populate: {

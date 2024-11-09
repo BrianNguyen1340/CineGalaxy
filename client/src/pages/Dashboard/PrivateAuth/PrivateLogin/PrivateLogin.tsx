@@ -9,11 +9,7 @@ import nProgress from 'nprogress'
 import { useAppDispatch, useAppSelector } from '~/hooks/redux'
 import { paths } from '~/utils/paths'
 import { useLoginMutation } from '~/services/auth.service'
-import {
-  loginFailure,
-  loginStart,
-  loginSuccess,
-} from '~/redux/reducers/user.reducer'
+import { setCredentials } from '~/redux/reducers/user.reducer'
 import { FormInputGroup } from '~/components'
 
 const PrivateLogin = () => {
@@ -47,22 +43,24 @@ const PrivateLogin = () => {
   }> = async (reqBody) => {
     try {
       const { email, password } = reqBody
-      dispatch(loginStart())
       nProgress.start()
 
-      const response = await loginApi({ email, password }).unwrap()
+      const { accessToken, data, message } = await loginApi({
+        email,
+        password,
+      }).unwrap()
 
       dispatch(
-        loginSuccess({
-          user: response.data,
+        setCredentials({
+          user: data,
+          token: accessToken,
         }),
       )
 
-      Swal.fire('Thành công', response.message, 'success')
+      Swal.fire('Thành công', message, 'success')
 
       navigate(paths.dashboardPaths.dashboard)
     } catch (error: any) {
-      dispatch(loginFailure(error.data.message))
       Swal.fire('Thất bại', error.data.message, 'error')
     } finally {
       nProgress.done()

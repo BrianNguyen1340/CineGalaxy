@@ -18,12 +18,21 @@ import { app } from '~/firebase/firebase.config'
 import { useAppDispatch, useAppSelector } from '~/hooks/redux'
 import { BreadcrumbAccount } from '~/components'
 import { useUpdateProfileMutation } from '~/services/user.service'
-import { loginSuccess } from '~/redux/reducers/user.reducer'
+import { setCredentials } from '~/redux/reducers/user.reducer'
+import { Navigate } from 'react-router-dom'
+import { paths } from '~/utils/paths'
 
 ReactModal.setAppElement('#root')
 
 const Profile = () => {
-  const { user } = useAppSelector((state) => state.user)
+  const { user, isAuthenticated } = useAppSelector((state) => state.user)
+  const isAuthorized =
+    isAuthenticated &&
+    (user?.role === 0 || user?.role === 1 || user?.role === 2)
+
+  if (isAuthorized) {
+    return <Navigate to={paths.dashboardPaths.dashboard} replace />
+  }
 
   const dispatch = useAppDispatch()
 
@@ -164,7 +173,7 @@ const Profile = () => {
     try {
       nProgress.start()
 
-      const response = await updateApi({
+      const { data } = await updateApi({
         id: user?.id,
         name,
         email,
@@ -175,8 +184,8 @@ const Profile = () => {
       }).unwrap()
 
       dispatch(
-        loginSuccess({
-          user: response.data,
+        setCredentials({
+          user: data,
         }),
       )
 
@@ -235,7 +244,6 @@ const Profile = () => {
                 }}
               >
                 <div className='relative h-full w-full'>
-                  {/* show form modal change avatar */}
                   <div
                     className={`${showFormEditAvatar ? 'invisible h-0 w-0 opacity-0' : 'visible opacity-100'} transition`}
                   >
@@ -287,7 +295,6 @@ const Profile = () => {
                       </div>
                     </div>
                   </div>
-                  {/* show form edit avatar */}
                   {showFormEditAvatar && (
                     <>
                       {!photoURL && (
@@ -309,7 +316,6 @@ const Profile = () => {
                               <BsThreeDotsVertical size='20' />
                             </div>
                           </div>
-                          {/* tải ảnh từ pc */}
                           {photo ? (
                             <div className='p-6'>
                               <div className='relative'>
@@ -636,7 +642,9 @@ const Profile = () => {
                           </div>
                         ) : (
                           <div className='text-sm capitalize text-[#6a6a6a]'>
-                            {user?.gender}
+                            {user?.gender === 'male' && 'Nam'}
+                            {user?.gender === 'female' && 'Nữ'}
+                            {user?.gender === 'other' && 'Khác'}
                           </div>
                         )}
                       </>
@@ -709,7 +717,53 @@ const Profile = () => {
             </div>
           </div>
           <div className='ml-12 w-[40%]'>
-            <div className='rounded-xl border p-6'></div>
+            <div className='rounded-xl border p-6'>
+              <svg
+                width='48px'
+                height='48px'
+                viewBox='0 0 16 16'
+                fill='none'
+                xmlns='http://www.w3.org/2000/svg'
+              >
+                <path
+                  fill-rule='evenodd'
+                  clip-rule='evenodd'
+                  d='M8 16L4.35009 13.3929C2.24773 11.8912 1 9.46667 1 6.88306V3L8 0L15 3V6.88306C15 9.46667 13.7523 11.8912 11.6499 13.3929L8 16ZM12.2071 5.70711L10.7929 4.29289L7 8.08579L5.20711 6.29289L3.79289 7.70711L7 10.9142L12.2071 5.70711Z'
+                  fill='#000000'
+                />
+              </svg>
+              <div className='mt-4 text-xl font-bold'>
+                Tại sao thông tin của tôi không được hiển thị ở đây?
+              </div>
+              <div className='mt-4'>
+                Chúng tôi đang ẩn một số thông tin tài khoản để bảo vệ danh tính
+                của bạn.
+              </div>
+              <svg
+                fill='#000000'
+                width='48px'
+                height='48px'
+                viewBox='0 0 512 512'
+                id='_x30_1'
+                version='1.1'
+                xmlSpace='preserve'
+                xmlns='http://www.w3.org/2000/svg'
+                xmlnsXlink='http://www.w3.org/1999/xlink'
+                className='mt-4'
+              >
+                <g>
+                  <path d='M256,126.562c-20.193,0-36.562,16.37-36.562,36.562v31.688h73.125v-31.688C292.562,142.932,276.193,126.562,256,126.562z' />
+                  <path d='M255.461,243.566c-19.543,0.281-35.588,16.2-36.015,35.741c-0.303,13.872,7.127,26.027,18.272,32.477v23.185   c0,10.096,8.185,18.281,18.281,18.281s18.281-8.185,18.281-18.281v-23.185c10.925-6.322,18.281-18.128,18.281-31.659   C292.562,259.753,275.901,243.272,255.461,243.566z' />
+                  <path d='M256,0C114.615,0,0,114.615,0,256s114.615,256,256,256s256-114.615,256-256S397.385,0,256,0z M390.062,365.438   c0,20.193-16.37,36.562-36.562,36.562h-195c-20.193,0-36.562-16.37-36.562-36.562V231.375c0-20.193,16.37-36.562,36.562-36.562   h24.375v-31.688C182.875,122.739,215.614,90,256,90l0,0c40.386,0,73.125,32.739,73.125,73.125v31.688H353.5   c20.193,0,36.562,16.37,36.562,36.562V365.438z' />
+                </g>
+              </svg>
+              <div className='mt-4 text-xl font-bold'>
+                Bạn có thể chỉnh sửa những thông tin nào?
+              </div>
+              <div className='mt-4'>
+                Bạn có thể chỉnh sửa thông tin liên hệ và thông tin cá nhân.
+              </div>
+            </div>
           </div>
         </div>
       </div>

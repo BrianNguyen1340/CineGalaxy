@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { StatusCodes } from 'http-status-codes'
 import { Types } from 'mongoose'
 import bcrypt from 'bcrypt'
@@ -22,8 +23,7 @@ const profile = async (
       }
     }
 
-    const { password, isVerified, createdAt, updatedAt, __v, ...data } =
-      user.toObject()
+    const { password, isVerified, __v, ...data } = user.toObject()
 
     return {
       success: true,
@@ -48,9 +48,9 @@ const profile = async (
 }
 
 const updateProfile = async (
-  userId: Types.ObjectId,
-  email: string,
+  _id: Types.ObjectId,
   name: string,
+  email: string,
   phone: string,
   gender: string,
   address: string,
@@ -62,21 +62,21 @@ const updateProfile = async (
   data?: Partial<UserType>
 }> => {
   try {
+    if (!Types.ObjectId.isValid(_id)) {
+      return {
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'ID người dùng không hợp lệ!',
+      }
+    }
+
     const request = await userModel.findByIdAndUpdate(
-      userId,
+      _id,
       {
-        $set: {
-          name,
-          email,
-          phone,
-          gender,
-          address,
-          photoURL,
-        },
+        $set: { name, email, phone, gender, address, photoURL },
       },
       {
         new: true,
-        runValidators: true,
       },
     )
     if (!request) {
@@ -88,8 +88,7 @@ const updateProfile = async (
       }
     }
 
-    const { password, isVerified, createdAt, updatedAt, __v, ...data } =
-      request.toObject()
+    const { password, isVerified, __v, ...data } = request.toObject()
 
     return {
       success: true,
@@ -346,8 +345,7 @@ const blockAccount = async (
       }
     }
 
-    const { password, isVerified, createdAt, updatedAt, __v, ...data } =
-      user.toObject()
+    const { password, isVerified, __v, ...data } = user.toObject()
 
     return {
       success: true,
@@ -402,8 +400,7 @@ const unblockAccount = async (
       }
     }
 
-    const { password, isVerified, createdAt, updatedAt, __v, ...data } =
-      user.toObject()
+    const { password, isVerified, __v, ...data } = user.toObject()
 
     return {
       success: true,

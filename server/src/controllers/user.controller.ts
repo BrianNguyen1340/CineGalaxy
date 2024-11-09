@@ -10,6 +10,10 @@ import { catchErrors } from '~/utils/catchErrors'
 import { Types } from 'mongoose'
 
 const profile: RequestHandler = catchErrors(async (req, res) => {
+  if (!req.user || !req.user._id) {
+    return sendErrorResponse(res, 400, 'Không tìm thấy ID người dùng!')
+  }
+
   const { _id } = req.user
 
   const response = await userService.profile(_id)
@@ -26,11 +30,15 @@ const profile: RequestHandler = catchErrors(async (req, res) => {
 })
 
 const updateProfile: RequestHandler = catchErrors(async (req, res) => {
-  const userId = req.user._id
+  if (!req.user || !req.user._id) {
+    return sendErrorResponse(res, 400, 'Không tìm thấy ID người dùng!')
+  }
+
+  const _id = req.user._id
   const { name, email, phone, gender, address, photoURL } = req.body
 
   const response = await userService.updateProfile(
-    userId,
+    _id,
     name,
     email,
     phone,

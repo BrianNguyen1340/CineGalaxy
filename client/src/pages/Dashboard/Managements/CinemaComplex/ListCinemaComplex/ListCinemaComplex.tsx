@@ -44,9 +44,9 @@ const ListCinemaComplex = () => {
           <table>
             <thead>
               <tr>
-                <th>stt</th>
-                <th>name</th>
-                <th>action</th>
+                <th>no.</th>
+                <th>tên cụm rạp</th>
+                <th>hành động</th>
               </tr>
             </thead>
             <tbody>

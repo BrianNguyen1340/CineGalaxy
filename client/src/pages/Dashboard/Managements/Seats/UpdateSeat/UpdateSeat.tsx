@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
+import { HashLoader } from 'react-spinners'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
@@ -77,12 +78,11 @@ const UpdateSeat = () => {
   }
 
   return (
-    <div className='container'>
-      <div className='title'>cập nhật ghế</div>
-      <form
-        onSubmit={handleSubmit(handleUpdate)}
-        style={{ width: '500px', margin: '0 auto' }}
-      >
+    <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
+      <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
+        cập nhật ghế
+      </div>
+      <form onSubmit={handleSubmit(handleUpdate)} className='mx-auto w-[500px]'>
         <div
           style={{
             marginBottom: '25px',
@@ -230,9 +230,14 @@ const UpdateSeat = () => {
         <button
           type='submit'
           disabled={isLoadingUpdate ? true : false}
-          className='btn-create'
+          className='rounded bg-black px-4 py-3 font-semibold text-white transition duration-300 hover:opacity-70'
         >
-          {isLoadingUpdate ? 'Đang cập nhật' : 'Cập nhật'}
+          <div className='flex items-center justify-center gap-3'>
+            {isLoadingUpdate && <HashLoader size='20' color='#fff' />}
+            <span className='capitalize'>
+              {isLoadingUpdate ? 'đang lưu' : 'lưu'}
+            </span>
+          </div>
         </button>
       </form>
     </div>

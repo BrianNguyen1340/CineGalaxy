@@ -6,7 +6,8 @@ import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
 import { useCreateSeatMutation } from '~/services/seat.service'
-import { FormInputGroup } from '~/components'
+import { useGetAllRoomsQuery } from '~/services/room.service'
+import { FormInputGroup, Loader } from '~/components'
 import { paths } from '~/utils/paths'
 
 const CreateSeat = () => {
@@ -18,31 +19,30 @@ const CreateSeat = () => {
     row: string
     number: number
     type: string
-    status: string
-    price: string
+    room: string
   }>()
 
   const navigate = useNavigate()
 
+  const { data: rooms, isLoading: isLoadingRooms } = useGetAllRoomsQuery({})
+  console.log(rooms)
   const [createApi, { isLoading }] = useCreateSeatMutation()
 
   const handleCreate: SubmitHandler<{
     row: string
     number: number
     type: string
-    status: string
-    price: string
+    room: string
   }> = async (reqBody) => {
     try {
       nProgress.start()
-      const { row, number, status, type, price } = reqBody
+      const { row, number, room, type } = reqBody
 
       const response = await createApi({
         row,
         number,
-        status,
+        room,
         type,
-        price,
       }).unwrap()
 
       Swal.fire('Thành công', response.message, 'success')
@@ -55,37 +55,25 @@ const CreateSeat = () => {
     }
   }
 
+  if (isLoadingRooms) {
+    return <Loader />
+  }
+
   return (
-    <div className='container'>
-      <div className='title'>tạo ghế</div>
-      <form
-        onSubmit={handleSubmit(handleCreate)}
-        style={{ width: '500px', margin: '0 auto' }}
-      >
-        <div
-          style={{
-            marginBottom: '25px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <label
-            htmlFor='subtitle'
-            style={{
-              textTransform: 'capitalize',
-              fontWeight: 700,
-              marginBottom: '5px',
-            }}
-          >
-            hàng ghế
-          </label>
+    <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
+      <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
+        tạo ghế
+      </div>
+      <form onSubmit={handleSubmit(handleCreate)} className='mx-auto w-[500px]'>
+        <div className='mb-6 flex flex-col'>
+          <label className='mb-1 font-semibold capitalize'>hàng ghế</label>
           <select
             {...register('row', {
               required: 'Vui lòng chọn hàng ghế',
             })}
             id='row'
             name='row'
-            style={{ padding: '8px', outline: 'none' }}
+            className='p-2'
           >
             <option value='' aria-hidden='true'>
               Chọn hàng ghế
@@ -121,21 +109,8 @@ const CreateSeat = () => {
           name='number'
           icon={<FaRegStar color='red' />}
         />
-        <div
-          style={{
-            marginBottom: '25px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <label
-            htmlFor='subtitle'
-            style={{
-              textTransform: 'capitalize',
-              fontWeight: 700,
-              marginBottom: '5px',
-            }}
-          >
+        <div className='mb-6 flex flex-col'>
+          <label htmlFor='subtitle' className='mb-1 font-semibold capitalize'>
             loại ghế
           </label>
           <select
@@ -144,7 +119,7 @@ const CreateSeat = () => {
             })}
             id='type'
             name='type'
-            style={{ padding: '8px', outline: 'none' }}
+            className='p-2'
           >
             <option value='' aria-hidden='true'>
               Chọn loại ghế
@@ -155,63 +130,37 @@ const CreateSeat = () => {
             <option value='Couple'>Couple</option>
           </select>
         </div>
-        <div
-          style={{
-            marginBottom: '25px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <label
-            htmlFor='subtitle'
-            style={{
-              textTransform: 'capitalize',
-              fontWeight: 700,
-              marginBottom: '5px',
-            }}
-          >
-            trạng thái ghế
+        <div className='mb-6 flex flex-col'>
+          <label htmlFor='subtitle' className='mb-1 font-semibold capitalize'>
+            phòng
           </label>
           <select
-            {...register('status', {
-              required: 'Vui lòng chọn trạng thái ghế',
+            {...register('room', {
+              required: 'Vui lòng chọn loại ghế',
             })}
-            id='status'
-            name='status'
-            style={{ padding: '8px', outline: 'none' }}
+            id='room'
+            name='room'
+            className='p-2'
           >
             <option value='' aria-hidden='true'>
-              Chọn trạng thái ghế
+              Chọn phòng
             </option>
-            <option value='Available'>Available</option>
-            <option value='Unavailable'>Unavailable</option>
-            <option value='Booked'>Booked</option>
+            {rooms?.data?.map((room: any) => (
+              <option key={room._id} value={room._id}>
+                {room.name}
+              </option>
+            ))}
           </select>
         </div>
-        <FormInputGroup
-          register={register}
-          errors={errors}
-          validation={{
-            required: 'Vui lòng nhập giá ghế!',
-            pattern: {
-              value: /^\d+$/,
-              message: 'Chỉ được nhập số',
-            },
-          }}
-          labelChildren='giá ghế'
-          htmlFor='price'
-          id='price'
-          placeholder='Vui lòng nhập giá ghế'
-          type='text'
-          name='price'
-          icon={<FaRegStar color='red' />}
-        />
         <button
           type='submit'
           disabled={isLoading ? true : false}
-          className='btn-create'
+          className='rounded bg-black px-4 py-3 font-semibold text-white transition duration-300 hover:opacity-70'
         >
-          {isLoading ? 'Đang tạo' : 'Tạo'}
+          <div className='flex items-center justify-center gap-3'>
+            {isLoading && <HashLoader size='20' color='#fff' />}
+            <span className='capitalize'>{isLoading ? 'đang lưu' : 'lưu'}</span>
+          </div>
         </button>
       </form>
     </div>

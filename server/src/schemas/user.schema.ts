@@ -15,8 +15,6 @@ export type UserType = Document & {
   lastLogin: Date
   resetPasswordToken?: string
   resetPasswordExpiresAt?: Date
-  createdAt: Date
-  updatedAt: Date
 }
 
 const userSchema = new Schema<UserType>(
@@ -35,6 +33,10 @@ const userSchema = new Schema<UserType>(
     password: {
       type: String,
       required: true,
+      trim: true,
+    },
+    phone: {
+      type: String,
       trim: true,
     },
     gender: {

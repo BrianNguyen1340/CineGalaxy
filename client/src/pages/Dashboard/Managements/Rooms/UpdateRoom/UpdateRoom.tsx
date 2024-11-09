@@ -87,12 +87,11 @@ const UpdateRoom = () => {
   }
 
   return (
-    <div className='container'>
-      <div className='title'>cập nhật phòng</div>
-      <form
-        onSubmit={handleSubmit(handleUpdate)}
-        style={{ width: '500px', margin: '0 auto' }}
-      >
+    <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
+      <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
+        cập nhật phòng
+      </div>
+      <form onSubmit={handleSubmit(handleUpdate)} className='mx-auto w-[500px]'>
         <FormInputGroup
           register={register}
           errors={errors}
@@ -219,19 +218,12 @@ const UpdateRoom = () => {
         </div>
         <button
           type='submit'
-          disabled={isLoadingUpdate ? true : false}
-          className='btn-create'
+          disabled={isLoading ? true : false}
+          className='rounded bg-black px-4 py-3 font-semibold text-white transition duration-300 hover:opacity-70'
         >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '10px',
-            }}
-          >
-            {isLoadingUpdate && <HashLoader size='20' color='#fff' />}
-            <span>{isLoadingUpdate ? 'Đang cập nhật' : 'Cập nhật'}</span>
+          <div className='flex items-center justify-center gap-3'>
+            {isLoading && <HashLoader size='20' color='#fff' />}
+            <span className='capitalize'>{isLoading ? 'đang lưu' : 'lưu'}</span>
           </div>
         </button>
       </form>

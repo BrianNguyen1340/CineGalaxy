@@ -31,18 +31,20 @@ const ListCinema = () => {
   }
 
   return (
-    <div className='container'>
-      <div className='title'>danh sách rạp</div>
+    <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
+      <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
+        danh sách rạp
+      </div>
       {cinemas ? (
         <>
           <table>
             <thead>
               <tr>
-                <th>stt</th>
-                <th>name</th>
+                <th>no.</th>
+                <th>tên rạp</th>
                 <th>email</th>
-                <th>address</th>
-                <th>phone</th>
+                <th>địa chỉ rạp</th>
+                <th>số điện thoại rạp</th>
                 <th>cụm rạp</th>
                 <th>action</th>
               </tr>
@@ -51,15 +53,17 @@ const ListCinema = () => {
               {currentItems.map((item: any, index: number) => (
                 <tr key={index}>
                   <td>{index + offset}</td>
-                  <td>{item.name}</td>
+                  <td className='capitalize'>{item.name}</td>
                   <td style={{ textTransform: 'unset' }}>{item.email}</td>
-                  <td>{item.address}</td>
+                  <td className='capitalize'>{item.address}</td>
                   <td>{item.phone}</td>
-                  <td>{item.cinemaComplex.name}</td>
+                  <td className='capitalize'>{item.cinemaComplex.name}</td>
                   <td>
-                    <Link to={`/update-cinema/${item._id}`}>
-                      <SquarePen />
-                    </Link>
+                    <div className='flex items-center justify-center'>
+                      <Link to={`/update-cinema/${item._id}`}>
+                        <SquarePen />
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -53,18 +53,17 @@ const UpdateGenre = () => {
   }
 
   return (
-    <div className='container'>
-      <div className='title'>Cập nhật thể loại phim</div>
-      <form
-        onSubmit={handleSubmit(handleUpdate)}
-        style={{ width: '500px', margin: '0 auto' }}
-      >
+    <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
+      <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
+        Cập nhật thể loại phim
+      </div>
+      <form onSubmit={handleSubmit(handleUpdate)} className='mx-auto w-[500px]'>
         <FormInputGroup
           register={register}
           errors={errors}
-          validation={{ required: 'Vui lòng nhập tên!' }}
+          validation={{ required: 'Vui lòng nhập tên thể loại!' }}
           htmlFor='name'
-          labelChildren='name'
+          labelChildren='tên thể loại'
           type='text'
           id='name'
           name='name'

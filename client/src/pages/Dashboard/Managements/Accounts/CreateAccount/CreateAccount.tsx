@@ -113,6 +113,7 @@ const CreateAccount = () => {
               {showHidePassword ? <Eye size='18' /> : <EyeOff size='18' />}
             </button>
           }
+          placeholder='Vui lòng nhập mật khẩu'
         />
         <PasswordStrength password={password} />
         <div className='my-5 flex flex-col gap-1'>

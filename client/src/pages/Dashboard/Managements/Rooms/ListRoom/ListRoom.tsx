@@ -32,8 +32,10 @@ const ListRoom = () => {
   }
 
   return (
-    <div className='container'>
-      <div className='title'>danh sách phòng</div>
+    <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
+      <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
+        danh sách phòng
+      </div>
       {rooms ? (
         <>
           <table>
@@ -56,9 +58,11 @@ const ListRoom = () => {
                   <td>{item.status}</td>
                   <td>{item.cinema.name}</td>
                   <td>
-                    <Link to={`/update-room/${item?._id}`}>
-                      <SquarePen />
-                    </Link>
+                    <div className='flex items-center justify-center'>
+                      <Link to={`/update-room/${item?._id}`}>
+                        <SquarePen />
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))}

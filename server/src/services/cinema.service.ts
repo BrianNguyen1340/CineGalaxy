@@ -17,7 +17,7 @@ const handleCreate = async (
 }> => {
   try {
     const checkExist = await cinemaModel.findOne({
-      name,
+      $or: [{ name }, { email }, { phone }],
     })
     if (checkExist) {
       return {

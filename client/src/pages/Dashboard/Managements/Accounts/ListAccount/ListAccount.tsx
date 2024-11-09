@@ -89,12 +89,12 @@ const ListAccount = () => {
                 <tr>
                   <th>no.</th>
                   <th>email</th>
-                  <th>name</th>
-                  <th>avatar</th>
-                  <th>last login</th>
-                  <th>isBlocked</th>
-                  <th>role</th>
-                  <th>action</th>
+                  <th>tên</th>
+                  <th>ảnh</th>
+                  <th>lần đăng nhập cuối</th>
+                  <th>khóa</th>
+                  <th>vai trò</th>
+                  <th>hành động</th>
                 </tr>
               </thead>
               <tbody>
@@ -108,16 +108,14 @@ const ListAccount = () => {
                         <img
                           src={item.photoURL}
                           alt='avatar'
-                          width='70'
-                          height='70'
-                          className='rounded-full'
+                          className='h-[70px] w-[70px] rounded-full object-cover'
                         />
                       </div>
                     </td>
                     <td>
-                      {new Date(item.lastLogin).toLocaleDateString('vi-VN')}
-                      {' - '}
                       {new Date(item.lastLogin).toLocaleTimeString('vi-VN')}
+                      {' - '}
+                      {new Date(item.lastLogin).toLocaleDateString('vi-VN')}
                     </td>
                     <td>
                       {item.role === 0 ? (

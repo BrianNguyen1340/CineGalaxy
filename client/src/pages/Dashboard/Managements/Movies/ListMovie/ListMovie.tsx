@@ -32,15 +32,17 @@ const ListMovie = () => {
   }
 
   return (
-    <div className='container'>
-      <div className='title'>danh sách phim</div>
+    <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
+      <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
+        danh sách phim
+      </div>
       {movies ? (
         <>
           <table>
             <thead>
               <tr>
                 <th>stt</th>
-                <th>tên</th>
+                <th>tên phim</th>
                 <th>đạo diễn</th>
                 <th>poster</th>
                 <th>công chiếu</th>
@@ -53,23 +55,19 @@ const ListMovie = () => {
               {currentItems?.map((item: any, index: number) => (
                 <tr key={index}>
                   <td>{index + offset}</td>
-                  <td>{item?.name}</td>
+                  <td className='w-[200px]'>{item?.name}</td>
                   <td>{item?.director}</td>
                   <td>
-                    <img src={item?.poster} alt='poster' width='200' />
+                    <div className='flex items-center justify-center'>
+                      <img src={item?.poster} alt='poster' width='200' />
+                    </div>
                   </td>
                   <td>
                     {new Date(item?.releaseDate).toLocaleDateString('vi-VN')}
                   </td>
                   <td>{item?.duration} phút</td>
                   <td>
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '10px',
-                      }}
-                    >
+                    <div className='flex flex-col gap-3'>
                       {item?.genres?.map((genre: any, index: number) => (
                         <span key={index}>
                           {genre.name}
@@ -79,9 +77,11 @@ const ListMovie = () => {
                     </div>
                   </td>
                   <td>
-                    <Link to={`/update-movie/${item?._id}`}>
-                      <SquarePen />
-                    </Link>
+                    <div className='flex items-center justify-center'>
+                      <Link to={`/update-movie/${item?._id}`}>
+                        <SquarePen />
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))}

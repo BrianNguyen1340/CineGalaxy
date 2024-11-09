@@ -42,7 +42,7 @@ const MovieDetails = () => {
           {!isOpen && (
             <button
               onClick={openModal}
-              className='absolute left-[50%] top-[50%] z-10 h-[120px] w-[120px] translate-x-[-50%] translate-y-[-50%] cursor-pointer rounded-full border-[3px] border-white'
+              className='absolute left-[50%] top-[50%] z-10 flex h-[120px] w-[120px] translate-x-[-50%] translate-y-[-50%] cursor-pointer items-center justify-center rounded-full border-[3px] border-white'
             >
               <TbPlayerPlay size='50' color='white' />
             </button>
@@ -83,24 +83,28 @@ const MovieDetails = () => {
                 className='w-[220px] object-cover'
               />
             </div>
-            <button className='btn-to-showtime mt-10px'>
-              <Link to={paths.userPaths.showtimes}>đặt vé</Link>
+            <button className='mt-5 w-full bg-black text-base font-semibold capitalize text-white transition duration-500 hover:opacity-80'>
+              <Link to={paths.userPaths.showtimes} className='block p-4'>
+                đặt vé
+              </Link>
             </button>
           </div>
-          <div className='info-main'>
-            <div className='name'>{movie?.data?.name}</div>
-            <div className='director'>
+          <div className='flex w-full flex-col gap-3'>
+            <div className='text-2xl font-bold uppercase'>
+              {movie?.data?.name}
+            </div>
+            <div>
               <strong>Đạo diễn: </strong>
               {movie?.data?.director}
             </div>
-            <div className='movie-rating'>
+            <div>
               <strong>Xếp hạng độ tuổi: </strong> {movie?.data?.movieRating}
             </div>
-            <div className='release-date'>
+            <div>
               <strong>Ngày phát hành: </strong>
               {new Date(movie?.data?.releaseDate).toLocaleDateString('vi-VN')}
             </div>
-            <div className='genres'>
+            <div className='flex items-center gap-1 capitalize'>
               <strong>Thể loại:</strong>
               {movie?.data?.genres?.map((item: any, index: number) => (
                 <span key={index}>
@@ -109,23 +113,23 @@ const MovieDetails = () => {
                 </span>
               ))}
             </div>
-            <div className='duration'>
+            <div>
               <strong>Thời lượng: </strong>
               {movie?.data?.duration} phút
             </div>
-            <div className='subtitle'>
+            <div>
               <strong>Phụ đề: </strong>
               {movie?.data?.subtitle}
             </div>
-            <div className='movie-format'>
+            <div>
               <strong>Định dạng phim: </strong>
               {movie?.data?.movieFormat}
             </div>
           </div>
         </div>
-        <div className='description'>
-          <div className='description-title'>tóm tắt</div>
-          <div className='description-text'>{movie?.data?.description}</div>
+        <div className='mt-12'>
+          <div className='mb-5 text-2xl font-semibold capitalize'>tóm tắt</div>
+          <div className='text-[#333]'>{movie?.data?.description}</div>
         </div>
       </div>
     </div>

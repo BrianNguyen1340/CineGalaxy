@@ -117,7 +117,7 @@ const handleGetAll = async (): Promise<{
       statusCode: StatusCodes.OK,
       data: datas.map((data) => data.toObject()),
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       return {
         success: false,
@@ -184,7 +184,7 @@ const handleUpdate = async (
       statusCode: StatusCodes.OK,
       data: request,
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       return {
         success: false,

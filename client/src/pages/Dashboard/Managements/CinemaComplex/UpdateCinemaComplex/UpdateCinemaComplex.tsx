@@ -63,19 +63,17 @@ const UpdateCinemaComplex = () => {
       <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
         Cập nhật danh mục phim
       </div>
-      <form
-        onSubmit={handleSubmit(handleUpdate)}
-        style={{ width: '500px', margin: '0 auto' }}
-      >
+      <form onSubmit={handleSubmit(handleUpdate)} className='mx-auto w-[500px]'>
         <FormInputGroup
           register={register}
           errors={errors}
-          validation={{ required: 'Vui lòng nhập tên!' }}
+          validation={{ required: 'Vui lòng nhập tên cụm rạp!' }}
           htmlFor='name'
-          labelChildren='name'
+          labelChildren='tên cụm rạp'
           type='text'
           id='name'
           name='name'
+          placeholder='Vui lòng nhập tên cụm rạp'
         />
         <button
           type='submit'

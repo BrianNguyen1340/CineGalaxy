@@ -8,11 +8,7 @@ import { useGoogleLoginMutation } from '~/services/auth.service'
 import { useAppDispatch } from '~/hooks/redux'
 import { useNavigate } from 'react-router-dom'
 import { paths } from '~/utils/paths'
-import {
-  loginFailure,
-  loginStart,
-  loginSuccess,
-} from '~/redux/reducers/user.reducer'
+import { setCredentials } from '~/redux/reducers/user.reducer'
 
 const GoogleAuth = () => {
   const dispatch = useAppDispatch()
@@ -22,7 +18,6 @@ const GoogleAuth = () => {
 
   const handleGoogleClick = async () => {
     try {
-      dispatch(loginStart())
       nProgress.start()
 
       const provider = new GoogleAuthProvider()
@@ -35,22 +30,22 @@ const GoogleAuth = () => {
       if (!email || !name || !photoURL) {
         throw new Error('Missing data!')
       }
-      const response = await googleLoginApi({
+      const { data, accessToken, message } = await googleLoginApi({
         email,
         name,
         photoURL,
       }).unwrap()
 
       dispatch(
-        loginSuccess({
-          user: response.data,
+        setCredentials({
+          user: data,
+          token: accessToken,
         }),
       )
 
-      Swal.fire('Thành công', response.message, 'success')
+      Swal.fire('Thành công', message, 'success')
       navigate(paths.userPaths.home)
     } catch (error: any) {
-      dispatch(loginFailure(error.message))
       Swal.fire('Thất bại!', error.message, 'error')
     } finally {
       nProgress.done()

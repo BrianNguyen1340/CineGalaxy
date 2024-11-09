@@ -7,7 +7,6 @@ export type ShowtimeType = Document & {
   timeEnd: Date
   movie: Types.ObjectId
   cinema: Types.ObjectId
-  cinemaComplex: Types.ObjectId
   room: Types.ObjectId
 }
 
@@ -23,26 +22,6 @@ const showtimeSchema = new Schema<ShowtimeType>(
     },
     timeEnd: {
       type: Date,
-      required: true,
-    },
-    movie: {
-      type: Schema.Types.ObjectId,
-      ref: 'Movie',
-      required: true,
-    },
-    cinema: {
-      type: Schema.Types.ObjectId,
-      ref: 'Cinema',
-      required: true,
-    },
-    cinemaComplex: {
-      type: Schema.Types.ObjectId,
-      ref: 'CinemaComplex',
-      required: true,
-    },
-    room: {
-      type: Schema.Types.ObjectId,
-      ref: 'Room',
       required: true,
     },
   },

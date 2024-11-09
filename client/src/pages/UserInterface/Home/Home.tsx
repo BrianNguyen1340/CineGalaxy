@@ -1,11 +1,21 @@
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import Slider from 'react-slick'
 
 import { useGetAllMoviesQuery } from '~/services/movie.service'
 import { paths } from '~/utils/paths'
 import { Loader } from '~/components'
+import { useAppSelector } from '~/hooks/redux'
 
 const Home = () => {
+  const { isAuthenticated, user } = useAppSelector((state) => state.user)
+  const isAuthorized =
+    isAuthenticated &&
+    (user?.role === 0 || user?.role === 1 || user?.role === 2)
+
+  if (isAuthorized) {
+    return <Navigate to={paths.dashboardPaths.dashboard} replace />
+  }
+
   var settings = {
     dots: true,
     infinite: false,
@@ -58,22 +68,28 @@ const Home = () => {
             <ul key={index} className='border border-[#ddd]'>
               {
                 <li>
-                  <figure className='group relative m-0 h-full w-full overflow-hidden'>
+                  <figure className='group relative h-full w-full overflow-hidden'>
                     <img
                       src={item.poster}
                       alt='poster'
                       className='h-[412px] w-full object-cover'
                     />
-                    <figcaption className='absolute bottom-0 left-0 right-0 top-0 z-10 before:absolute before:z-[-1] before:bg-gray-700 before:opacity-0'>
-                      <div className='relative top-[50%] mx-auto flex w-[150px] translate-x-[-50%] flex-col gap-5'>
-                        <div className='border border-[#ffd60a] opacity-0 hover:bg-white hover:text-base'>
-                          <Link to={`/movie/${item?._id}`} className=''>
-                            xem chi tiết
-                          </Link>
-                        </div>
-                        <div className='border border-[#ffd60a] opacity-0 hover:bg-white hover:text-base'>
-                          <Link to={paths.userPaths.showtimes}>đặt vé</Link>
-                        </div>
+                    <figcaption className='absolute bottom-0 left-0 right-0 top-0 z-10 flex h-full w-full flex-col items-center justify-center gap-10 transition duration-500 before:absolute before:z-[-1] before:bg-gray-700 before:opacity-0 group-hover:bg-[rgba(0,0,0,0.7)]'>
+                      <div className='border border-[#ffd60a] opacity-0 transition duration-500 group-hover:opacity-100'>
+                        <Link
+                          to={`/movie/${item?._id}`}
+                          className='mx-auto block min-w-[150px] cursor-pointer p-5 text-center font-semibold capitalize text-white transition duration-500 hover:bg-white hover:text-black'
+                        >
+                          xem chi tiết
+                        </Link>
+                      </div>
+                      <div className='border border-[#ffd60a] opacity-0 transition duration-500 group-hover:opacity-100'>
+                        <Link
+                          to={paths.userPaths.showtimes}
+                          className='mx-auto block min-w-[150px] cursor-pointer p-5 text-center font-semibold capitalize text-white transition duration-500 hover:bg-white hover:text-black'
+                        >
+                          đặt vé
+                        </Link>
                       </div>
                     </figcaption>
                   </figure>

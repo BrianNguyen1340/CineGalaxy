@@ -17,6 +17,14 @@ const Register = () => {
     return <Navigate to={paths.userPaths.home} />
   }
 
+  const isAuthorized =
+    isAuthenticated &&
+    (user?.role === 0 || user?.role === 1 || user?.role === 2)
+
+  if (isAuthorized) {
+    return <Navigate to={paths.dashboardPaths.dashboard} replace />
+  }
+
   const {
     register,
     handleSubmit,
@@ -25,8 +33,8 @@ const Register = () => {
     watch,
   } = useForm<{
     email: string
-    password: string
     name: string
+    password: string
   }>()
 
   const password = watch('password')
@@ -53,8 +61,8 @@ const Register = () => {
 
   const handleRegister: SubmitHandler<{
     email: string
-    password: string
     name: string
+    password: string
   }> = async (reqBody) => {
     const { email, password, name } = reqBody
 
@@ -62,8 +70,8 @@ const Register = () => {
       nProgress.start()
       const response = await registerApi({
         email,
-        password,
         name,
+        password,
       }).unwrap()
 
       Swal.fire('Thành công', response.message, 'success')

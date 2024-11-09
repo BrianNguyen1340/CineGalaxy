@@ -7,8 +7,7 @@ const handleCreate = async (
   number: number,
   row: string,
   type: string,
-  status: string,
-  price: number,
+  room: Types.ObjectId,
 ): Promise<{
   success: boolean
   message: string
@@ -28,9 +27,8 @@ const handleCreate = async (
     const request = await seatModel.create({
       number,
       row,
-      status,
       type,
-      price,
+      room,
     })
     if (!request) {
       return {
@@ -71,7 +69,7 @@ const handleGetOne = async (
   statusCode: number
 }> => {
   try {
-    const request = await seatModel.findById(id)
+    const request = await seatModel.findById(id).populate('room')
     if (!request) {
       return {
         success: false,
@@ -109,7 +107,7 @@ const handleGetAll = async (): Promise<{
   statusCode: number
 }> => {
   try {
-    const request = await seatModel.find()
+    const request = await seatModel.find().populate('room')
     if (!request || request.length === 0) {
       return {
         success: false,
@@ -145,8 +143,7 @@ const handleUpdate = async (
   number: number,
   row: string,
   type: string,
-  status: string,
-  price: number,
+  room: Types.ObjectId,
 ): Promise<{
   success: boolean
   message: string
@@ -183,8 +180,7 @@ const handleUpdate = async (
           number,
           row,
           type,
-          status,
-          price,
+          room,
         },
       },
       {
