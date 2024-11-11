@@ -7,17 +7,17 @@ import { Eye, EyeOff, FileLock, Mail } from 'lucide-react'
 import nProgress from 'nprogress'
 import Swal from 'sweetalert2'
 
-import { FormInputGroup } from '~/components'
+import { useAppSelector } from '~/hooks/redux'
 import { useResetPasswordMutation } from '~/services/auth.service'
 import { paths } from '~/utils/paths'
-import { useAppSelector } from '~/hooks/redux'
-
-type ResetPasswordData = {
-  password: string
-}
+import { FormInputGroup } from '~/components'
+import useTitle from '~/hooks/useTitle'
 
 const PrivateResetPassword = () => {
+  useTitle('Xác nhận thay đổi mật khẩu panel')
+
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
+
   if (isAuthenticated && user) {
     return <Navigate to={paths.dashboardPaths.dashboard} />
   }
@@ -27,7 +27,9 @@ const PrivateResetPassword = () => {
     register,
     formState: { errors },
     getValues,
-  } = useForm<ResetPasswordData>()
+  } = useForm<{
+    password: string
+  }>()
 
   const navigate = useNavigate()
 
@@ -46,9 +48,9 @@ const PrivateResetPassword = () => {
     setShowHideConfirmPassword((prevState) => !prevState)
   }
 
-  const handleResetPassword: SubmitHandler<ResetPasswordData> = async (
-    data,
-  ) => {
+  const handleResetPassword: SubmitHandler<{
+    password: string
+  }> = async (data) => {
     try {
       nProgress.start()
       const { password } = data

@@ -6,8 +6,8 @@ import {
   sendErrorResponse,
   sendSuccessResponse,
 } from '~/utils/responseDataHandler'
-import { cinemaService } from '~/services/cinema.service'
 import { catchErrors } from '~/utils/catchErrors'
+import { cinemaService } from '~/services/cinema.service'
 import { cinemaValidation } from '~/validations/cinema.validation'
 
 const handleCreate: RequestHandler = catchErrors(async (req, res) => {
@@ -20,6 +20,7 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
     phone,
     cinemaComplex,
   )
+  
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }

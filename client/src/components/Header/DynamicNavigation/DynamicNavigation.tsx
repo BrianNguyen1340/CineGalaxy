@@ -12,15 +12,15 @@ const DynamicNavigation = () => {
       {user ? (
         <MenuDropdown />
       ) : (
-        <ul className='flex items-center justify-end gap-3'>
-          <li className='relative flex items-center'>
+        <ul className='flex items-center justify-end gap-4'>
+          {/* <li className='relative flex items-center'>
             <Link
               to={paths.userPaths.support}
               className='after:ease relative hidden pb-0.5 capitalize after:absolute after:bottom-[-3px] after:left-0 after:h-[2px] after:w-0 after:bg-red-500 after:transition-all after:duration-500 hover:after:w-full 600px:block'
             >
               hỗ trợ
             </Link>
-          </li>
+          </li> */}
           <li className='relative flex items-center'>
             <Link
               to={paths.userPaths.login}

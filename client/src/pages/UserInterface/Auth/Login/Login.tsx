@@ -11,9 +11,13 @@ import { FormInputGroup, GoogleAuth } from '~/components'
 import { useLoginMutation } from '~/services/auth.service'
 import { paths } from '~/utils/paths'
 import { setCredentials } from '~/redux/reducers/user.reducer'
+import useTitle from '~/hooks/useTitle'
 
 const Login = () => {
+  useTitle('Đăng nhập')
+
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
+
   if (isAuthenticated && user) {
     return <Navigate to={paths.userPaths.home} />
   }
@@ -26,6 +30,9 @@ const Login = () => {
     return <Navigate to={paths.dashboardPaths.dashboard} replace />
   }
 
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
   const {
     register,
     handleSubmit,
@@ -34,9 +41,6 @@ const Login = () => {
     email: string
     password: string
   }>()
-
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
 
   const [loginApi, { isLoading }] = useLoginMutation()
 

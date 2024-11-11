@@ -2,8 +2,11 @@ import { Link } from 'react-router-dom'
 
 import { useAppSelector } from '~/hooks/redux'
 import { paths } from '~/utils/paths'
+import useTitle from '~/hooks/useTitle'
 
 const NotFound = () => {
+  useTitle('Trang không tồn tại')
+
   const user = useAppSelector((state) => state.user.user)
 
   return (

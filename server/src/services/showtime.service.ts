@@ -4,13 +4,13 @@ import { Types } from 'mongoose'
 import { ShowtimeType, showtimeModel } from '~/schemas/showtime.schema'
 
 const handleCreate = async (
+  date: Date,
   timeStart: Date,
   timeEnd: Date,
-  date: Date,
   movie: Types.ObjectId,
+  room: Types.ObjectId,
   cinema: Types.ObjectId,
   cinemaComplex: Types.ObjectId,
-  room: Types.ObjectId,
 ): Promise<{
   success: boolean
   message: string
@@ -43,13 +43,13 @@ const handleCreate = async (
     }
 
     const request = await showtimeModel.create({
+      date,
       timeStart,
       timeEnd,
-      date,
       movie,
+      room,
       cinema,
       cinemaComplex,
-      room,
     })
     if (!request) {
       return {
@@ -94,7 +94,7 @@ const handleGetOne = async (
       .findById(id)
       .populate('movie')
       .populate('cinema')
-      // .populate('cinemaComplex')
+      .populate('cinemaComplex')
       .populate({
         path: 'room',
         populate: {
@@ -142,7 +142,7 @@ const handleGetAll = async (): Promise<{
       .find()
       .populate('movie')
       .populate('cinema')
-      // .populate('cinemaComplex')
+      .populate('cinemaComplex')
       .populate({
         path: 'room',
         populate: {
@@ -153,14 +153,14 @@ const handleGetAll = async (): Promise<{
       return {
         success: false,
         statusCode: StatusCodes.BAD_REQUEST,
-        message: 'Không có ghế nào!',
+        message: 'Không có suất chiếu nào!',
       }
     }
 
     return {
       success: true,
       statusCode: StatusCodes.OK,
-      message: 'Lấy tất cả ghế thành công!',
+      message: 'Lấy tất cả suất chiếu thành công!',
       data: request.map((item) => item.toObject()),
     }
   } catch (error: unknown) {
@@ -185,9 +185,9 @@ const handleUpdate = async (
   timeStart: Date,
   timeEnd: Date,
   movie: Types.ObjectId,
+  room: Types.ObjectId,
   cinema: Types.ObjectId,
   cinemaComplex: Types.ObjectId,
-  room: Types.ObjectId,
 ): Promise<{
   success: boolean
   message: string
@@ -196,6 +196,7 @@ const handleUpdate = async (
 }> => {
   try {
     const showtime = await showtimeModel.findById(id)
+    
     if (!showtime) {
       return {
         success: false,
@@ -204,41 +205,12 @@ const handleUpdate = async (
       }
     }
 
-    const checkExist = await showtimeModel.findOne({
-      date,
-      cinema,
-      cinemaComplex,
-      room,
-      $or: [
-        {
-          $and: [
-            { timeStart: { $lt: timeEnd } },
-            { timeEnd: { $gt: timeStart } },
-          ],
-        },
-        {
-          $and: [
-            { timeStart: { $gte: timeStart } },
-            { timeEnd: { $lte: timeEnd } },
-          ],
-        },
-      ],
-      _id: { $ne: id },
-    })
-    if (checkExist) {
-      return {
-        success: false,
-        statusCode: StatusCodes.BAD_REQUEST,
-        message: 'Ghế đã tồn tại',
-      }
-    }
-
     const conflictingShowtime = await showtimeModel.findOne({
       _id: { $ne: id },
       date,
+      room,
       cinema,
       cinemaComplex,
-      room,
       $or: [
         {
           $and: [
@@ -269,16 +241,17 @@ const handleUpdate = async (
       {
         $set: {
           date,
-          movie,
           timeStart,
           timeEnd,
-          cinemaComplex,
-          cinema,
+          movie,
           room,
+          cinema,
+          cinemaComplex,
         },
       },
       { new: true },
     )
+
     if (!request) {
       return {
         success: false,
@@ -309,7 +282,7 @@ const handleUpdate = async (
   }
 }
 
-export const seatService = {
+export const showtimeService = {
   handleCreate,
   handleGetOne,
   handleGetAll,

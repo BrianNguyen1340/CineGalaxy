@@ -13,9 +13,11 @@ const MenuDropdown = () => {
   const { user } = useAppSelector((state) => state.user)
 
   const navigate = useNavigate()
+  
   const dispatch = useAppDispatch()
 
   const [logoutApi, { isLoading }] = useLogoutMutation()
+
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -33,7 +35,9 @@ const MenuDropdown = () => {
         setIsOpen(false)
       }
     }
+
     document.addEventListener('mousedown', handleClickOutside)
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
@@ -48,11 +52,15 @@ const MenuDropdown = () => {
       confirmButtonText: 'Vâng, đăng xuất!',
       cancelButtonText: 'Không, tiếp tục đăng nhập!',
     })
+
     if (result.isConfirmed) {
       try {
         nProgress.start()
+
         const response = await logoutApi({}).unwrap()
+
         dispatch(logout())
+
         Swal.fire({
           toast: true,
           position: 'top-end',
@@ -62,6 +70,7 @@ const MenuDropdown = () => {
           timer: 3000,
           timerProgressBar: true,
         })
+
         navigate(paths.userPaths.login)
       } catch (error: any) {
         Swal.fire('Thất bại', error.message, 'error')
@@ -72,11 +81,12 @@ const MenuDropdown = () => {
   }
 
   return (
-    <div className='col-start-3 col-end-4 row-start-1 row-end-1 flex cursor-pointer items-center justify-end whitespace-nowrap text-sm font-semibold'>
+    <div className='col-start-3 col-end-4 row-start-1 row-end-1 flex items-center justify-end whitespace-nowrap text-sm font-semibold'>
       <div
-        className='relative flex h-full w-fit items-center justify-end'
+        className='relative flex h-full w-fit items-center justify-end gap-2'
         ref={dropdownRef}
       >
+        <div>Xin chào {user?.name}</div>
         <div className='rounded-full border-[3px] border-[#90e0ef]'>
           <button
             onClick={toggleDropdown}

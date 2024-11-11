@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react'
 import PerfectScrollbar from 'perfect-scrollbar'
-import 'perfect-scrollbar/css/perfect-scrollbar.css'
 
 type ScrollbarProps = {
   content: React.ReactNode

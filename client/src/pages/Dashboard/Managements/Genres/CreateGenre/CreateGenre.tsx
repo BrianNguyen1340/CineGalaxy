@@ -1,19 +1,30 @@
+import { useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { HashLoader } from 'react-spinners'
-import { useNavigate } from 'react-router-dom'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as Yup from 'yup'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
 import { useCreateGenreMutation } from '~/services/genre.service'
 import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
+import useTitle from '~/hooks/useTitle'
+
+const validationSchema = Yup.object().shape({
+  name: Yup.string().trim().required('Tên thể loại phim là bắt buộc'),
+})
 
 const CreateGenre = () => {
+  useTitle('Admin | Tạo thể loại phim')
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<{ name: string }>()
+  } = useForm<{ name: string }>({
+    resolver: yupResolver(validationSchema),
+  })
 
   const navigate = useNavigate()
 
@@ -22,6 +33,7 @@ const CreateGenre = () => {
   const handleCreate: SubmitHandler<{ name: string }> = async (reqBody) => {
     try {
       nProgress.start()
+
       const { name } = reqBody
 
       const response = await createApi({ name }).unwrap()
@@ -46,12 +58,12 @@ const CreateGenre = () => {
           register={register}
           errors={errors}
           validation={{
-            required: 'Vui lòng nhập tên thể loại!',
+            required: 'Vui lòng nhập tên thể loại phim!',
           }}
-          labelChildren='tên thể loại'
+          labelChildren='tên thể loại phim'
           htmlFor='name'
           id='name'
-          placeholder='Vui lòng nhập tên thể loại'
+          placeholder='Vui lòng nhập tên thể loại phim'
           type='text'
           name='name'
         />

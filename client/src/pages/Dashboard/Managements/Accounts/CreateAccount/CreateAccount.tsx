@@ -3,14 +3,26 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { HashLoader } from 'react-spinners'
 import { Eye, EyeOff } from 'lucide-react'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as Yup from 'yup'
 import nProgress from 'nprogress'
 import Swal from 'sweetalert2'
 
 import { useCreateUserMutation } from '~/services/user.service'
-import { FormInputGroup, PasswordStrength } from '~/components'
 import { paths } from '~/utils/paths'
+import { FormInputGroup, PasswordStrength } from '~/components'
+import useTitle from '~/hooks/useTitle'
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().trim().email().required('Email là bắt buộc'),
+  name: Yup.string().trim().required('Tên người dùng là bắt buộc'),
+  password: Yup.string().trim().required('Mật khẩu là bắt buộc'),
+  role: Yup.number().required('Vai trò là bắt buộc'),
+})
 
 const CreateAccount = () => {
+  useTitle('Admin | Tạo tài khoản người dùng')
+
   const navigate = useNavigate()
 
   const {
@@ -23,11 +35,13 @@ const CreateAccount = () => {
     name: string
     password: string
     role: number
-  }>()
+  }>({
+    resolver: yupResolver(validationSchema),
+  })
 
   const password = watch('password')
 
-  const [createApi, { isLoading }] = useCreateUserMutation()
+  const [createApi, { isLoading: isLoadingCreate }] = useCreateUserMutation()
 
   const [showHidePassword, setShowHidePassword] = useState<boolean>(false)
 
@@ -43,6 +57,7 @@ const CreateAccount = () => {
   }> = async (reqBody) => {
     try {
       nProgress.start()
+
       const { email, name, password, role } = reqBody
 
       const response = await createApi({ email, name, password, role }).unwrap()
@@ -139,12 +154,14 @@ const CreateAccount = () => {
         </div>
         <button
           type='submit'
-          disabled={isLoading ? true : false}
+          disabled={isLoadingCreate ? true : false}
           className='rounded bg-black px-4 py-3 font-semibold text-white transition duration-300 hover:opacity-70'
         >
           <div className='flex items-center justify-center gap-3'>
-            {isLoading && <HashLoader size='20' color='#fff' />}
-            <span className='capitalize'>{isLoading ? 'đang lưu' : 'lưu'}</span>
+            {isLoadingCreate && <HashLoader size='20' color='#fff' />}
+            <span className='capitalize'>
+              {isLoadingCreate ? 'đang lưu' : 'lưu'}
+            </span>
           </div>
         </button>
       </form>

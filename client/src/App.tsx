@@ -1,12 +1,17 @@
 import { useState, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
+import { motion } from 'framer-motion'
 import 'nprogress/nprogress.css'
 import 'react-circular-progressbar/dist/styles.css'
 import 'react-day-picker/style.css'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import 'react-toastify/dist/ReactToastify.css'
+import 'react-tabs/style/react-tabs.css'
+import 'flatpickr/dist/themes/material_green.css'
+import 'perfect-scrollbar/css/perfect-scrollbar.css'
+import 'react-datepicker/dist/react-datepicker.css'
 
 import {
   DashHeader,
@@ -21,6 +26,11 @@ import { useAppSelector } from '~/hooks/redux'
 import { NotFound } from '~/pages'
 
 const App = () => {
+  const variants = {
+    open: { width: 'calc(100% - 288px)', left: '304px' },
+    closed: { width: '100%', left: 0 },
+  }
+
   const { user } = useAppSelector((state) => state.user)
   const location = useLocation()
 
@@ -64,12 +74,10 @@ const App = () => {
             setOpenSidebar={setOpenSidebar}
             style={{ width: `${openSidebar ? '288px' : '0'}` }}
           />
-          <main
+          <motion.main
+            variants={variants}
+            animate={openSidebar ? 'open' : 'closed'}
             className='relative flex flex-col bg-transparent'
-            style={{
-              width: `${openSidebar ? 'calc(100% - 288px)' : '100%'}`,
-              marginLeft: `${openSidebar ? '304px' : '0'}`,
-            }}
           >
             <DashHeader
               openSidebar={openSidebar}
@@ -78,7 +86,7 @@ const App = () => {
             <div className='mt-4 h-screen'>
               <DashLayout openSidebar={openSidebar} />
             </div>
-          </main>
+          </motion.main>
         </div>
       ) : (
         <>

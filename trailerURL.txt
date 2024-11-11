@@ -36,3 +36,8 @@ desciption: Phim xoay quanh So-hee, người đã mất đi gia đình hạnh ph
 
 trailerUrl: https://www.youtube.com/embed/QeDo1uPujSc?si=YEZqrbFbs4Zyvx9l
 
+********************************************************************************************************************
+
+name: 
+
+director: Chris Sanders

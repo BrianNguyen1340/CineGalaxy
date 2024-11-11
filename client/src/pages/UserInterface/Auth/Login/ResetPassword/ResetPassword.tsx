@@ -11,13 +11,13 @@ import { FormInputGroup } from '~/components'
 import { useResetPasswordMutation } from '~/services/auth.service'
 import { paths } from '~/utils/paths'
 import { useAppSelector } from '~/hooks/redux'
-
-type ResetPasswordData = {
-  password: string
-}
+import useTitle from '~/hooks/useTitle'
 
 const ResetPassword = () => {
+  useTitle('Xác nhận thay đổi mật khẩu')
+
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
+
   if (isAuthenticated && user) {
     return <Navigate to={paths.userPaths.home} />
   }
@@ -35,7 +35,9 @@ const ResetPassword = () => {
     register,
     formState: { errors },
     getValues,
-  } = useForm<ResetPasswordData>()
+  } = useForm<{
+    password: string
+  }>()
 
   const navigate = useNavigate()
 
@@ -54,9 +56,9 @@ const ResetPassword = () => {
     setShowHideConfirmPassword((prevState) => !prevState)
   }
 
-  const handleResetPassword: SubmitHandler<ResetPasswordData> = async (
-    data,
-  ) => {
+  const handleResetPassword: SubmitHandler<{
+    password: string
+  }> = async (data) => {
     try {
       nProgress.start()
       const { password } = data

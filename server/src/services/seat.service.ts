@@ -7,6 +7,7 @@ const handleCreate = async (
   number: number,
   row: string,
   type: string,
+  price: number,
   room: Types.ObjectId,
 ): Promise<{
   success: boolean
@@ -15,7 +16,8 @@ const handleCreate = async (
   data?: Partial<SeatType>
 }> => {
   try {
-    const checkExist = await seatModel.findOne({ number, row })
+    const checkExist = await seatModel.findOne({ number, row, room })
+
     if (checkExist) {
       return {
         success: false,
@@ -69,7 +71,17 @@ const handleGetOne = async (
   statusCode: number
 }> => {
   try {
-    const request = await seatModel.findById(id).populate('room')
+    const request = await seatModel
+      .findById(id)
+      .populate('room')
+      .populate({
+        path: 'room',
+        populate: {
+          path: 'cinema',
+          select: 'name',
+        },
+      })
+
     if (!request) {
       return {
         success: false,
@@ -107,7 +119,17 @@ const handleGetAll = async (): Promise<{
   statusCode: number
 }> => {
   try {
-    const request = await seatModel.find().populate('room')
+    const request = await seatModel
+      .find()
+      .populate('room')
+      .populate({
+        path: 'room',
+        populate: {
+          path: 'cinema',
+          select: 'name',
+        },
+      })
+
     if (!request || request.length === 0) {
       return {
         success: false,
@@ -143,6 +165,7 @@ const handleUpdate = async (
   number: number,
   row: string,
   type: string,
+  price: number,
   room: Types.ObjectId,
 ): Promise<{
   success: boolean
@@ -180,6 +203,7 @@ const handleUpdate = async (
           number,
           row,
           type,
+          price,
           room,
         },
       },

@@ -6,13 +6,17 @@ import { HashLoader } from 'react-spinners'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
-import { paths } from '~/utils/paths'
-import { FormInputGroup, GoogleAuth, PasswordStrength } from '~/components'
-import { useRegisterMutation } from '~/services/auth.service'
 import { useAppSelector } from '~/hooks/redux'
+import { paths } from '~/utils/paths'
+import { useRegisterMutation } from '~/services/auth.service'
+import { FormInputGroup, GoogleAuth, PasswordStrength } from '~/components'
+import useTitle from '~/hooks/useTitle'
 
 const Register = () => {
+  useTitle('Đăng ký')
+
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
+
   if (isAuthenticated && user) {
     return <Navigate to={paths.userPaths.home} />
   }
@@ -44,6 +48,7 @@ const Register = () => {
   const [registerApi, { isLoading }] = useRegisterMutation()
 
   const [showForm, setShowForm] = useState<boolean>(false)
+
   const [showHidePassword, setShowHidePassword] = useState<boolean>(false)
 
   const handleShowHidePassword = () => {
@@ -68,6 +73,7 @@ const Register = () => {
 
     try {
       nProgress.start()
+
       const response = await registerApi({
         email,
         name,
@@ -75,7 +81,9 @@ const Register = () => {
       }).unwrap()
 
       Swal.fire('Thành công', response.message, 'success')
+
       localStorage.setItem('email', email)
+      
       navigate(paths.userPaths.verifyOtp)
     } catch (error: any) {
       Swal.fire('Thất bại', error.data.message, 'error')

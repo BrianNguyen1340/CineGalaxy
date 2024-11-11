@@ -2,18 +2,28 @@ import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { HashLoader } from 'react-spinners'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as Yup from 'yup'
 import nProgress from 'nprogress'
 import Swal from 'sweetalert2'
 
 import { useGetUserQuery, useUpdateUserMutation } from '~/services/user.service'
-import { FormInputGroup, Loader } from '~/components'
 import { paths } from '~/utils/paths'
+import { FormInputGroup } from '~/components'
 import useTitle from '~/hooks/useTitle'
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().trim().email().required('Email là bắt buộc'),
+  name: Yup.string().trim().required('Tên người dùng là bắt buộc'),
+  role: Yup.number().required('Vai trò là bắt buộc'),
+})
 
 const UpdateAccount = () => {
   useTitle('Admin | Cập nhật tài khoản')
 
   const { id } = useParams()
+
+  const navigate = useNavigate()
 
   const {
     register,
@@ -24,23 +34,11 @@ const UpdateAccount = () => {
     email: string
     name: string
     role: number
-  }>()
+  }>({
+    resolver: yupResolver(validationSchema),
+  })
 
-  const navigate = useNavigate()
-
-  const {
-    data: user,
-    isLoading,
-    isSuccess,
-    isError,
-    error,
-  } = useGetUserQuery(id)
-
-  let content
-
-  if (isLoading) content = <Loader />
-
-  const [updateApi, { isLoading: isLoadingUpdate }] = useUpdateUserMutation()
+  const { data: user, isLoading, isSuccess } = useGetUserQuery(id)
 
   useEffect(() => {
     if (user) {
@@ -50,6 +48,8 @@ const UpdateAccount = () => {
     }
   }, [setValue, user])
 
+  const [updateApi, { isLoading: isLoadingUpdate }] = useUpdateUserMutation()
+
   const handleUpdate: SubmitHandler<{
     email: string
     name: string
@@ -57,6 +57,7 @@ const UpdateAccount = () => {
   }> = async (reqBody) => {
     try {
       nProgress.start()
+
       const { email, name, role } = reqBody
 
       const response = await updateApi({ id, email, name, role }).unwrap()
@@ -70,6 +71,10 @@ const UpdateAccount = () => {
       nProgress.done()
     }
   }
+
+  let content
+
+  if (isLoading) content = <div>Loading...</div>
 
   if (isSuccess) {
     content = (
@@ -146,20 +151,6 @@ const UpdateAccount = () => {
             </div>
           </button>
         </form>
-      </div>
-    )
-  }
-
-  if (isError) {
-    const errorMessage =
-      error && 'message' in error ? error.message : 'An unknown error occurred.'
-
-    content = (
-      <div>
-        <p>{errorMessage}</p>
-        {error && 'data' in error && (
-          <pre>{JSON.stringify(error.data, null, 2)}</pre>
-        )}
       </div>
     )
   }

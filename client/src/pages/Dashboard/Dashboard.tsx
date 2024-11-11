@@ -1,5 +1,9 @@
+import useTitle from '~/hooks/useTitle'
+
 const Dashboard = () => {
-  return <div className=''></div>
+  useTitle('Dashboard')
+
+  return <div className='relative h-fit w-full'></div>
 }
 
 export default Dashboard

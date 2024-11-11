@@ -11,9 +11,9 @@ import { handleJoiError } from '~/middlewares/joi.middleware'
 import { seatValidation } from '~/validations/seat.validation'
 
 const handleCreate: RequestHandler = catchErrors(async (req, res) => {
-  const { number, row, type, room } = req.body
+  const { number, row, type, price, room } = req.body
 
-  const response = await seatService.handleCreate(number, row, type, room)
+  const response = await seatService.handleCreate(number, row, type, price, room)
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -60,7 +60,7 @@ const handleGetAll = catchErrors(async (req, res) => {
 
 const handleUpdate = catchErrors(async (req, res) => {
   const { id } = req.params
-  const { number, row, type, room } = req.body
+  const { number, row, type, price, room } = req.body
 
   const objectID = new Types.ObjectId(id)
 
@@ -69,6 +69,7 @@ const handleUpdate = catchErrors(async (req, res) => {
     number,
     row,
     type,
+    price,
     room,
   )
   if (!response.success) {

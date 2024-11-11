@@ -6,16 +6,16 @@ import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
 import { useAppSelector } from '~/hooks/redux'
+import { useForgotPasswordMutation } from '~/services/auth.service'
 import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
-import { useForgotPasswordMutation } from '~/services/auth.service'
-
-type ForgotPasswordData = {
-  email: string
-}
+import useTitle from '~/hooks/useTitle'
 
 const PrivateForgotPassword = () => {
+  useTitle('Quên mật khẩu panel')
+
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
+
   if (isAuthenticated && user) {
     return <Navigate to={paths.dashboardPaths.dashboard} />
   }
@@ -24,21 +24,25 @@ const PrivateForgotPassword = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ForgotPasswordData>()
+  } = useForm<{
+    email: string
+  }>()
 
   const navigate = useNavigate()
 
   const [forgotPasswordApi, { isLoading }] = useForgotPasswordMutation()
 
-  const handleForgotPassword: SubmitHandler<ForgotPasswordData> = async (
-    reqBody,
-  ) => {
+  const handleForgotPassword: SubmitHandler<{
+    email: string
+  }> = async (reqBody) => {
     try {
       const { email } = reqBody
       nProgress.start()
 
       const response = await forgotPasswordApi({ email }).unwrap()
+
       Swal.fire('Thành công', response.message, 'success')
+
       navigate(paths.userPaths.resetPassword)
     } catch (error: any) {
       Swal.fire('Thất bại', error.data.message, 'error')

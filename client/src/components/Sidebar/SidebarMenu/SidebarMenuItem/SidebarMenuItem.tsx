@@ -20,6 +20,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
   path,
 }) => {
   const location = useLocation()
+
   const isSelected = location.pathname === path
 
   return (

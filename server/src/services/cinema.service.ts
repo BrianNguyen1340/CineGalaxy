@@ -74,6 +74,7 @@ const handleGetOne = async (
 }> => {
   try {
     const request = await cinemaModel.findById(id).populate('cinemaComplex')
+    
     if (!request) {
       return {
         success: false,
@@ -112,6 +113,7 @@ const handleGetAll = async (): Promise<{
 }> => {
   try {
     const request = await cinemaModel.find().populate('cinemaComplex')
+
     if (!request || request.length === 0) {
       return {
         success: false,

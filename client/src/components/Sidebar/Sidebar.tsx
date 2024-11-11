@@ -11,6 +11,7 @@ import {
   LogOut,
   ShieldCheck,
 } from 'lucide-react'
+import { motion } from 'framer-motion'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
@@ -37,6 +38,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   setOpenSidebar,
   style,
 }) => {
+  const variants = {
+    open: { width: '288px', opacity: 1 },
+    closed: { width: 0, opacity: 0 },
+  }
+
   const user = useAppSelector((state) => state.user.user)
 
   const location = useLocation()
@@ -80,7 +86,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   }
 
   return (
-    <aside
+    <motion.aside
+      variants={variants}
+      animate={openSidebar ? 'open' : 'closed'}
       className='fixed flex h-screen flex-col overflow-hidden border border-[#eee] bg-white shadow-custom'
       style={style}
     >
@@ -313,7 +321,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           </>
         }
       />
-    </aside>
+    </motion.aside>
   )
 }
 

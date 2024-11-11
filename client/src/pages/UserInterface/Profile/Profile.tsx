@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { Navigate } from 'react-router-dom'
 import {
   getDownloadURL,
   getStorage,
@@ -16,16 +17,19 @@ import nProgress from 'nprogress'
 
 import { app } from '~/firebase/firebase.config'
 import { useAppDispatch, useAppSelector } from '~/hooks/redux'
-import { BreadcrumbAccount } from '~/components'
 import { useUpdateProfileMutation } from '~/services/user.service'
 import { setCredentials } from '~/redux/reducers/user.reducer'
-import { Navigate } from 'react-router-dom'
 import { paths } from '~/utils/paths'
+import { BreadcrumbAccount } from '~/components'
+import useTitle from '~/hooks/useTitle'
 
 ReactModal.setAppElement('#root')
 
 const Profile = () => {
+  useTitle('Thông tin cá nhân')
+
   const { user, isAuthenticated } = useAppSelector((state) => state.user)
+
   const isAuthorized =
     isAuthenticated &&
     (user?.role === 0 || user?.role === 1 || user?.role === 2)

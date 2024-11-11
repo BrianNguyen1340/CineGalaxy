@@ -11,9 +11,13 @@ import { paths } from '~/utils/paths'
 import { useLoginMutation } from '~/services/auth.service'
 import { setCredentials } from '~/redux/reducers/user.reducer'
 import { FormInputGroup } from '~/components'
+import useTitle from '~/hooks/useTitle'
 
 const PrivateLogin = () => {
+  useTitle('Đăng nhập panel')
+
   const dispatch = useAppDispatch()
+
   const navigate = useNavigate()
 
   const { user } = useAppSelector((state) => state.user)
@@ -31,6 +35,7 @@ const PrivateLogin = () => {
   }>()
 
   const [loginApi, { isLoading }] = useLoginMutation()
+
   const [showHidePassword, setShowHidePassword] = useState<boolean>(false)
 
   const handleShowHidePassword = () => {

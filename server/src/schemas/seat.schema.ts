@@ -5,6 +5,7 @@ export type SeatType = Document & {
   number: number
   row: string
   type: string
+  price: number
   room: Types.ObjectId
 }
 
@@ -13,7 +14,6 @@ const seatSchema = new Schema<SeatType>(
     number: {
       type: Number,
       required: true,
-      trim: true,
     },
     row: {
       type: String,
@@ -26,6 +26,10 @@ const seatSchema = new Schema<SeatType>(
       enum: ['Standard', 'Vip', 'Kid', 'Couple'],
       required: true,
       trim: true,
+    },
+    price: {
+      type: Number,
+      required: true,
     },
     room: {
       type: Schema.Types.ObjectId,

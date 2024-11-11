@@ -3,6 +3,8 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { PiUserList } from 'react-icons/pi'
 import { TbPasswordFingerprint } from 'react-icons/tb'
+import { Eye, EyeOff } from 'lucide-react'
+import { HashLoader } from 'react-spinners'
 import ReactModal from 'react-modal'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
@@ -11,12 +13,13 @@ import { useAppSelector } from '~/hooks/redux'
 import { paths } from '~/utils/paths'
 import { useUpdatePasswordMutation } from '~/services/user.service'
 import { FormInputGroup, PasswordStrength } from '~/components'
-import { Eye, EyeOff } from 'lucide-react'
-import { HashLoader } from 'react-spinners'
+import useTitle from '~/hooks/useTitle'
 
 ReactModal.setAppElement('#root')
 
 const Account = () => {
+  useTitle('Tài khoản')
+
   const { user } = useAppSelector((state) => state.user)
 
   const {

@@ -7,10 +7,13 @@ import ReactModal from 'react-modal'
 import { useGetMovieQuery } from '~/services/movie.service'
 import { paths } from '~/utils/paths'
 import { Loader } from '~/components'
+import useTitle from '~/hooks/useTitle'
 
 ReactModal.setAppElement('#root')
 
 const MovieDetails = () => {
+  useTitle('Chi tiết phim')
+
   const { id } = useParams()
 
   const [isOpen, setIsOpen] = useState(false)

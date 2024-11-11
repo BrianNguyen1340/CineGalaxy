@@ -9,13 +9,13 @@ import { useAppSelector } from '~/hooks/redux'
 import { paths } from '~/utils/paths'
 import { FormInputGroup, Loader } from '~/components'
 import { useForgotPasswordMutation } from '~/services/auth.service'
-
-type ForgotPasswordData = {
-  email: string
-}
+import useTitle from '~/hooks/useTitle'
 
 const ForgotPassword = () => {
+  useTitle('Quên mật khẩu')
+
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
+
   if (isAuthenticated && user) {
     return <Navigate to={paths.userPaths.home} />
   }
@@ -32,7 +32,9 @@ const ForgotPassword = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ForgotPasswordData>()
+  } = useForm<{
+    email: string
+  }>()
 
   const navigate = useNavigate()
 
@@ -43,9 +45,9 @@ const ForgotPassword = () => {
     setIsVideoLoaded(true)
   }
 
-  const handleForgotPassword: SubmitHandler<ForgotPasswordData> = async (
-    reqBody,
-  ) => {
+  const handleForgotPassword: SubmitHandler<{
+    email: string
+  }> = async (reqBody) => {
     try {
       const { email } = reqBody
       nProgress.start()

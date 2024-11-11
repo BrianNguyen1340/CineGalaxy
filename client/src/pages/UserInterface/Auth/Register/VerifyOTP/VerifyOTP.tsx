@@ -6,15 +6,19 @@ import { HashLoader } from 'react-spinners'
 import nProgress from 'nprogress'
 import Swal from 'sweetalert2'
 
+import { useAppSelector } from '~/hooks/redux'
 import { paths } from '~/utils/paths'
 import {
   useVerifyOTPMutation,
   useResendOTPMutation,
 } from '~/services/auth.service'
-import { useAppSelector } from '~/hooks/redux'
+import useTitle from '~/hooks/useTitle'
 
 const VerifyOTP = () => {
+  useTitle('OTP xác nhận tài khoản')
+
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
+
   if (isAuthenticated && user) {
     return <Navigate to={paths.userPaths.home} />
   }
@@ -27,6 +31,8 @@ const VerifyOTP = () => {
     return <Navigate to={paths.dashboardPaths.dashboard} replace />
   }
 
+  const navigate = useNavigate()
+
   const {
     handleSubmit,
     register,
@@ -38,10 +44,10 @@ const VerifyOTP = () => {
 
   const [code, setCode] = useState<string[]>(Array(8).fill(''))
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
-  const navigate = useNavigate()
 
   const [verifyOTPApi, { isLoading: isLoadingVerifyRegister }] =
     useVerifyOTPMutation()
+
   const [resendOTPApi, { isLoading: isLoadingResendOTP }] =
     useResendOTPMutation()
 
@@ -96,12 +102,15 @@ const VerifyOTP = () => {
 
     try {
       nProgress.start()
+
       const response = await verifyOTPApi({
         code: code.join(''),
       }).unwrap()
 
       Swal.fire('Thành công', response.message, 'success')
+
       localStorage.removeItem('email')
+
       navigate(paths.userPaths.login)
     } catch (error: any) {
       Swal.fire('Thất bại', error.data.message, 'error')
@@ -112,18 +121,22 @@ const VerifyOTP = () => {
 
   const handleResendOTP = async () => {
     const email = localStorage.getItem('email')
+
     if (!email) {
       return
     }
 
     try {
       nProgress.start()
+
       const response = await resendOTPApi({
         email,
       }).unwrap()
 
       Swal.fire('Thành công', response.message, 'success')
+
       localStorage.removeItem('email')
+
       navigate(paths.userPaths.verifyOtp)
     } catch (error: any) {
       Swal.fire('Thất bại', error.message, 'error')

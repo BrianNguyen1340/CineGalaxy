@@ -1,29 +1,40 @@
+import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 
 import { useAppSelector } from '~/hooks/redux'
 import { paths } from '~/utils/paths'
 import { useGetCinemaComplexesQuery } from '~/services/cinemaComplex.service'
 import { useGetCinemasQuery } from '~/services/cinema.service'
-import { useState } from 'react'
 import { DateSelector } from '~/components'
+import useTitle from '~/hooks/useTitle'
 
 const Cinemas = () => {
+  useTitle('Danh sách rạp')
+
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
+
   const isAuthorized =
     isAuthenticated &&
     (user?.role === 0 || user?.role === 1 || user?.role === 2)
+
   if (isAuthorized) {
     return <Navigate to={paths.dashboardPaths.dashboard} replace />
   }
+
   const { data: cinemaComplexes, isLoading: isLoadingCinemaComplex } =
     useGetCinemaComplexesQuery({})
+
   const { data: cinemas, isLoading: isLoadingCinemas } = useGetCinemasQuery({})
+
   const [hoveredCinemaComplexId, setHoveredCinemaComplexId] =
     useState<null>(null)
+
   const [selectedCinemaName, setSelectedCinemaName] = useState<string>('')
+
   const handleCinemaClick = (cinemaName: any) => {
     setSelectedCinemaName(cinemaName)
   }
+
   if (isLoadingCinemaComplex || isLoadingCinemas) {
     return <p>Loading ...</p>
   }
@@ -40,7 +51,7 @@ const Cinemas = () => {
           >
             {cinemaComplex.name}
             {hoveredCinemaComplexId === cinemaComplex._id && (
-              <div className='absolute left-0 top-full flex w-full items-center justify-center gap-12 rounded bg-[rgba(0,0,0,0.8)] bg-white p-4 text-white shadow-custom'>
+              <div className='absolute left-0 top-full flex w-full items-center justify-center gap-12 rounded bg-[rgba(0,0,0,0.8)] p-4 text-white shadow-custom'>
                 {cinemas?.data
                   ?.filter(
                     (cinema: any) =>
@@ -60,11 +71,11 @@ const Cinemas = () => {
           </div>
         ))}
       </div>
-      <div>
+      <div className='h-[420px] w-full'>
         <img
           src='images/cinema_bg.jpg'
           alt='background'
-          className='h-[420px] w-full object-cover'
+          className='h-full w-full object-cover'
         />
       </div>
       <div className='mx-auto w-[1000px]'>
@@ -77,7 +88,7 @@ const Cinemas = () => {
             {selectedCinemaName}
           </div>
         )}
-        <div className='bg-white'>
+        <div className='mt-10 bg-white'>
           <div className='flex items-center gap-10 border-b-2 p-6'>
             <div className='flex items-center'>
               <div className='mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-[#088210] p-3 font-semibold uppercase text-white'>

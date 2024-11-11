@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FaTimes, FaLock, FaLockOpen } from 'react-icons/fa'
+import { FaTimes } from 'react-icons/fa'
 import { SquarePen } from 'lucide-react'
 import ReactPaginate from 'react-paginate'
 import Swal from 'sweetalert2'
@@ -11,38 +11,43 @@ import {
   useBlockAccountMutation,
   useUnblockAccountMutation,
 } from '~/services/user.service'
-import { Loader } from '~/components'
 import useTitle from '~/hooks/useTitle'
 
 const ListAccount = () => {
   useTitle('Admin | Danh sách tài khoản')
 
-  const {
-    data: users,
-    refetch,
-    isLoading,
-    isSuccess,
-    isError,
-    error,
-  } = useGetUsersQuery({})
-
-  let content
-
-  const [blockAccount] = useBlockAccountMutation()
-  const [unblockAccount] = useUnblockAccountMutation()
+  const { data: users, isLoading, isSuccess, refetch } = useGetUsersQuery({})
 
   useEffect(() => {
     refetch()
   }, [refetch])
 
+  const [blockAccount] = useBlockAccountMutation()
+
+  const [unblockAccount] = useUnblockAccountMutation()
+
   const handleBlockAccount = async (_id: string) => {
     try {
       nProgress.start()
-      await blockAccount(_id)
-      Swal.fire('Thành công!', 'Khóa tài khoản thành công!', 'success')
-      refetch()
+
+      const result = await Swal.fire({
+        title: 'Bạn có chắc',
+        text: 'Muốn khóa tài khoản này?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'OK!',
+        cancelButtonText: 'Không!',
+      })
+
+      if (result.isConfirmed) {
+        await blockAccount(_id)
+
+        Swal.fire('Thành công!', 'Khóa tài khoản thành công!', 'success')
+
+        refetch()
+      }
     } catch (error: any) {
-      Swal.fire('Thất bại', error.message, 'error')
+      Swal.fire('Thất bại', error.data.message, 'error')
     } finally {
       nProgress.done()
     }
@@ -51,30 +56,50 @@ const ListAccount = () => {
   const handleUnblockAccount = async (_id: string) => {
     try {
       nProgress.start()
-      await unblockAccount(_id)
-      Swal.fire('Thành công!', 'Khóa tài khoản thành công!', 'success')
-      refetch()
+
+      const result = await Swal.fire({
+        title: 'Bạn có chắc',
+        text: 'Muốn mở khóa tài khoản này?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'OK!',
+        cancelButtonText: 'Không!',
+      })
+
+      if (result.isConfirmed) {
+        await unblockAccount(_id)
+
+        Swal.fire('Thành công!', 'Mở khóa tài khoản thành công!', 'success')
+
+        refetch()
+      }
     } catch (error: any) {
-      Swal.fire('Thất bại', error.message, 'error')
+      Swal.fire('Thất bại', error.data.message, 'error')
     } finally {
       nProgress.done()
     }
   }
 
   const [currentPage, setCurrentPage] = useState(0)
+
   const itemsPerPage = 10
+
   const offset = currentPage * itemsPerPage
+
   const currentItems = users
     ? users.data
         .slice()
         .reverse()
         .slice(offset, offset + itemsPerPage)
     : []
+
   const handlePageClick = (event: any) => {
     setCurrentPage(event.selected)
   }
 
-  if (isLoading) content = <Loader />
+  let content
+
+  if (isLoading) content = <div>Loading...</div>
 
   if (isSuccess) {
     content = (
@@ -92,7 +117,7 @@ const ListAccount = () => {
                   <th>tên</th>
                   <th>ảnh</th>
                   <th>lần đăng nhập cuối</th>
-                  <th>khóa</th>
+                  <th>trạng thái</th>
                   <th>vai trò</th>
                   <th>hành động</th>
                 </tr>
@@ -124,37 +149,40 @@ const ListAccount = () => {
                         </div>
                       ) : (
                         <>
-                          {item.isBlocked ? (
+                          {item.isBlocked === false ? (
                             <div className='flex items-center justify-center'>
                               <button
-                                className='cursor-pointer bg-white'
-                                onClick={() => handleUnblockAccount(item?._id)}
+                                className='cursor-pointer rounded bg-[#70e000] p-1 capitalize text-white'
+                                onClick={() => handleBlockAccount(item?._id)}
                               >
-                                <FaLock
-                                  size='20'
-                                  color='red'
-                                  className='bg-white'
-                                />
+                                active
                               </button>
                             </div>
                           ) : (
                             <div className='flex items-center justify-center'>
                               <button
-                                className='cursor-pointer bg-white'
-                                onClick={() => handleBlockAccount(item?._id)}
+                                className='ff006e cursor-pointer rounded bg-[#ff006e] p-1 capitalize text-white'
+                                onClick={() => handleUnblockAccount(item?._id)}
                               >
-                                <FaLockOpen
-                                  size='20'
-                                  color='green'
-                                  className='bg-white'
-                                />
+                                unactive
                               </button>
                             </div>
                           )}
                         </>
                       )}
                     </td>
-                    <td>{item.role}</td>
+                    {item.role === 0 && (
+                      <td className='capitalize text-[#0d6efd]'>admin</td>
+                    )}
+                    {item.role === 1 && (
+                      <td className='capitalize text-[#fb8500]'>quản lý</td>
+                    )}
+                    {item.role === 2 && (
+                      <td className='capitalize text-[#2a9d8f]'>thu ngân</td>
+                    )}
+                    {item.role === 3 && (
+                      <td className='capitalize text-[#fb6f92]'>khách hàng</td>
+                    )}
                     <td>
                       {item.role === 0 ? (
                         <div className='flex items-center justify-center'>
@@ -185,20 +213,6 @@ const ListAccount = () => {
               activeClassName={'active'}
             />
           </>
-        )}
-      </div>
-    )
-  }
-
-  if (isError) {
-    const errorMessage =
-      error && 'message' in error ? error.message : 'An unknown error occurred.'
-
-    content = (
-      <div>
-        <p>{errorMessage}</p>
-        {error && 'data' in error && (
-          <pre>{JSON.stringify(error.data, null, 2)}</pre>
         )}
       </div>
     )
