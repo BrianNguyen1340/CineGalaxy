@@ -31,7 +31,8 @@ const Account = () => {
 
   const password = watch('password')
 
-  const [updateApi, { isLoading }] = useUpdatePasswordMutation()
+  const [updateApi, { isLoading: isLoadingUpdate }] =
+    useUpdatePasswordMutation()
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -152,12 +153,12 @@ const Account = () => {
             </div>
             <button
               type='submit'
-              disabled={isLoading ? true : false}
+              disabled={isLoadingUpdate ? true : false}
               className='flex w-fit cursor-pointer items-center justify-center rounded bg-[#f97417] px-4 py-2 text-base font-semibold capitalize text-white transition duration-300 hover:opacity-80'
             >
               <div className='flex items-center justify-center gap-3'>
-                {isLoading && <HashLoader size='16' color='#fff' />}
-                <span>{isLoading ? 'Đang lưu' : 'Lưu'}</span>
+                {isLoadingUpdate && <HashLoader size='16' color='#fff' />}
+                <span>{isLoadingUpdate ? 'Đang lưu' : 'Lưu'}</span>
               </div>
             </button>
           </div>
@@ -208,26 +209,6 @@ const Account = () => {
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            className='min-h-[156px] rounded-[12px] transition duration-500 hover:scale-[1.05]'
-            style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 6px 16px ' }}
-          >
-            <Link
-              to={paths.userPaths.profile}
-              className='block h-full w-full p-4'
-            >
-              <div className='mb-5'>
-                <PiUserList size='30' />
-              </div>
-              <div>
-                <div className='mb-3 font-semibold'>Thông tin cá nhân</div>
-                <div className='text-[#555]'>
-                  Cung cấp thông tin cá nhân và cách chúng tôi có thể liên hệ
-                  với bạn
-                </div>
-              </div>
-            </Link>
           </div>
         </div>
       </div>

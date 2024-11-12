@@ -43,8 +43,11 @@ const ResetPassword = () => {
 
   const { token } = useParams<{ token: string }>()
 
-  const [resetPasswordApi, { isLoading }] = useResetPasswordMutation()
+  const [resetPasswordApi, { isLoading: isLoadingResetPassword }] =
+    useResetPasswordMutation()
+
   const [showHidePassword, setShowHidePassword] = useState<boolean>(false)
+
   const [showHideConfirmPassword, setShowHideConfirmPassword] =
     useState<boolean>(false)
 
@@ -61,6 +64,7 @@ const ResetPassword = () => {
   }> = async (data) => {
     try {
       nProgress.start()
+
       const { password } = data
 
       if (!token) {
@@ -150,12 +154,14 @@ const ResetPassword = () => {
           <button
             type='submit'
             className='flex w-full cursor-pointer items-center justify-center rounded-[40px] bg-[#f97417] p-5 text-base font-semibold capitalize text-white transition duration-300 hover:opacity-80'
-            disabled={isLoading ? true : false}
+            disabled={isLoadingResetPassword ? true : false}
           >
             <div className='flex items-center justify-center gap-[10px]'>
-              {isLoading && <HashLoader size='20' color='#fff' />}
+              {isLoadingResetPassword && <HashLoader size='20' color='#fff' />}
               <span>
-                {isLoading ? 'Đang thay đổi mật khẩu' : 'Thay đổi mật khẩu'}
+                {isLoadingResetPassword
+                  ? 'Đang thay đổi mật khẩu'
+                  : 'Thay đổi mật khẩu'}
               </span>
             </div>
           </button>

@@ -45,7 +45,7 @@ const Register = () => {
 
   const navigate = useNavigate()
 
-  const [registerApi, { isLoading }] = useRegisterMutation()
+  const [registerApi, { isLoading: isLoadingRegister }] = useRegisterMutation()
 
   const [showForm, setShowForm] = useState<boolean>(false)
 
@@ -83,7 +83,7 @@ const Register = () => {
       Swal.fire('Thành công', response.message, 'success')
 
       localStorage.setItem('email', email)
-      
+
       navigate(paths.userPaths.verifyOtp)
     } catch (error: any) {
       Swal.fire('Thất bại', error.data.message, 'error')
@@ -217,11 +217,11 @@ const Register = () => {
             <button
               className='mt-5 flex w-full cursor-pointer items-center justify-center rounded-[40px] bg-[#f97417] p-5 text-base font-semibold capitalize text-white transition duration-300 hover:opacity-80'
               type='submit'
-              disabled={isLoading ? true : false}
+              disabled={isLoadingRegister ? true : false}
             >
               <div className='flex items-center justify-center gap-[10px]'>
-                {isLoading && <HashLoader size='20' color='#fff' />}
-                <span>{isLoading ? 'Đang đăng ký' : 'Đăng ký'}</span>
+                {isLoadingRegister && <HashLoader size='20' color='#fff' />}
+                <span>{isLoadingRegister ? 'Đang đăng ký' : 'Đăng ký'}</span>
               </div>
             </button>
           </form>

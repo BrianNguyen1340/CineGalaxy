@@ -1,9 +1,11 @@
+import { useEffect } from 'react'
 import { Link, Navigate } from 'react-router-dom'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay, EffectFade, Navigation } from 'swiper/modules'
 import Slider from 'react-slick'
 
 import { useGetMoviesQuery } from '~/services/movie.service'
 import { paths } from '~/utils/paths'
-import { Loader } from '~/components'
 import { useAppSelector } from '~/hooks/redux'
 import useTitle from '~/hooks/useTitle'
 
@@ -53,7 +55,17 @@ const Home = () => {
     ],
   }
 
-  const { data: movies, isLoading: isLoadingMovies } = useGetMoviesQuery({})
+  const {
+    data: movies,
+    isLoading: isLoadingMovies,
+    isSuccess: isSuccessMovies,
+    refetch: refetchMovies,
+  } = useGetMoviesQuery({})
+  console.log(movies)
+
+  useEffect(() => {
+    refetchMovies()
+  }, [refetchMovies])
 
   const moviesToDisplay = movies?.data?.slice(0, 7) || []
 
@@ -64,139 +76,157 @@ const Home = () => {
     return releaseDate <= currentDate
   })
 
-  if (isLoadingMovies) {
-    return <Loader />
-  }
+  let content
 
-  return (
-    <div className='h-fit w-full'>
-      <section className='mt-6 flex h-[650px] items-start gap-6 overflow-hidden'>
-        <div>
-          <img
-            src='images/home_banner_2.jpg'
-            alt='banner'
-            className='h-full w-full object-cover'
-          />
-        </div>
-        <div className='mr-6 h-fit min-w-[400px]'>
+  if (isLoadingMovies) content = <div>Loading...</div>
+
+  if (isSuccessMovies) {
+    content = (
+      <div className='h-fit w-full'>
+        <section className='mt-6 flex h-[650px] items-start gap-6 overflow-hidden'>
           <div
-            style={{ fontFamily: 'Dancing Script' }}
-            className='bg-[#2a2e33] py-6 text-center text-3xl font-semibold text-[#dad2b4]'
+            style={{ width: 'calc(100% - 430px)' }}
+            className='flex items-center justify-center'
           >
-            CineGalaxy
+            <Swiper
+              slidesPerView={1}
+              effect='fade'
+              autoplay={{
+                delay: 3000,
+                disableOnInteraction: false,
+              }}
+              navigation={true}
+              modules={[Autoplay, EffectFade, Navigation]}
+            >
+              {movies?.data?.map((item: any, index: number) => (
+                <SwiperSlide key={index}>
+                  <img src={item.banner} alt='banner' className='w-full' />
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
-          <div className='border py-3'>
-            {moviesToDisplay.length > 0 ? (
-              <>
-                {moviesToDisplay?.map((item: any, index: number) => (
-                  <ol key={index}>
-                    <li className='flex items-center gap-1 border-[4px] border-white hover:border-[4px] hover:border-[#dad2b4]'>
-                      <Link
-                        to={paths.userPaths.showtimes}
-                        className='flex items-center gap-1 p-3'
-                      >
-                        <div className='text-xl font-semibold italic'>
-                          {index + 1}.
-                        </div>
-                        {item.movieRating === 'P - Phổ biến' && (
-                          <div className='flex h-6 w-6 items-center justify-center rounded-full border bg-[#088210] p-2 text-white'>
-                            P
-                          </div>
-                        )}
-                        {item.movieRating === 'K - Dành cho trẻ em' && (
-                          <div className='flex h-6 w-6 items-center justify-center rounded-full border bg-black p-2 text-white'>
-                            K
-                          </div>
-                        )}
-                        {item.movieRating ===
-                          'C13 - Cấm khán giả dưới 13 tuổi' && (
-                          <div className='flex h-6 w-6 items-center justify-center rounded-full border bg-black p-2 text-white'>
-                            13
-                          </div>
-                        )}
-                        {item.movieRating ===
-                          'C16 - Cấm khán giả dưới 16 tuổi' && (
-                          <div className='flex h-6 w-6 items-center justify-center rounded-full border bg-black p-2 text-white'>
-                            16
-                          </div>
-                        )}
-                        {item.movieRating ===
-                          'C18 - Cấm khán giả dưới 18 tuổi' && (
-                          <div className='flex h-6 w-6 items-center justify-center rounded-full border bg-[#e80808] p-2 text-white'>
-                            18
-                          </div>
-                        )}
-                        <div className='w-[150px] overflow-hidden text-ellipsis text-nowrap text-sm font-bold uppercase'>
-                          {item.name}
-                        </div>
-                      </Link>
-                      <div className='flex w-full items-center justify-end'>
-                        <div className='text-sm'>{item.duration} phút</div>
-                        <div className='px-1'>|</div>
-                        <div className='text-sm'>
-                          {new Date(item.releaseDate).toLocaleDateString(
-                            'vi-VN',
-                          )}
-                        </div>
-                      </div>
-                    </li>
-                  </ol>
-                ))}
-              </>
-            ) : (
-              <div>Không có suất chiếu nào</div>
-            )}
-          </div>
-          <Link
-            to={paths.userPaths.showtimes}
-            className='block bg-[#ee1c25] py-4 text-center font-semibold text-white'
-          >
-            Mua vé ngay
-          </Link>
-        </div>
-      </section>
-      <section className='mx-auto w-[1300px] py-10'>
-        <div className='mb-10 text-center text-[24px] font-semibold capitalize'>
-          phim đang chiếu
-        </div>
-        <Slider {...settings}>
-          {releasedMovies.map((item: any, index: number) => (
-            <ul key={index} className='border border-[#ddd]'>
-              {
-                <li>
-                  <figure className='group relative h-full w-full overflow-hidden'>
-                    <img
-                      src={item.poster}
-                      alt='poster'
-                      className='h-[412px] w-full object-cover'
-                    />
-                    <figcaption className='absolute bottom-0 left-0 right-0 top-0 z-10 flex h-full w-full flex-col items-center justify-center gap-10 transition duration-500 before:absolute before:z-[-1] before:bg-gray-700 before:opacity-0 group-hover:bg-[rgba(0,0,0,0.7)]'>
-                      <div className='border border-[#ffd60a] opacity-0 transition duration-500 group-hover:opacity-100'>
-                        <Link
-                          to={`/movie/${item?._id}`}
-                          className='mx-auto block min-w-[150px] cursor-pointer p-5 text-center font-semibold capitalize text-white transition duration-500 hover:bg-white hover:text-black'
-                        >
-                          xem chi tiết
-                        </Link>
-                      </div>
-                      <div className='border border-[#ffd60a] opacity-0 transition duration-500 group-hover:opacity-100'>
+          <div className='h-fit min-w-[400px]'>
+            <div
+              style={{ fontFamily: 'Dancing Script' }}
+              className='bg-[#2a2e33] py-6 text-center text-3xl font-semibold text-[#dad2b4]'
+            >
+              CineGalaxy
+            </div>
+            <div className='border py-3'>
+              {moviesToDisplay.length > 0 ? (
+                <>
+                  {moviesToDisplay?.map((item: any, index: number) => (
+                    <ol key={index}>
+                      <li className='flex items-center gap-1 border-[4px] border-white hover:border-[4px] hover:border-[#dad2b4]'>
                         <Link
                           to={paths.userPaths.showtimes}
-                          className='mx-auto block min-w-[150px] cursor-pointer p-5 text-center font-semibold capitalize text-white transition duration-500 hover:bg-white hover:text-black'
+                          className='flex items-center gap-1 p-3'
                         >
-                          đặt vé
+                          <div className='text-xl font-semibold italic'>
+                            {index + 1}.
+                          </div>
+                          {item.movieRating === 'P - Phổ biến' && (
+                            <div className='flex h-6 w-6 items-center justify-center rounded-full border bg-[#088210] p-2 text-white'>
+                              P
+                            </div>
+                          )}
+                          {item.movieRating === 'K - Dành cho trẻ em' && (
+                            <div className='flex h-6 w-6 items-center justify-center rounded-full border bg-black p-2 text-white'>
+                              K
+                            </div>
+                          )}
+                          {item.movieRating ===
+                            'C13 - Cấm khán giả dưới 13 tuổi' && (
+                            <div className='flex h-6 w-6 items-center justify-center rounded-full border bg-black p-2 text-white'>
+                              13
+                            </div>
+                          )}
+                          {item.movieRating ===
+                            'C16 - Cấm khán giả dưới 16 tuổi' && (
+                            <div className='flex h-6 w-6 items-center justify-center rounded-full border bg-black p-2 text-white'>
+                              16
+                            </div>
+                          )}
+                          {item.movieRating ===
+                            'C18 - Cấm khán giả dưới 18 tuổi' && (
+                            <div className='flex h-6 w-6 items-center justify-center rounded-full border bg-[#e80808] p-2 text-white'>
+                              18
+                            </div>
+                          )}
+                          <div className='w-[150px] overflow-hidden text-ellipsis text-nowrap text-sm font-bold uppercase'>
+                            {item.name}
+                          </div>
                         </Link>
-                      </div>
-                    </figcaption>
-                  </figure>
-                </li>
-              }
-            </ul>
-          ))}
-        </Slider>
-      </section>
-    </div>
-  )
+                        <div className='flex w-full items-center justify-end'>
+                          <div className='text-sm'>{item.duration} phút</div>
+                          <div className='px-1'>|</div>
+                          <div className='text-sm'>
+                            {new Date(item.releaseDate).toLocaleDateString(
+                              'vi-VN',
+                            )}
+                          </div>
+                        </div>
+                      </li>
+                    </ol>
+                  ))}
+                </>
+              ) : (
+                <div>Không có suất chiếu nào</div>
+              )}
+            </div>
+            <Link
+              to={paths.userPaths.showtimes}
+              className='block bg-[#ee1c25] py-4 text-center font-semibold text-white'
+            >
+              Mua vé ngay
+            </Link>
+          </div>
+        </section>
+        <section className='mx-auto w-[1300px] py-10'>
+          <div className='mb-10 text-center text-[24px] font-semibold capitalize'>
+            phim đang chiếu
+          </div>
+          <Slider {...settings}>
+            {releasedMovies.map((item: any, index: number) => (
+              <ul key={index} className='border border-[#ddd]'>
+                {
+                  <li>
+                    <figure className='group relative h-full w-full overflow-hidden'>
+                      <img
+                        src={item.poster}
+                        alt='poster'
+                        className='h-[412px] w-full object-cover'
+                      />
+                      <figcaption className='absolute bottom-0 left-0 right-0 top-0 z-10 flex h-full w-full flex-col items-center justify-center gap-10 transition duration-500 before:absolute before:z-[-1] before:bg-gray-700 before:opacity-0 group-hover:bg-[rgba(0,0,0,0.7)]'>
+                        <div className='border border-[#ffd60a] opacity-0 transition duration-500 group-hover:opacity-100'>
+                          <Link
+                            to={`/movie/${item?._id}`}
+                            className='mx-auto block min-w-[150px] cursor-pointer p-5 text-center font-semibold capitalize text-white transition duration-500 hover:bg-white hover:text-black'
+                          >
+                            xem chi tiết
+                          </Link>
+                        </div>
+                        <div className='border border-[#ffd60a] opacity-0 transition duration-500 group-hover:opacity-100'>
+                          <Link
+                            to={paths.userPaths.showtimes}
+                            className='mx-auto block min-w-[150px] cursor-pointer p-5 text-center font-semibold capitalize text-white transition duration-500 hover:bg-white hover:text-black'
+                          >
+                            đặt vé
+                          </Link>
+                        </div>
+                      </figcaption>
+                    </figure>
+                  </li>
+                }
+              </ul>
+            ))}
+          </Slider>
+        </section>
+      </div>
+    )
+  }
+
+  return content
 }
 
 export default Home

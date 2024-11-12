@@ -77,29 +77,6 @@ button {
   border-color: #00acc1;
 }
 
-.btn-create,
-.btn-update {
-  width: fit-content;
-  background-color: #f97417;
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  padding: 20px;
-  cursor: pointer;
-  border-radius: 40px;
-  text-transform: capitalize;
-  transition: 0.5s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: 0.5s ease;
-
-  &:disabled {
-    cursor: no-drop;
-    background-color: #ddd;
-  }
-}
-
 table {
   width: 100%;
   padding: 20px;
@@ -162,4 +139,9 @@ select {
 
 option {
   text-transform: capitalize;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: white !important;
 }

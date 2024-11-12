@@ -40,9 +40,10 @@ const VerifyOTP = () => {
     setValue,
     trigger,
     setError,
-  } = useForm()
+  } = useForm<{ code: number }>()
 
   const [code, setCode] = useState<string[]>(Array(8).fill(''))
+
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
   const [verifyOTPApi, { isLoading: isLoadingVerifyRegister }] =
@@ -79,7 +80,7 @@ const VerifyOTP = () => {
         inputRefs.current[index + 1]?.focus()
       }
 
-      setValue('code', newCode.join(''))
+      setValue('code', Number(newCode.join('')))
       await trigger('code')
     }
   }
@@ -90,8 +91,9 @@ const VerifyOTP = () => {
     }
   }
 
-  const handleVerifyOTP: SubmitHandler<{ code?: number }> = async () => {
+  const handleVerifyOTP: SubmitHandler<{ code: number }> = async () => {
     const otpCode = code.join('')
+
     if (otpCode.length < 8) {
       setError('code', {
         type: 'manual',

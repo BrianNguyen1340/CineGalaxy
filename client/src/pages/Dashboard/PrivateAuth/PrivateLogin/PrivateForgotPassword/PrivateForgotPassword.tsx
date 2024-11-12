@@ -30,7 +30,8 @@ const PrivateForgotPassword = () => {
 
   const navigate = useNavigate()
 
-  const [forgotPasswordApi, { isLoading }] = useForgotPasswordMutation()
+  const [forgotPasswordApi, { isLoading: isLoadingForgotPassword }] =
+    useForgotPasswordMutation()
 
   const handleForgotPassword: SubmitHandler<{
     email: string
@@ -84,11 +85,15 @@ const PrivateForgotPassword = () => {
           <button
             type='submit'
             className='flex w-full cursor-pointer items-center justify-center rounded-[40px] bg-[#f97417] p-5 text-base font-semibold capitalize text-white transition duration-300 hover:opacity-80'
-            disabled={isLoading ? true : false}
+            disabled={isLoadingForgotPassword ? true : false}
           >
             <div className='flex items-center justify-center gap-[10px]'>
-              {isLoading && <HashLoader size='20' color='#fff' />}
-              <span>{isLoading ? 'Đang gửi yêu cầu' : 'Xác nhận email'}</span>
+              {isLoadingForgotPassword && <HashLoader size='20' color='#fff' />}
+              <span>
+                {isLoadingForgotPassword
+                  ? 'Đang gửi yêu cầu'
+                  : 'Xác nhận email'}
+              </span>
             </div>
           </button>
         </form>

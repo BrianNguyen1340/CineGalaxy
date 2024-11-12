@@ -12,6 +12,8 @@ import 'react-tabs/style/react-tabs.css'
 import 'flatpickr/dist/themes/material_green.css'
 import 'perfect-scrollbar/css/perfect-scrollbar.css'
 import 'react-datepicker/dist/react-datepicker.css'
+import 'swiper/css'
+import 'swiper/swiper-bundle.css'
 
 import {
   DashHeader,

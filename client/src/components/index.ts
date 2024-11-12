@@ -18,8 +18,6 @@ import GoogleAuth from './GoogleAuth/GoogleAuth'
 import PasswordStrength from './PasswordStrength/PasswordStrength'
 import FormInputGroup from './FormInputGroup/FormInputGroup'
 import MenuDropdown from './Header/DynamicNavigation/MenuDropdown/MenuDropdown'
-import Loader from './Loader/Loader'
-import Loading from './Loading/Loading'
 import Scrollbar from './Scrollbar/Scrollbar'
 import BreadcrumbAccount from './BreadcrumbAccount/BreadcrumbAccount'
 import DateSelector from './DateSelector/DateSelector'
@@ -41,8 +39,6 @@ export {
   PasswordStrength,
   FormInputGroup,
   MenuDropdown,
-  Loader,
-  Loading,
   SidebarTop,
   Scrollbar,
   SidebarMenu,

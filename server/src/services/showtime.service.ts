@@ -101,6 +101,7 @@ const handleGetOne = async (
           path: 'cinema',
         },
       })
+
     if (!request) {
       return {
         success: false,
@@ -149,6 +150,7 @@ const handleGetAll = async (): Promise<{
           path: 'cinema',
         },
       })
+      
     if (!request || request.length === 0) {
       return {
         success: false,
@@ -196,7 +198,7 @@ const handleUpdate = async (
 }> => {
   try {
     const showtime = await showtimeModel.findById(id)
-    
+
     if (!showtime) {
       return {
         success: false,
