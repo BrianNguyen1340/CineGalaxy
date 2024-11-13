@@ -4,7 +4,7 @@ import { RootState } from '~/redux/store'
 
 export type UserState = {
   user: {
-    id: string
+    _id: string
     name: string
     email: string
     phone: string

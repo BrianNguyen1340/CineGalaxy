@@ -182,7 +182,7 @@ const Home = () => {
             </Link>
           </div>
         </section>
-        <section className='mx-auto w-[1300px] py-10'>
+        <section className='mx-auto w-[1300px] pb-10'>
           <div className='mb-10 text-center text-[24px] font-semibold capitalize'>
             phim đang chiếu
           </div>

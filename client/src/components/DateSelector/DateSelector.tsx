@@ -1,10 +1,17 @@
-import { useState } from 'react'
+import { FC } from 'react'
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa'
 
-const DateSelector = () => {
-  const today = new Date()
-  const [selectedDate, setSelectedDate] = useState(today)
+type DateSelectorProps = {
+  selectedDate?: Date
+  onDateChange?: (date: Date) => void
+}
+
+const DateSelector: FC<DateSelectorProps> = ({
+  selectedDate = new Date(),
+  onDateChange = () => {},
+}) => {
   const days = ['CN', 'Hai', 'Ba', 'Tư', 'Năm', 'Sáu', 'Bảy']
+
   const months = [
     'January',
     'February',
@@ -19,33 +26,39 @@ const DateSelector = () => {
     'November',
     'December',
   ]
-  const getWeekDays = (startDate: any) => {
-    const week = []
+
+  const getWeekDays = (startDate: Date): Date[] => {
+    const week: Date[] = []
     const dayOfWeek = startDate.getDay()
     const startOfWeek = new Date(startDate)
     startOfWeek.setDate(startDate.getDate() - dayOfWeek)
+
     for (let i = 0; i < 7; i++) {
       const date = new Date(startOfWeek)
       date.setDate(startOfWeek.getDate() + i)
       week.push(date)
     }
+
     return week
   }
+
   const currentWeek = getWeekDays(selectedDate)
-  const handleDateClick = (date: any) => {
-    setSelectedDate(date)
+
+  const handleDateClick = (date: Date) => {
+    onDateChange(date)
   }
-  const handleWeekChange = (direction: any) => {
+
+  const handleWeekChange = (direction: number) => {
     const newDate = new Date(selectedDate)
     newDate.setDate(selectedDate.getDate() + direction * 7)
-    setSelectedDate(newDate)
+    onDateChange(newDate)
   }
   return (
     <div className='h-fit w-full border-b-[5px] border-t-[5px] border-[#dad2b4] py-4 text-center'>
       <div className='mb-4 flex items-center justify-center'>
         <div className='mx-8 font-semibold'>
           <span className='mr-6 text-[34px] underline'>
-            {new Date().getDate()}
+            {selectedDate.getDate()}
           </span>
           <span className='mr-1 text-sm'>
             {months[selectedDate.getMonth()]}

@@ -61,7 +61,6 @@ const UpdateShowtime = () => {
     isSuccess: isSuccessShowtime,
     refetch: refetchShowtime,
   } = useGetShowtimeQuery(id)
-  console.log(showtime)
 
   const {
     data: movies,
@@ -177,6 +176,7 @@ const UpdateShowtime = () => {
         reqBody
 
       const response = await updateApi({
+        id,
         date,
         timeStart,
         timeEnd,
