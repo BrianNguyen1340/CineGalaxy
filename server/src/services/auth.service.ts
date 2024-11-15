@@ -220,11 +220,11 @@ const googleLogin = async (
           _id: user._id,
           role: user.role,
         },
-        { secret: varEnv.JWT_ACCESS_TOKEN_KEY, expiresIn: '1d' },
+        { secret: varEnv.JWT_ACCESS_TOKEN_KEY, expiresIn: '7d' },
       )
       const refreshToken = generateToken(
         { _id: user._id },
-        { secret: varEnv.JWT_REFRESH_TOKEN_KEY, expiresIn: '7d' },
+        { secret: varEnv.JWT_REFRESH_TOKEN_KEY, expiresIn: '30d' },
       )
 
       user.lastLogin = new Date()
@@ -263,11 +263,11 @@ const googleLogin = async (
           _id: newUser._id,
           role: newUser.role,
         },
-        { secret: varEnv.JWT_ACCESS_TOKEN_KEY, expiresIn: '1d' },
+        { secret: varEnv.JWT_ACCESS_TOKEN_KEY, expiresIn: '7d' },
       )
       const refreshToken = generateToken(
         { _id: newUser._id },
-        { secret: varEnv.JWT_REFRESH_TOKEN_KEY, expiresIn: '7d' },
+        { secret: varEnv.JWT_REFRESH_TOKEN_KEY, expiresIn: '30d' },
       )
 
       newUser.lastLogin = new Date()
@@ -346,11 +346,11 @@ const login = async (
         _id: user._id,
         role: user.role,
       },
-      { secret: varEnv.JWT_ACCESS_TOKEN_KEY, expiresIn: '1d' },
+      { secret: varEnv.JWT_ACCESS_TOKEN_KEY, expiresIn: '7d' },
     )
     const refreshToken = generateToken(
       { _id: user._id },
-      { secret: varEnv.JWT_REFRESH_TOKEN_KEY, expiresIn: '7d' },
+      { secret: varEnv.JWT_REFRESH_TOKEN_KEY, expiresIn: '30d' },
     )
 
     user.lastLogin = new Date()

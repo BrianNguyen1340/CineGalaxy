@@ -8,8 +8,8 @@ import {
   sendErrorResponse,
   sendSuccessResponse,
 } from '~/utils/responseDataHandler'
-import { movieService } from '~/services/movie.service'
 import { catchErrors } from '~/utils/catchErrors'
+import { movieService } from '~/services/movie.service'
 
 const handleCreate: RequestHandler = catchErrors(async (req, res) => {
   const {
@@ -48,6 +48,7 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
     movieFormat,
     genres,
   )
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -66,6 +67,7 @@ const handleGetOne: RequestHandler = catchErrors(async (req, res) => {
   const objectID = new Types.ObjectId(id)
 
   const response = await movieService.handleGetOne(objectID)
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -80,6 +82,7 @@ const handleGetOne: RequestHandler = catchErrors(async (req, res) => {
 
 const handleGetAll: RequestHandler = catchErrors(async (req, res) => {
   const response = await movieService.handleGetAll()
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -94,6 +97,7 @@ const handleGetAll: RequestHandler = catchErrors(async (req, res) => {
 
 const handleUpdate: RequestHandler = catchErrors(async (req, res) => {
   const { id } = req.params
+
   const {
     name,
     description,
@@ -126,6 +130,45 @@ const handleUpdate: RequestHandler = catchErrors(async (req, res) => {
     movieFormat,
     genres,
   )
+
+  if (!response.success) {
+    return sendErrorResponse(res, response.statusCode, response.message)
+  }
+
+  return sendSuccessResponse(
+    res,
+    response.statusCode,
+    response.message,
+    response.data,
+  )
+})
+
+const handleHideMovie = catchErrors(async (req, res) => {
+  const { id } = req.params
+
+  const objectID = new Types.ObjectId(id)
+
+  const response = await movieService.handleHideMovie(objectID)
+
+  if (!response.success) {
+    return sendErrorResponse(res, response.statusCode, response.message)
+  }
+
+  return sendSuccessResponse(
+    res,
+    response.statusCode,
+    response.message,
+    response.data,
+  )
+})
+
+const handleShowMovie = catchErrors(async (req, res) => {
+  const { id } = req.params
+
+  const objectID = new Types.ObjectId(id)
+
+  const response = await movieService.handleShowtimeMovie(objectID)
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -149,4 +192,6 @@ export const movieController = {
     handleJoiError({ body: movieValidation.handleUpdate }),
     handleUpdate,
   ],
+  handleHideMovie,
+  handleShowMovie,
 }

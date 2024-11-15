@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import {
@@ -24,6 +24,7 @@ import { useCreateMovieMutation } from '~/services/movie.service'
 import { paths } from '~/utils/paths'
 import { useGetGenresQuery } from '~/services/genre.service'
 import { FormInputGroup } from '~/components'
+import { GenreType } from '~/types/genre.type'
 import useTitle from '~/hooks/useTitle'
 
 const validationSchema = Yup.object().shape({
@@ -42,10 +43,8 @@ const validationSchema = Yup.object().shape({
 })
 
 const CreateMovie = () => {
-  useTitle('Admin | Tạp phim')
-
+  useTitle('Admin | Tạo phim')
   const navigate = useNavigate()
-
   const animatedComponents = makeAnimated()
 
   const {
@@ -70,9 +69,16 @@ const CreateMovie = () => {
     resolver: yupResolver(validationSchema),
   })
 
-  const [createApi, { isLoading: isLoadingCreate }] = useCreateMovieMutation()
+  const {
+    data: genres,
+    isLoading: isLoadingGenres,
+    isSuccess: isSuccessGenres,
+    refetch: refetcgGenres,
+  } = useGetGenresQuery({})
 
-  const { data: genres, isLoading, isSuccess } = useGetGenresQuery({})
+  useEffect(() => {
+    refetcgGenres()
+  }, [refetcgGenres])
 
   const [selectedGenres, setSelectedGenres] = useState<
     { value: string; label: string }[]
@@ -93,21 +99,17 @@ const CreateMovie = () => {
   const [bannerUploadError, setBannerUploadError] = useState<null | string>(
     null,
   )
-
   const handleUploadBanner = () => {
     try {
       if (!banner) {
         setBannerUploadError('Vui lòng chọn ảnh!')
         return
       }
-
       setBannerUploadError(null)
-
       const storage = getStorage(app)
       const fileName = new Date().getTime() + '-' + banner.name
       const storageRef = ref(storage, `banners/${fileName}`)
       const uploadTask = uploadBytesResumable(storageRef, banner)
-
       uploadTask.on(
         'state_changed',
         (snapshot) => {
@@ -140,21 +142,17 @@ const CreateMovie = () => {
   const [posterUploadError, setPosterUploadError] = useState<null | string>(
     null,
   )
-
   const handleUploadPoster = () => {
     try {
       if (!poster) {
         setPosterUploadError('Vui lòng chọn ảnh!')
         return
       }
-
       setPosterUploadError(null)
-
       const storage = getStorage(app)
       const fileName = new Date().getTime() + '-' + poster.name
       const storageRef = ref(storage, `posters/${fileName}`)
       const uploadTask = uploadBytesResumable(storageRef, poster)
-
       uploadTask.on(
         'state_changed',
         (snapshot) => {
@@ -179,6 +177,8 @@ const CreateMovie = () => {
     }
   }
 
+  const [createApi, { isLoading: isLoadingCreate }] = useCreateMovieMutation()
+
   const handleCreate: SubmitHandler<{
     name: string
     description: string
@@ -195,41 +195,53 @@ const CreateMovie = () => {
   }> = async (reqBody) => {
     try {
       nProgress.start()
-
-      const body = {
-        ...reqBody,
+      const {
+        name,
+        description,
+        director,
+        releaseDate,
+        duration,
+        trailer,
+        movieRating,
+        subtitle,
+        movieFormat,
+      } = reqBody
+      const response = await createApi({
+        name,
+        description,
+        director,
+        releaseDate,
+        duration,
+        trailer,
+        movieRating,
+        subtitle,
+        movieFormat,
         genres: selectedGenres.map((genre) => genre.value),
         poster: posterURL,
         banner: bannerURL,
-      }
-
-      const response = await createApi(body).unwrap()
-
+      }).unwrap()
       Swal.fire('Thành công', response.message, 'success')
-
       navigate(paths.dashboardPaths.managements.movies.list)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
   }
 
   let content
-
-  if (isLoading) content = <div>Loading...</div>
-
-  if (isSuccess) {
+  if (isLoadingGenres) content = <div>Loading...</div>
+  if (isSuccessGenres) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
         <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
           tạo phim
         </div>
+
         <form
           onSubmit={handleSubmit(handleCreate)}
           className='mx-auto w-[500px]'
         >
-          {/* name */}
           <FormInputGroup
             register={register}
             errors={errors}
@@ -245,7 +257,6 @@ const CreateMovie = () => {
             icon={<FaRegStar color='red' />}
           />
 
-          {/* genres */}
           <div className='mb-5'>
             <label
               htmlFor='genres'
@@ -256,7 +267,7 @@ const CreateMovie = () => {
             <Select
               id='genres'
               isMulti
-              options={genres?.data?.map((genre: any) => ({
+              options={genres?.data?.map((genre: GenreType) => ({
                 value: genre._id,
                 label: genre.name,
               }))}
@@ -271,7 +282,6 @@ const CreateMovie = () => {
             />
           </div>
 
-          {/* director */}
           <FormInputGroup
             register={register}
             errors={errors}
@@ -287,7 +297,6 @@ const CreateMovie = () => {
             icon={<FaRegStar color='red' />}
           />
 
-          {/* description */}
           <div className='mb-5'>
             <label
               htmlFor='description'
@@ -305,7 +314,6 @@ const CreateMovie = () => {
             />
           </div>
 
-          {/* releaseDate */}
           <div className='mb-5'>
             <label htmlFor='releaseDate' className='font-semibold capitalize'>
               Chọn ngày công chiếu
@@ -318,7 +326,6 @@ const CreateMovie = () => {
             />
           </div>
 
-          {/* duration */}
           <FormInputGroup
             register={register}
             errors={errors}
@@ -338,7 +345,6 @@ const CreateMovie = () => {
             icon={<FaRegStar color='red' />}
           />
 
-          {/* poster */}
           <div className='mb-5 flex flex-col gap-3'>
             <label className='font-semibold capitalize'>poster</label>
             <label htmlFor='poster' className='cursor-pointer capitalize'>
@@ -364,7 +370,7 @@ const CreateMovie = () => {
               type='button'
               disabled={posterUploadProgress ? true : false}
               onClick={handleUploadPoster}
-              style={{ width: 'fit-content' }}
+              className='w-fit'
             >
               {posterUploadProgress ? (
                 <div className='h-16 w-16'>
@@ -382,7 +388,6 @@ const CreateMovie = () => {
             {posterUploadError && <div>{posterUploadError}</div>}
           </div>
 
-          {/* banner */}
           <div className='mb-5 flex flex-col gap-3'>
             <label className='font-semibold capitalize'>banner</label>
             <label htmlFor='banner' className='cursor-pointer capitalize'>
@@ -426,7 +431,6 @@ const CreateMovie = () => {
             {bannerUploadError && <div>{bannerUploadError}</div>}
           </div>
 
-          {/* movie format */}
           <div className='mb-6 flex flex-col'>
             <label
               htmlFor='movieFormat'
@@ -440,17 +444,14 @@ const CreateMovie = () => {
               })}
               id='movieFormat'
               name='movieFormat'
-              className='p-2'
+              className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn định dạng phim
-              </option>
+              <option>Chọn định dạng phim</option>
               <option value='2D'>2D</option>
               <option value='3D'>3D</option>
             </select>
           </div>
 
-          {/* subtitle */}
           <div className='mb-6 flex flex-col'>
             <label htmlFor='subtitle' className='mb-1 font-semibold capitalize'>
               phụ đề
@@ -461,18 +462,15 @@ const CreateMovie = () => {
               })}
               id='subtitle'
               name='subtitle'
-              className='p-2'
+              className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn phụ đề
-              </option>
+              <option>Chọn phụ đề</option>
               <option value='Thuyết minh'>Thuyết minh</option>
               <option value='Phụ đề'>Phụ đề</option>
               <option value='Lồng tiếng'>Lồng tiếng</option>
             </select>
           </div>
 
-          {/* movie rating */}
           <div className='mb-6 flex flex-col'>
             <label
               htmlFor='movieRating'
@@ -486,11 +484,9 @@ const CreateMovie = () => {
               })}
               id='movieRating'
               name='movieRating'
-              className='p-2'
+              className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn xếp hạng độ tuổi
-              </option>
+              <option>Chọn xếp hạng độ tuổi</option>
               <option value='P - Phổ biến'>P - Phổ biến</option>
               <option value='K - Dành cho trẻ em'>K - Dành cho trẻ em</option>
               <option value='C13 - Cấm khán giả dưới 13 tuổi'>
@@ -505,7 +501,6 @@ const CreateMovie = () => {
             </select>
           </div>
 
-          {/* trailer url */}
           <FormInputGroup
             register={register}
             errors={errors}

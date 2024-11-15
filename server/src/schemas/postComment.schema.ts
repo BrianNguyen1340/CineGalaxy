@@ -3,8 +3,8 @@ import { Document, model, Types, Schema } from 'mongoose'
 export type PostCommentType = Document & {
   readonly _id: Types.ObjectId
   content: string
-  postId: Types.ObjectId
-  userId: Types.ObjectId
+  post: Types.ObjectId
+  user: Types.ObjectId
   likes: Types.ObjectId[]
   numberOfLikes: number
 }
@@ -16,12 +16,12 @@ const postCommentSchema = new Schema<PostCommentType>(
       required: true,
       trim: true,
     },
-    postId: {
+    post: {
       type: Schema.Types.ObjectId,
       ref: 'Post',
       required: true,
     },
-    userId: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,

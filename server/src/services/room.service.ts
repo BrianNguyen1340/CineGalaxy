@@ -17,6 +17,7 @@ const handleCreate = async (
 }> => {
   try {
     const checkExist = await roomModel.findOne({ name, cinema })
+
     if (checkExist) {
       return {
         success: false,
@@ -72,6 +73,7 @@ const handleGetOne = async (
 }> => {
   try {
     const request = await roomModel.findById(id).populate('cinema')
+
     if (!request) {
       return {
         success: false,
@@ -110,6 +112,7 @@ const handleGetAll = async (): Promise<{
 }> => {
   try {
     const request = await roomModel.find().populate('cinema')
+
     if (!request || request.length === 0) {
       return {
         success: false,
@@ -155,6 +158,7 @@ const handleUpdate = async (
 }> => {
   try {
     const room = await roomModel.findById(id)
+
     if (!room) {
       return {
         success: false,
@@ -168,6 +172,7 @@ const handleUpdate = async (
       cinema,
       _id: { $ne: id },
     })
+
     if (checkExist) {
       return {
         success: false,
@@ -191,6 +196,7 @@ const handleUpdate = async (
         new: true,
       },
     )
+    
     if (!request) {
       return {
         success: false,

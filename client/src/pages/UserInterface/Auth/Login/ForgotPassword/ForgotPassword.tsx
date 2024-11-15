@@ -12,17 +12,13 @@ import useTitle from '~/hooks/useTitle'
 
 const ForgotPassword = () => {
   useTitle('Quên mật khẩu')
-
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
-
   if (isAuthenticated && user) {
     return <Navigate to={paths.userPaths.home} />
   }
-
   const isAuthorized =
     isAuthenticated &&
     (user?.role === 0 || user?.role === 1 || user?.role === 2)
-
   if (isAuthorized) {
     return <Navigate to={paths.dashboardPaths.dashboard} replace />
   }
@@ -46,12 +42,11 @@ const ForgotPassword = () => {
     try {
       const { email } = reqBody
       nProgress.start()
-
       const response = await forgotPasswordApi({ email }).unwrap()
       Swal.fire('Thành công', response.message, 'success')
       navigate(paths.userPaths.resetPassword)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }

@@ -15,6 +15,7 @@ import { useGetCinemaComplexesQuery } from '~/services/cinemaComplex.service'
 import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
 import useTitle from '~/hooks/useTitle'
+import { CinemaComplexType } from '~/types/cinemaComplex.type'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().trim().required('Tên rạp là bắt buộc'),
@@ -26,9 +27,7 @@ const validationSchema = Yup.object().shape({
 
 const UpdateCinema = () => {
   useTitle('Admin | Cập nhật rạp')
-
   const { id } = useParams()
-
   const navigate = useNavigate()
 
   const {
@@ -86,7 +85,6 @@ const UpdateCinema = () => {
   }> = async (reqBody) => {
     try {
       const { name, email, phone, address, cinemaComplex } = reqBody
-
       const response = await updateApi({
         id,
         name,
@@ -95,28 +93,25 @@ const UpdateCinema = () => {
         address,
         cinemaComplex,
       }).unwrap()
-
       Swal.fire('Thành công', response.message, 'success')
-
       navigate(paths.dashboardPaths.managements.cinemas.list)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
   }
 
   let content
-
   if (isLoadingCinema || isLoadingCinemaComplexes)
     content = <div>Loading...</div>
-
   if (isSuccessCinema && isSuccessCinemaComplexes) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
         <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
           cập nhật rạp
         </div>
+        
         <form
           onSubmit={handleSubmit(handleUpdate)}
           className='mx-auto w-[500px]'
@@ -131,6 +126,7 @@ const UpdateCinema = () => {
             id='name'
             name='name'
           />
+          
           <FormInputGroup
             register={register}
             errors={errors}
@@ -148,6 +144,7 @@ const UpdateCinema = () => {
             type='text'
             name='email'
           />
+
           <FormInputGroup
             register={register}
             errors={errors}
@@ -161,6 +158,7 @@ const UpdateCinema = () => {
             type='text'
             name='address'
           />
+
           <FormInputGroup
             register={register}
             errors={errors}
@@ -174,8 +172,12 @@ const UpdateCinema = () => {
             type='text'
             name='phone'
           />
-          <div className='mb-5 flex flex-col gap-1'>
-            <label htmlFor='cinemaComplex' className='font-semibold capitalize'>
+
+          <div className='mb-5 flex flex-col'>
+            <label
+              htmlFor='cinemaComplex'
+              className='mb-1 font-semibold capitalize'
+            >
               cụm rạp
             </label>
             <select
@@ -184,16 +186,19 @@ const UpdateCinema = () => {
               })}
               id='cinemaComplex'
               name='cinemaComplex'
-              className='p-2'
+              className='p-2 capitalize'
             >
-              <option value=''>Chọn cụm rạp</option>
-              {cinemaComplexes?.data?.map((item: any) => (
-                <option key={item?._id} value={item?._id}>
-                  {item?.name}
-                </option>
-              ))}
+              <option>Chọn cụm rạp</option>
+              {cinemaComplexes?.data?.map(
+                (item: CinemaComplexType, index: number) => (
+                  <option key={index} value={item._id}>
+                    {item?.name}
+                  </option>
+                ),
+              )}
             </select>
           </div>
+
           <button
             type='submit'
             disabled={isLoadingUpdate ? true : false}

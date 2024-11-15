@@ -6,13 +6,13 @@ import ReactModal from 'react-modal'
 
 import { useGetMovieQuery } from '~/services/movie.service'
 import { paths } from '~/utils/paths'
+import { MovieType } from '~/types/movie.type'
 import useTitle from '~/hooks/useTitle'
 
 ReactModal.setAppElement('#root')
 
 const MovieDetails = () => {
   useTitle('Chi tiết phim')
-
   const { id } = useParams()
 
   const {
@@ -21,6 +21,7 @@ const MovieDetails = () => {
     isSuccess: isSuccessMovie,
     refetch: refetchMovie,
   } = useGetMovieQuery(id)
+  console.log(movie)
 
   useEffect(() => {
     refetchMovie()
@@ -31,10 +32,13 @@ const MovieDetails = () => {
   const openModal = () => setIsOpen(true)
   const closeModal = () => setIsOpen(false)
 
+  const currentDate = new Date()
+
+  const upcomingMovie =
+    new Date(movie?.data?.releaseDate).getTime() > currentDate.getTime()
+
   let content
-
   if (isLoadingMovie) content = <div>Loading...</div>
-
   if (isSuccessMovie) {
     content = (
       <div className='h-fit w-full'>
@@ -95,13 +99,17 @@ const MovieDetails = () => {
                   className='w-[220px] object-cover'
                 />
               </div>
-              <button className='mt-5 w-full bg-black text-base font-semibold capitalize text-white transition duration-500 hover:opacity-80'>
-                <Link to={paths.userPaths.showtimes} className='block p-4'>
-                  đặt vé
-                </Link>
-              </button>
+              {upcomingMovie ? (
+                <></>
+              ) : (
+                <button className='mt-3 w-full bg-[#ef233c] text-base font-semibold capitalize text-white transition duration-500 hover:opacity-80'>
+                  <Link to={paths.userPaths.showtimes} className='block p-4'>
+                    đặt vé
+                  </Link>
+                </button>
+              )}
             </div>
-            <div className='flex w-full flex-col gap-3'>
+            <div className='flex w-full flex-col gap-3 text-sm'>
               <div className='text-2xl font-bold uppercase'>
                 {movie?.data?.name}
               </div>
@@ -118,10 +126,10 @@ const MovieDetails = () => {
               </div>
               <div className='flex items-center gap-1 capitalize'>
                 <strong>Thể loại:</strong>
-                {movie?.data?.genres?.map((item: any, index: number) => (
+                {movie?.data?.genres?.map((item: MovieType, index: number) => (
                   <span key={index}>
                     {item?.name}
-                    {index < movie.data.genres.length - 1 ? ' / ' : ''}
+                    {index < movie?.data?.genres.length - 1 ? ' / ' : ''}
                   </span>
                 ))}
               </div>
@@ -140,10 +148,12 @@ const MovieDetails = () => {
             </div>
           </div>
           <div className='mt-12'>
-            <div className='mb-5 text-2xl font-semibold capitalize'>
+            <div className='mb-5 text-center text-2xl font-semibold capitalize'>
               tóm tắt
             </div>
-            <div className='text-[#333]'>{movie?.data?.description}</div>
+            <div className='text-sm text-[#333]'>
+              {movie?.data?.description}
+            </div>
           </div>
         </div>
       </div>

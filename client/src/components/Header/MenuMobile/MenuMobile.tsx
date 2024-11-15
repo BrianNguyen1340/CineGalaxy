@@ -16,7 +16,7 @@ const MenuMobile: React.FC<MenuMobileProps> = ({ className }) => {
 
   return (
     <div
-      className={`${className} absolute left-0 top-[100%] z-20 mt-[1px] h-fit w-full bg-white 1000px:hidden`}
+      className={`${className} absolute left-0 top-[100%] z-20 mt-0.5 h-fit w-full bg-white 1000px:hidden`}
     >
       <ul>
         <motion.li

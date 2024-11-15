@@ -17,7 +17,12 @@ import {
   useGetShowtimeQuery,
 } from '~/services/showtime.service'
 import { paths } from '~/utils/paths'
+import { RoomType } from '~/types/room.type'
+import { CinemaType } from '~/types/cinema.type'
+import { CinemaComplexType } from '~/types/cinemaComplex.type'
+
 import useTitle from '~/hooks/useTitle'
+import { MovieType } from '~/types/movie.type'
 
 const validationSchema = Yup.object().shape({
   date: Yup.date().required('Ngày chiếu là bắt buộc'),
@@ -113,24 +118,25 @@ const UpdateShowtime = () => {
   ])
 
   useEffect(() => {
-    if (showtime) {
-      setValue('date', showtime.data.date)
-      setSelectedDate(showtime.data.date)
-      setSelectedTimeStart(showtime.data.timeStart)
-      setSelectedTimeEnd(showtime.data.timeEnd)
-      setValue('cinemaComplex', showtime.data.cinemaComplex._id)
-      setValue('cinema', showtime.data.cinema._id)
-      setValue('room', showtime.data.room._id)
-      setValue('movie', showtime.data.movie._id)
-      setSelectedCinemaComplex(showtime.data.cinemaComplex._id)
-      setSelectedCinema(showtime.data.cinema._id)
+    if (showtime?.data) {
+      setValue('date', showtime?.data?.date)
+      setSelectedDate(showtime?.data?.date)
+      setSelectedTimeStart(showtime?.data?.timeStart)
+      setSelectedTimeEnd(showtime?.data?.timeEnd)
+      setValue('room', showtime?.data?.room?._id)
+      setValue('movie', showtime?.data?.movie?._id)
+      setValue('cinemaComplex', showtime?.data?.cinemaComplex?._id)
+      setValue('cinema', showtime?.data?.cinema?._id)
+      setSelectedCinemaComplex(showtime?.data?.cinemaComplex?._id)
+      setSelectedCinema(showtime?.data?.cinema?._id)
     }
   }, [showtime, setValue])
 
   useEffect(() => {
-    if (selectedCinemaComplex && cinemas) {
-      const filtered = cinemas.data.filter(
-        (cinema: any) => cinema.cinemaComplex._id === selectedCinemaComplex,
+    if (selectedCinemaComplex && cinemas?.data) {
+      const filtered = cinemas?.data?.filter(
+        (cinema: CinemaType) =>
+          cinema.cinemaComplex._id === selectedCinemaComplex,
       )
       setFilteredCinemas(filtered)
     } else {
@@ -144,8 +150,8 @@ const UpdateShowtime = () => {
 
   useEffect(() => {
     if (selectedCinema && rooms) {
-      const filtered = rooms.data.filter(
-        (room: any) => room.cinema._id === selectedCinema,
+      const filtered = rooms?.data?.filter(
+        (room: RoomType) => room.cinema._id === selectedCinema,
       )
       setFilteredRooms(filtered)
     } else {
@@ -171,10 +177,8 @@ const UpdateShowtime = () => {
   }> = async (reqBody) => {
     try {
       nProgress.start()
-
       const { date, timeStart, timeEnd, movie, room, cinema, cinemaComplex } =
         reqBody
-
       const response = await updateApi({
         id,
         date,
@@ -185,19 +189,16 @@ const UpdateShowtime = () => {
         cinema,
         cinemaComplex,
       }).unwrap()
-
       Swal.fire('Thành công!', response.message, 'success')
-
       navigate(paths.dashboardPaths.managements.showtimes.list)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
   }
 
   let content
-
   if (
     isLoadingShowtime ||
     isLoadingMovies ||
@@ -206,7 +207,6 @@ const UpdateShowtime = () => {
     isLoadingCimemaComplexes
   )
     content = <div>Loading...</div>
-
   if (
     isSuccessShowtime &&
     isSuccessMovies &&
@@ -219,11 +219,12 @@ const UpdateShowtime = () => {
         <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
           cập nhật suất chiếu
         </div>
+
         <form
           onSubmit={handleSubmit(handleUpdate)}
           className='mx-auto w-[500px]'
         >
-          <div className='mb-6 flex flex-col'>
+          <div className='mb-5 flex flex-col'>
             <label
               htmlFor='cinemaComplex'
               className='mb-1 font-semibold capitalize'
@@ -239,18 +240,14 @@ const UpdateShowtime = () => {
               onChange={(e) => handleCinemaComplexClick(e.target.value)}
               className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn cụm rạp
-              </option>
-              {cinemaComplexes?.data?.map((cinemaComplex: any) => (
-                <option
-                  value={cinemaComplex?._id}
-                  key={cinemaComplex?._id}
-                  className='capitalize'
-                >
-                  {cinemaComplex?.name}
-                </option>
-              ))}
+              <option>Chọn cụm rạp</option>
+              {cinemaComplexes?.data?.map(
+                (item: CinemaComplexType, index: number) => (
+                  <option key={index} value={item._id} className='capitalize'>
+                    {item.name}
+                  </option>
+                ),
+              )}
             </select>
             {errors.cinemaComplex && (
               <div className='text-sm text-[red]'>
@@ -258,7 +255,8 @@ const UpdateShowtime = () => {
               </div>
             )}
           </div>
-          <div className='mb-6 flex flex-col'>
+
+          <div className='mb-5 flex flex-col'>
             <label htmlFor='cinema' className='mb-1 font-semibold capitalize'>
               rạp
             </label>
@@ -271,16 +269,10 @@ const UpdateShowtime = () => {
               onChange={(e) => handleCinemaClick(e.target.value)}
               className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn rạp
-              </option>
-              {filteredCinemas?.map((cinema: any) => (
-                <option
-                  key={cinema?._id}
-                  value={cinema?._id}
-                  className='capitalize'
-                >
-                  {cinema?.name}
+              <option>Chọn rạp</option>
+              {filteredCinemas?.map((cinema: CinemaType, index: number) => (
+                <option key={index} value={cinema._id} className='capitalize'>
+                  {cinema.name}
                 </option>
               ))}
             </select>
@@ -288,7 +280,8 @@ const UpdateShowtime = () => {
               <div className='text-sm text-[red]'>{errors.cinema.message}</div>
             )}
           </div>
-          <div className='mb-6 flex flex-col'>
+
+          <div className='mb-5 flex flex-col'>
             <label htmlFor='room' className='mb-1 font-semibold capitalize'>
               phòng
             </label>
@@ -299,18 +292,11 @@ const UpdateShowtime = () => {
               id='room'
               name='room'
               className='p-2 capitalize'
-              defaultValue={showtime?.data?.room?._id}
             >
-              <option value='' aria-hidden='true'>
-                Chọn phòng
-              </option>
-              {filteredRooms?.map((room: any) => (
-                <option
-                  value={room?._id}
-                  key={room?._id}
-                  className='capitalize'
-                >
-                  {room?.name}
+              <option>Chọn phòng</option>
+              {filteredRooms?.map((room: RoomType, index: number) => (
+                <option key={index} value={room._id} className='capitalize'>
+                  {room.name}
                 </option>
               ))}
             </select>
@@ -318,7 +304,8 @@ const UpdateShowtime = () => {
               <div className='text-sm text-[red]'>{errors.room.message}</div>
             )}
           </div>
-          <div className='mb-6 flex flex-col'>
+
+          <div className='mb-5 flex flex-col'>
             <label htmlFor='movie' className='mb-1 font-semibold capitalize'>
               phim
             </label>
@@ -328,18 +315,16 @@ const UpdateShowtime = () => {
               })}
               id='movie'
               name='movie'
-              className='p-2'
+              className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn phim
-              </option>
-              {movies?.data?.map((item: any) => (
+              <option>Chọn phim</option>
+              {movies?.data?.map((item: MovieType, index: number) => (
                 <option
-                  value={item?._id}
-                  key={item?._id}
+                  key={index}
+                  value={item._id}
                   className='text-sm font-semibold capitalize'
                 >
-                  {item?.name}
+                  {item.name}
                 </option>
               ))}
             </select>
@@ -347,7 +332,8 @@ const UpdateShowtime = () => {
               <div className='text-sm text-[red]'>{errors.movie.message}</div>
             )}
           </div>
-          <div className='mb-6 flex flex-col'>
+
+          <div className='mb-5 flex flex-col'>
             <label htmlFor='date' className='mb-1 font-semibold capitalize'>
               ngày chiếu
             </label>
@@ -366,7 +352,8 @@ const UpdateShowtime = () => {
               <div className='text-sm text-[red]'>{errors.date.message}</div>
             )}
           </div>
-          <div className='mb-6 flex flex-col'>
+
+          <div className='mb-5 flex flex-col'>
             <label
               htmlFor='timeStart'
               className='mb-1 font-semibold capitalize'
@@ -393,7 +380,8 @@ const UpdateShowtime = () => {
               </div>
             )}
           </div>
-          <div className='mb-6 flex flex-col'>
+
+          <div className='mb-5 flex flex-col'>
             <label htmlFor='timeEnd' className='mb-1 font-semibold capitalize'>
               giờ bắt đầu suất chiếu
             </label>
@@ -415,6 +403,7 @@ const UpdateShowtime = () => {
               <div className='text-sm text-[red]'>{errors.timeEnd.message}</div>
             )}
           </div>
+          
           <button
             type='submit'
             disabled={isLoadingUpdate ? true : false}

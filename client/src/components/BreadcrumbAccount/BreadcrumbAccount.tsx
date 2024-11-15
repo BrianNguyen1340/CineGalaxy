@@ -5,12 +5,13 @@ import { paths } from '~/utils/paths'
 
 const BreadcrumbAccount = () => {
   const location = useLocation()
+
   const pathnames = location.pathname.split('/').filter((x) => x)
 
   const breadcrumbNameMap: { [key: string]: string } = {
     profile: 'thông tin tài khoản',
   }
-
+  
   const formatBreadcrumbText = (text: string) => {
     return breadcrumbNameMap[text] || text.replace(/-/g, ' ')
   }
@@ -29,7 +30,6 @@ const BreadcrumbAccount = () => {
         {pathnames.map((name, index) => {
           const routeTo = `/${pathnames.slice(0, index + 1).join('/')}`
           const isLast = index === pathnames.length - 1
-
           return (
             <React.Fragment key={name}>
               <li

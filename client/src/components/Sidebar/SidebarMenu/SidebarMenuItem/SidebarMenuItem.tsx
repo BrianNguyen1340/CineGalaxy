@@ -25,7 +25,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
 
   return (
     <Link
-      className={`${isSelected && 'selected bg-[#fff6f6]'} flex w-full items-center justify-start gap-4 overflow-hidden rounded-[6px] p-2 font-semibold text-gray-800 transition duration-300 hover:bg-[#fff6f6]`}
+      className={`${isSelected && 'selected bg-[#fff6f6]'} flex w-full items-center justify-start gap-4 overflow-hidden rounded p-2 font-semibold text-gray-800 transition duration-300 hover:bg-[#fff6f6]`}
       title={title}
       to={path}
       onClick={onSelect}
@@ -34,7 +34,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
         {icon
           ? icon
           : spanTitle && (
-              <div className='flex h-[30px] w-[30px] items-center justify-center rounded-[4px] border-2 border-[#ccc] text-center font-semibold capitalize shadow-md'>
+              <div className='flex h-7 w-7 items-center justify-center rounded border-2 border-[#ccc] text-center font-semibold capitalize shadow-md'>
                 {spanTitle}
               </div>
             )}

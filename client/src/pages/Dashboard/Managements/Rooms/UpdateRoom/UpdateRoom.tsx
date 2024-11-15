@@ -12,6 +12,7 @@ import { useUpdateRoomMutation, useGetRoomQuery } from '~/services/room.service'
 import { useGetCinemasQuery } from '~/services/cinema.service'
 import { FormInputGroup } from '~/components'
 import useTitle from '~/hooks/useTitle'
+import { CinemaType } from '~/types/cinema.type'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().trim().required('Tên phòng là bắt buộc'),
@@ -23,9 +24,7 @@ const validationSchema = Yup.object().shape({
 
 const UpdateRoom = () => {
   useTitle('Admin | Cập nhật phòng')
-
   const { id } = useParams()
-
   const navigate = useNavigate()
 
   const {
@@ -91,22 +90,18 @@ const UpdateRoom = () => {
         screen,
         cinema,
       }).unwrap()
-
       Swal.fire('Thành công', response.message, 'success')
-
       navigate(paths.dashboardPaths.managements.rooms.list)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
   }
 
   let content
-
   if (isLoadingRoom || isLoadingUpdate || isLoadingCinemas)
     content = <div>Loading...</div>
-
   if (isSuccessRoom || isSuccessCinemas) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
@@ -130,6 +125,7 @@ const UpdateRoom = () => {
             type='text'
             name='name'
           />
+
           <FormInputGroup
             register={register}
             errors={errors}
@@ -147,21 +143,9 @@ const UpdateRoom = () => {
             type='text'
             name='opacity'
           />
-          <div
-            style={{
-              marginBottom: '25px',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <label
-              htmlFor='status'
-              style={{
-                textTransform: 'capitalize',
-                fontWeight: 700,
-                marginBottom: '5px',
-              }}
-            >
+
+          <div className='mb-5 flex flex-col'>
+            <label htmlFor='status' className='mb-1 font-semibold capitalize'>
               tình trạng
             </label>
             <select
@@ -170,30 +154,16 @@ const UpdateRoom = () => {
               })}
               id='status'
               name='status'
-              style={{ padding: '8px', outline: 'none' }}
+              className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn tình trạng
-              </option>
+              <option>Chọn tình trạng</option>
               <option value='có sẵn'>có sẵn</option>
               <option value='bảo trì'>bảo trì</option>
             </select>
           </div>
-          <div
-            style={{
-              marginBottom: '25px',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <label
-              htmlFor='screen'
-              style={{
-                textTransform: 'capitalize',
-                fontWeight: 700,
-                marginBottom: '5px',
-              }}
-            >
+
+          <div className='mb-5 flex flex-col'>
+            <label htmlFor='screen' className='mb-1 font-semibold capitalize'>
               loại màn hình
             </label>
             <select
@@ -202,27 +172,16 @@ const UpdateRoom = () => {
               })}
               id='screen'
               name='screen'
-              style={{ padding: '8px', outline: 'none' }}
+              className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn loại màn hình
-              </option>
+              <option>Chọn loại màn hình</option>
               <option value='2D'>2D</option>
               <option value='3D'>3D</option>
             </select>
           </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '5px',
-              marginBottom: '20px',
-            }}
-          >
-            <label
-              htmlFor=''
-              style={{ textTransform: 'capitalize', fontWeight: 700 }}
-            >
+
+          <div className='mb-5 flex flex-col'>
+            <label htmlFor='cinema' className='mb-1 font-semibold capitalize'>
               rạp
             </label>
             <select
@@ -231,16 +190,17 @@ const UpdateRoom = () => {
               })}
               id='cinema'
               name='cinema'
-              style={{ padding: '10px', outline: 'none' }}
+              className='p-2 capitalize'
             >
-              <option value=''>Chọn rạp</option>
-              {cinemas?.data?.map((item: any) => (
-                <option key={item?._id} value={item?._id}>
-                  {item?.name}
+              <option>Chọn rạp</option>
+              {cinemas?.data?.map((item: CinemaType, index: number) => (
+                <option key={index} value={item._id}>
+                  {item.name}
                 </option>
               ))}
             </select>
           </div>
+
           <button
             type='submit'
             disabled={isLoadingUpdate ? true : false}

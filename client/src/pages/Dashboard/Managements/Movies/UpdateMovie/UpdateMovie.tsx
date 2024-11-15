@@ -27,6 +27,7 @@ import {
 } from '~/services/movie.service'
 import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
+import { GenreType } from '~/types/genre.type'
 import useTitle from '~/hooks/useTitle'
 
 const validationSchema = Yup.object().shape({
@@ -46,11 +47,8 @@ const validationSchema = Yup.object().shape({
 
 const UpdateMovie = () => {
   useTitle('Admin | Cập nhật phim')
-
   const { id } = useParams()
-
   const navigate = useNavigate()
-
   const animatedComponents = makeAnimated()
 
   const {
@@ -94,8 +92,6 @@ const UpdateMovie = () => {
     refetchMovie()
   }, [refetchGenres, refetchMovie])
 
-  const [updateApi, { isLoading: isLoadingUpdate }] = useUpdateMovieMutation()
-
   const [releaseDate, setReleaseDate] = useState<Date>()
 
   const handleDateChange = (date: Date) => {
@@ -112,16 +108,15 @@ const UpdateMovie = () => {
       setValue('name', movie?.data?.name)
       setValue('description', movie?.data?.description)
       setValue('director', movie?.data?.director)
-
-      const movieReleaseDate = new Date(movie?.data?.releaseDate)
-      setReleaseDate(movieReleaseDate)
-
-      setValue('releaseDate', movieReleaseDate)
       setValue('duration', movie?.data?.duration)
       setValue('trailer', movie?.data?.trailer)
       setValue('movieRating', movie?.data?.movieRating)
       setValue('subtitle', movie?.data?.subtitle)
       setValue('movieFormat', movie?.data?.movieFormat)
+
+      const movieReleaseDate = new Date(movie?.data?.releaseDate)
+      setReleaseDate(movieReleaseDate)
+      setValue('releaseDate', movieReleaseDate)
 
       setValue('poster', movie?.data?.poster)
       setPosterURL(movie?.data?.poster)
@@ -129,11 +124,10 @@ const UpdateMovie = () => {
       setValue('banner', movie?.data?.banner)
       setBannerURL(movie?.data?.banner)
 
-      const defaultGenres = movie?.data?.genres?.map((genre: any) => ({
+      const defaultGenres = movie?.data?.genres?.map((genre: GenreType) => ({
         value: genre._id,
         label: genre.name,
       }))
-
       setSelectedGenres(defaultGenres)
       setValue('genres', defaultGenres)
     }
@@ -154,14 +148,11 @@ const UpdateMovie = () => {
         setBannerUploadError('Vui lòng chọn ảnh!')
         return
       }
-
       setBannerUploadError(null)
-
       const storage = getStorage(app)
       const fileName = new Date().getTime() + '-' + banner.name
       const storageRef = ref(storage, `banners/${fileName}`)
       const uploadTask = uploadBytesResumable(storageRef, banner)
-
       uploadTask.on(
         'state_changed',
         (snapshot) => {
@@ -201,14 +192,11 @@ const UpdateMovie = () => {
         setPosterUploadError('Vui lòng chọn ảnh!')
         return
       }
-
       setPosterUploadError(null)
-
       const storage = getStorage(app)
       const fileName = new Date().getTime() + '-' + poster.name
       const storageRef = ref(storage, `posters/${fileName}`)
       const uploadTask = uploadBytesResumable(storageRef, poster)
-
       uploadTask.on(
         'state_changed',
         (snapshot) => {
@@ -233,6 +221,8 @@ const UpdateMovie = () => {
     }
   }
 
+  const [updateApi, { isLoading: isLoadingUpdate }] = useUpdateMovieMutation()
+
   const handleUpdate: SubmitHandler<{
     poster: string
     banner: string
@@ -249,7 +239,6 @@ const UpdateMovie = () => {
   }> = async (reqBody) => {
     try {
       nProgress.start()
-
       const {
         name,
         description,
@@ -261,7 +250,6 @@ const UpdateMovie = () => {
         subtitle,
         movieFormat,
       } = reqBody
-
       const response = await updateApi({
         id,
         name,
@@ -275,33 +263,30 @@ const UpdateMovie = () => {
         movieFormat,
         genres: selectedGenres.map((genre) => genre.value),
         poster: posterURL,
+        banner: bannerURL,
       }).unwrap()
-
       Swal.fire('Thành công', response.message, 'success')
-
       navigate(paths.dashboardPaths.managements.movies.list)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
   }
 
   let content
-
   if (isLoadingMovie || isLoadingGenres) content = <div>Loading...</div>
-
   if (isSuccessMovie && isSuccessGenres) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
         <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
           cập nhật phim
         </div>
+
         <form
           onSubmit={handleSubmit(handleUpdate)}
           className='mx-auto w-[500px]'
         >
-          {/* name */}
           <FormInputGroup
             register={register}
             errors={errors}
@@ -317,12 +302,8 @@ const UpdateMovie = () => {
             icon={<FaRegStar color='red' />}
           />
 
-          {/* genres */}
-          <div style={{ marginBottom: '20px' }}>
-            <label
-              htmlFor='genres'
-              className='block gap-1 font-semibold capitalize'
-            >
+          <div className='mb-5 flex flex-col'>
+            <label htmlFor='genres' className='mb-1 font-semibold capitalize'>
               thể loại phim
             </label>
             <Select
@@ -344,7 +325,6 @@ const UpdateMovie = () => {
             />
           </div>
 
-          {/* director */}
           <FormInputGroup
             register={register}
             errors={errors}
@@ -359,10 +339,11 @@ const UpdateMovie = () => {
             name='director'
             icon={<FaRegStar color='red' />}
           />
+
           <div className='mb-5'>
             <label
               htmlFor='description'
-              className='mb-1 block font-semibold capitalize'
+              className='mb-1 font-semibold capitalize'
             >
               mô tả
             </label>
@@ -377,9 +358,11 @@ const UpdateMovie = () => {
             />
           </div>
 
-          {/* releaseDate */}
           <div className='mb-5'>
-            <label htmlFor='releaseDate' className='font-semibold capitalize'>
+            <label
+              htmlFor='releaseDate'
+              className='mb-1 font-semibold capitalize'
+            >
               Chọn ngày công chiếu
             </label>
             <DayPicker
@@ -390,7 +373,6 @@ const UpdateMovie = () => {
             />
           </div>
 
-          {/* duration */}
           <FormInputGroup
             register={register}
             errors={errors}
@@ -410,7 +392,6 @@ const UpdateMovie = () => {
             icon={<FaRegStar color='red' />}
           />
 
-          {/* poster */}
           <div className='mb-5 flex flex-col gap-1'>
             <label className='font-semibold capitalize'>poster</label>
             <label htmlFor='poster' className='cursor-pointer capitalize'>
@@ -453,7 +434,7 @@ const UpdateMovie = () => {
             </button>
             {posterUploadError && <div>{posterUploadError}</div>}
           </div>
-          {/* banner */}
+
           <div className='mb-5 flex flex-col gap-1'>
             <label className='font-semibold capitalize'>poster</label>
             <label htmlFor='poster' className='cursor-pointer capitalize'>
@@ -497,7 +478,6 @@ const UpdateMovie = () => {
             {bannerUploadError && <div>{bannerUploadError}</div>}
           </div>
 
-          {/* movie format */}
           <div className='mb-5 flex flex-col'>
             <label
               htmlFor='movieFormat'
@@ -511,25 +491,15 @@ const UpdateMovie = () => {
               })}
               id='movieFormat'
               name='movieFormat'
-              className='p-2'
+              className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn định dạng phim
-              </option>
+              <option>Chọn định dạng phim</option>
               <option value='2D'>2D</option>
               <option value='3D'>3D</option>
             </select>
           </div>
 
-          {/* subtitle */}
-          <div
-            style={{
-              marginBottom: '25px',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-            className='mb-6 flex flex-col'
-          >
+          <div className='mb-5 flex flex-col'>
             <label htmlFor='subtitle' className='mb-1 font-semibold capitalize'>
               phụ đề
             </label>
@@ -539,19 +509,16 @@ const UpdateMovie = () => {
               })}
               id='subtitle'
               name='subtitle'
-              className='p-2'
+              className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn phụ đề
-              </option>
+              <option>Chọn phụ đề</option>
               <option value='Thuyết minh'>Thuyết minh</option>
               <option value='Phụ đề'>Phụ đề</option>
               <option value='Lồng tiếng'>Lồng tiếng</option>
             </select>
           </div>
 
-          {/* movie rating */}
-          <div className='mb-6 flex flex-col'>
+          <div className='mb-5 flex flex-col'>
             <label
               htmlFor='movieRating'
               className='mb-1 font-semibold capitalize'
@@ -564,11 +531,9 @@ const UpdateMovie = () => {
               })}
               id='movieRating'
               name='movieRating'
-              className='p-2'
+              className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn xếp hạng độ tuổi
-              </option>
+              <option>Chọn xếp hạng độ tuổi</option>
               <option value='P - Phổ biến'>P - Phổ biến</option>
               <option value='K - Dành cho trẻ em'>K - Dành cho trẻ em</option>
               <option value='C13 - Cấm khán giả dưới 13 tuổi'>
@@ -583,7 +548,6 @@ const UpdateMovie = () => {
             </select>
           </div>
 
-          {/* trailer url */}
           <FormInputGroup
             register={register}
             errors={errors}
@@ -603,6 +567,7 @@ const UpdateMovie = () => {
             name='trailer'
             icon={<FaRegStar color='red' />}
           />
+
           <button
             type='submit'
             disabled={isLoadingUpdate ? true : false}

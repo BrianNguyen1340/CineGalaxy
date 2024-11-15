@@ -12,7 +12,7 @@ export const logEvents = async (
   const dateTime = format(new Date(), 'yyyyMMdd\tHH:mm:ss')
 
   const logItem = `${dateTime}\t${uuidv4()}\t${message}\n`
-
+  
   try {
     const logsDir = path.join(__dirname, '..', 'logs')
 
@@ -21,6 +21,7 @@ export const logEvents = async (
     }
 
     await fsPromises.appendFile(path.join(logsDir, logFileName), logItem)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     throw new Error(error.message)
   }

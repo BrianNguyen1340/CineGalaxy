@@ -2,7 +2,7 @@ import { Document, model, Types, Schema } from 'mongoose'
 
 export type PostType = Document & {
   readonly _id: Types.ObjectId
-  userId: Types.ObjectId
+  user: Types.ObjectId
   content: string
   title: string
   slug: string
@@ -11,7 +11,7 @@ export type PostType = Document & {
 
 const postSchema = new Schema<PostType>(
   {
-    userId: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,

@@ -5,7 +5,7 @@ const handleCreate = Joi.object({
 })
 
 const handleUpdate = Joi.object({
-  name: Joi.string().required().trim().optional(),
+  name: Joi.string().trim().optional(),
 })
 
 export const cinemaComplexValidation = {

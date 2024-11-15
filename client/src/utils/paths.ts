@@ -17,8 +17,8 @@ const userPaths = {
   pointsHistory: '/point-history',
   profile: '/profile',
   promotions: '/promotions',
-  selectSeats: '/select-seats',
   showtimes: '/showtimes',
+  showtimeDetails: '/showtime/:id',
   support: '/support',
   ticketPurchaseHistory: '/ticket-purchase-history',
   watchedMovies: '/watched-movies',
@@ -111,6 +111,18 @@ const dashboardPaths = {
       create: '/create-report',
       update: '/update-report/:id',
       delete: '/delete-report/:id',
+    },
+    productCategories: {
+      list: '/list-product-categories',
+      create: '/create-product-category',
+      update: '/update-product-category/:id',
+      delete: '/delete-product-category/:id',
+    },
+    products: {
+      list: '/list-products',
+      create: '/create-product',
+      update: '/update-product/:id',
+      delete: '/delete-product/:id',
     },
   },
   statistics: {

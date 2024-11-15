@@ -12,6 +12,7 @@ import { useGetSeatQuery, useUpdateSeatMutation } from '~/services/seat.service'
 import { useGetRoomsQuery } from '~/services/room.service'
 import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
+import { RoomType } from '~/types/room.type'
 import useTitle from '~/hooks/useTitle'
 
 const validationSchema = Yup.object().shape({
@@ -24,9 +25,7 @@ const validationSchema = Yup.object().shape({
 
 const UpdateSeat = () => {
   useTitle('Admin | Cập nhật ghế')
-
   const { id } = useParams()
-
   const navigate = useNavigate()
 
   const {
@@ -63,6 +62,7 @@ const UpdateSeat = () => {
       setValue('row', seat?.data?.row)
       setValue('number', seat?.data?.number)
       setValue('type', seat?.data?.type)
+      setValue('price', seat?.data?.price)
       setValue('room', seat?.data?.room?._id)
     }
   }, [seat, setValue])
@@ -78,33 +78,30 @@ const UpdateSeat = () => {
     row: string
     number: number
     type: string
+    price: number
     room: string
   }> = async (reqBody) => {
     try {
-      const { row, number, type, room } = reqBody
-
+      const { row, number, type, price, room } = reqBody
       const response = await updateApi({
         id,
         row,
         number,
         type,
+        price,
         room,
       }).unwrap()
-
       Swal.fire('Thành công', response.message, 'success')
-
       navigate(paths.dashboardPaths.managements.seats.list)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
   }
 
   let content
-
   if (isLoadingSeat || isLoadingRooms) content = <div>Loading...</div>
-
   if (isSuccessSeat && isSuccessRooms) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
@@ -115,21 +112,8 @@ const UpdateSeat = () => {
           onSubmit={handleSubmit(handleUpdate)}
           className='mx-auto w-[500px]'
         >
-          <div
-            style={{
-              marginBottom: '25px',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <label
-              htmlFor='subtitle'
-              style={{
-                textTransform: 'capitalize',
-                fontWeight: 700,
-                marginBottom: '5px',
-              }}
-            >
+          <div className='mb-5 flex flex-col'>
+            <label htmlFor='subtitle' className='mb-1 font-semibold capitalize'>
               hàng ghế
             </label>
             <select
@@ -138,11 +122,9 @@ const UpdateSeat = () => {
               })}
               id='row'
               name='row'
-              style={{ padding: '8px', outline: 'none' }}
+              className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn hàng ghế
-              </option>
+              <option>Chọn hàng ghế</option>
               <option value='A'>A</option>
               <option value='B'>B</option>
               <option value='C'>C</option>
@@ -156,6 +138,7 @@ const UpdateSeat = () => {
               <option value='J'>J</option>
             </select>
           </div>
+
           <FormInputGroup
             register={register}
             errors={errors}
@@ -174,21 +157,9 @@ const UpdateSeat = () => {
             name='number'
             icon={<FaRegStar color='red' />}
           />
-          <div
-            style={{
-              marginBottom: '25px',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <label
-              htmlFor='subtitle'
-              style={{
-                textTransform: 'capitalize',
-                fontWeight: 700,
-                marginBottom: '5px',
-              }}
-            >
+
+          <div className='mb-5 flex flex-col'>
+            <label htmlFor='subtitle' className='mb-1 font-semibold capitalize'>
               loại ghế
             </label>
             <select
@@ -197,18 +168,32 @@ const UpdateSeat = () => {
               })}
               id='type'
               name='type'
-              style={{ padding: '8px', outline: 'none' }}
+              className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn loại ghế
-              </option>
+              <option>Chọn loại ghế</option>
               <option value='Standard'>Standard</option>
               <option value='Vip'>Vip</option>
               <option value='Kid'>Kid</option>
               <option value='Couple'>Couple</option>
             </select>
           </div>
-          <div className='mb-6 flex flex-col'>
+
+          <FormInputGroup
+            register={register}
+            errors={errors}
+            validation={{
+              required: 'Vui lòng nhập giá tiền ghế!',
+            }}
+            labelChildren='giá tiền ghế'
+            htmlFor='price'
+            id='price'
+            placeholder='Vui lòng nhập giá tiền ghế'
+            type='text'
+            name='price'
+            icon={<FaRegStar color='red' />}
+          />
+
+          <div className='mb-5 flex flex-col'>
             <label htmlFor='subtitle' className='mb-1 font-semibold capitalize'>
               phòng
             </label>
@@ -218,18 +203,17 @@ const UpdateSeat = () => {
               })}
               id='room'
               name='room'
-              className='p-2'
+              className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn phòng
-              </option>
-              {rooms?.data?.map((room: any) => (
-                <option key={room._id} value={room._id}>
+              <option>Chọn phòng</option>
+              {rooms?.data?.map((room: RoomType, index: number) => (
+                <option key={index} value={room._id}>
                   {room.name} - {room.cinema.name}
                 </option>
               ))}
             </select>
           </div>
+
           <button
             type='submit'
             disabled={isLoadingUpdate ? true : false}

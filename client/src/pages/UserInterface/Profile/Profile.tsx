@@ -27,23 +27,17 @@ ReactModal.setAppElement('#root')
 
 const Profile = () => {
   useTitle('Thông tin cá nhân')
-
   const { user, isAuthenticated } = useAppSelector((state) => state.user)
-
   const isAuthorized =
     isAuthenticated &&
     (user?.role === 0 || user?.role === 1 || user?.role === 2)
-
   if (isAuthorized) {
     return <Navigate to={paths.dashboardPaths.dashboard} replace />
   }
 
   const dispatch = useAppDispatch()
 
-  const [updateApi] = useUpdateProfileMutation()
-
   const editorRef = useRef<AvatarEditor>(null)
-
   const [scale, setScale] = useState<number>(1)
 
   const [photo, setPhoto] = useState<File | null>(null)
@@ -71,22 +65,18 @@ const Profile = () => {
     setIsEditingName((prev) => !prev)
     setEditName((prev) => (prev === 'Chỉnh sửa' ? 'Hủy' : 'Chỉnh sửa'))
   }
-
   const handleEditEmail = () => {
     setIsEditingEmail((prev) => !prev)
     setEditEmail((prev) => (prev === 'Chỉnh sửa' ? 'Hủy' : 'Chỉnh sửa'))
   }
-
   const handleEditPhone = () => {
     setIsEditingPhone((prev) => !prev)
     setEditPhone((prev) => (prev === 'Chỉnh sửa' ? 'Hủy' : 'Chỉnh sửa'))
   }
-
   const handleEditGender = () => {
     setIsEditingGender((prev) => !prev)
     setEditGender((prev) => (prev === 'Chỉnh sửa' ? 'Hủy' : 'Chỉnh sửa'))
   }
-
   const handleEditAddress = () => {
     setIsEditingAddress((prev) => !prev)
     setEditAddress((prev) => (prev === 'Chỉnh sửa' ? 'Hủy' : 'Chỉnh sửa'))
@@ -103,11 +93,9 @@ const Profile = () => {
   }, [user])
 
   const [isOpenModal, setIsOpenModal] = useState(false)
-
   const openModal = () => {
     setIsOpenModal(true)
   }
-
   const closeModal = () => {
     setPhoto(null)
     setPhotoURL(null)
@@ -120,21 +108,17 @@ const Profile = () => {
   const handleToEditAvatar = () => {
     setShowFormEditAvatar(true)
   }
-
   const handleBack = () => {
     setShowFormEditAvatar(false)
     setPhoto(null)
   }
-
   const handleScaleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setScale(parseFloat(event.target.value))
   }
-
   const handleBackToEditAvatar = () => {
     setPhotoURL(null)
     setShowFormEditAvatar(true)
   }
-
   const handleClearFile = () => {
     setPhoto(null)
     setPhotoURL(null)
@@ -171,6 +155,8 @@ const Profile = () => {
     }
   }
 
+  const [updateApi] = useUpdateProfileMutation()
+
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -178,7 +164,7 @@ const Profile = () => {
       nProgress.start()
 
       const { data } = await updateApi({
-        id: user?.id,
+        id: user?._id,
         name,
         email,
         phone,

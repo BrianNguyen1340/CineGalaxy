@@ -22,7 +22,6 @@ const validationSchema = Yup.object().shape({
 
 const CreateAccount = () => {
   useTitle('Admin | Tạo tài khoản người dùng')
-
   const navigate = useNavigate()
 
   const {
@@ -41,13 +40,12 @@ const CreateAccount = () => {
 
   const password = watch('password')
 
-  const [createApi, { isLoading: isLoadingCreate }] = useCreateUserMutation()
-
   const [showHidePassword, setShowHidePassword] = useState<boolean>(false)
-
   const handleShowHidePassword = () => {
     setShowHidePassword((prevState) => !prevState)
   }
+
+  const [createApi, { isLoading: isLoadingCreate }] = useCreateUserMutation()
 
   const handleCreate: SubmitHandler<{
     email: string
@@ -57,16 +55,12 @@ const CreateAccount = () => {
   }> = async (reqBody) => {
     try {
       nProgress.start()
-
       const { email, name, password, role } = reqBody
-
       const response = await createApi({ email, name, password, role }).unwrap()
-
       Swal.fire('Thành công', response.message, 'success')
-
       navigate(paths.dashboardPaths.managements.accounts.list)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
@@ -77,6 +71,7 @@ const CreateAccount = () => {
       <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
         tạo tài khoản
       </div>
+      
       <form onSubmit={handleSubmit(handleCreate)} className='mx-auto w-[500px]'>
         <FormInputGroup
           register={register}
@@ -91,6 +86,7 @@ const CreateAccount = () => {
           type='text'
           name='name'
         />
+
         <FormInputGroup
           register={register}
           errors={errors}
@@ -108,6 +104,7 @@ const CreateAccount = () => {
           name='email'
           placeholder='example@.com'
         />
+
         <FormInputGroup
           register={register}
           errors={errors}
@@ -131,8 +128,9 @@ const CreateAccount = () => {
           placeholder='Vui lòng nhập mật khẩu'
         />
         <PasswordStrength password={password} />
-        <div className='my-5 flex flex-col gap-1'>
-          <label htmlFor='role' className='font-semibold'>
+
+        <div className='my-5 flex flex-col'>
+          <label htmlFor='role' className='mb-1 font-semibold capitalize'>
             Chọn vai trò người dùng
           </label>
           <select
@@ -141,17 +139,16 @@ const CreateAccount = () => {
             })}
             name='role'
             id='role'
-            className='rounded-lg border p-3 outline-none'
+            className='p-2 capitalize'
           >
-            <option value='Chọn vai trò' aria-hidden='true'>
-              Chọn vai trò
-            </option>
+            <option>Chọn vai trò</option>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
             <option value='3'>3</option>
           </select>
         </div>
+
         <button
           type='submit'
           disabled={isLoadingCreate ? true : false}

@@ -9,6 +9,7 @@ export type ShowtimeType = Document & {
   room: Types.ObjectId
   cinema: Types.ObjectId
   cinemaComplex: Types.ObjectId
+  hidden: boolean
 }
 
 const showtimeSchema = new Schema<ShowtimeType>(
@@ -44,6 +45,10 @@ const showtimeSchema = new Schema<ShowtimeType>(
       type: Schema.Types.ObjectId,
       ref: 'CinemaComplex',
       required: true,
+    },
+    hidden: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true },

@@ -9,6 +9,8 @@ import { movieRoute } from './movie.route'
 import { roomRoute } from './room.route'
 import { seatRoute } from './seat.route'
 import { showtimeRoute } from './showtime.route'
+import { productCategoryRoute } from './productCategory.route'
+import { productRoute } from './product.route'
 
 const router = Router()
 
@@ -22,6 +24,8 @@ export const initAPIRoutes = (app: Application) => {
   router.use('/room', roomRoute)
   router.use('/seat', seatRoute)
   router.use('/showtime', showtimeRoute)
+  router.use('/product-category', productCategoryRoute)
+  router.use('/product', productRoute)
 
   return app.use('/api/v1', router)
 }

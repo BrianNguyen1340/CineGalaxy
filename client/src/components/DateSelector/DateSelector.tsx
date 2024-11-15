@@ -1,6 +1,8 @@
 import { FC } from 'react'
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa'
 
+import { days, months } from '~/utils/dateTimes'
+
 type DateSelectorProps = {
   selectedDate?: Date
   onDateChange?: (date: Date) => void
@@ -10,23 +12,6 @@ const DateSelector: FC<DateSelectorProps> = ({
   selectedDate = new Date(),
   onDateChange = () => {},
 }) => {
-  const days = ['CN', 'Hai', 'Ba', 'Tư', 'Năm', 'Sáu', 'Bảy']
-
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ]
-
   const getWeekDays = (startDate: Date): Date[] => {
     const week: Date[] = []
     const dayOfWeek = startDate.getDay()
@@ -53,6 +38,7 @@ const DateSelector: FC<DateSelectorProps> = ({
     newDate.setDate(selectedDate.getDate() + direction * 7)
     onDateChange(newDate)
   }
+
   return (
     <div className='h-fit w-full border-b-[5px] border-t-[5px] border-[#dad2b4] py-4 text-center'>
       <div className='mb-4 flex items-center justify-center'>

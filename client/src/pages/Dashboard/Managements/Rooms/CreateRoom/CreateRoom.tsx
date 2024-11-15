@@ -10,6 +10,9 @@ import { useCreateRoomMutation } from '~/services/room.service'
 import { useGetCinemasQuery } from '~/services/cinema.service'
 import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
+import { useEffect } from 'react'
+import { CinemaType } from '~/types/cinema.type'
+import useTitle from '~/hooks/useTitle'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().trim().required('Tên phòng là bắt buộc'),
@@ -20,6 +23,7 @@ const validationSchema = Yup.object().shape({
 })
 
 const CreateRoom = () => {
+  useTitle('Admin | Tạo phòng')
   const navigate = useNavigate()
 
   const {
@@ -36,7 +40,16 @@ const CreateRoom = () => {
     resolver: yupResolver(validationSchema),
   })
 
-  const { data: cinemas, isLoading, isSuccess } = useGetCinemasQuery({})
+  const {
+    data: cinemas,
+    isLoading: isLoadingCinemas,
+    isSuccess: isSuccessCinemas,
+    refetch: refetchCinemas,
+  } = useGetCinemasQuery({})
+
+  useEffect(() => {
+    refetchCinemas()
+  }, [refetchCinemas])
 
   const [createApi, { isLoading: isLoadingCreate }] = useCreateRoomMutation()
 
@@ -50,7 +63,6 @@ const CreateRoom = () => {
     try {
       nProgress.start()
       const { name, opacity, status, screen, cinema } = reqBody
-
       const response = await createApi({
         name,
         opacity,
@@ -58,27 +70,24 @@ const CreateRoom = () => {
         screen,
         cinema,
       }).unwrap()
-
       Swal.fire('Thành công', response.message, 'success')
-
       navigate(paths.dashboardPaths.managements.rooms.list)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
   }
 
   let content
-
-  if (isLoading) content = <div>Loading...</div>
-
-  if (isSuccess) {
+  if (isLoadingCinemas) content = <div>Loading...</div>
+  if (isSuccessCinemas) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
         <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
           tạp phòng
         </div>
+
         <form
           onSubmit={handleSubmit(handleCreate)}
           className='mx-auto w-[500px]'
@@ -96,6 +105,7 @@ const CreateRoom = () => {
             type='text'
             name='name'
           />
+
           <FormInputGroup
             register={register}
             errors={errors}
@@ -113,21 +123,9 @@ const CreateRoom = () => {
             type='text'
             name='opacity'
           />
-          <div
-            style={{
-              marginBottom: '25px',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <label
-              htmlFor='status'
-              style={{
-                textTransform: 'capitalize',
-                fontWeight: 700,
-                marginBottom: '5px',
-              }}
-            >
+
+          <div className='mb-5 flex flex-col'>
+            <label htmlFor='status' className='mb-1 font-semibold capitalize'>
               tình trạng
             </label>
             <select
@@ -136,30 +134,16 @@ const CreateRoom = () => {
               })}
               id='status'
               name='status'
-              style={{ padding: '8px', outline: 'none' }}
+              className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn tình trạng
-              </option>
+              <option>Chọn tình trạng</option>
               <option value='có sẵn'>có sẵn</option>
               <option value='bảo trì'>bảo trì</option>
             </select>
           </div>
-          <div
-            style={{
-              marginBottom: '25px',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <label
-              htmlFor='screen'
-              style={{
-                textTransform: 'capitalize',
-                fontWeight: 700,
-                marginBottom: '5px',
-              }}
-            >
+
+          <div className='mb-5 flex flex-col'>
+            <label htmlFor='screen' className='mb-1 font-semibold capitalize'>
               loại màn hình
             </label>
             <select
@@ -168,27 +152,16 @@ const CreateRoom = () => {
               })}
               id='screen'
               name='screen'
-              style={{ padding: '8px', outline: 'none' }}
+              className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn loại màn hình
-              </option>
+              <option>Chọn loại màn hình</option>
               <option value='2D'>2D</option>
               <option value='3D'>3D</option>
             </select>
           </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '5px',
-              marginBottom: '20px',
-            }}
-          >
-            <label
-              htmlFor=''
-              style={{ textTransform: 'capitalize', fontWeight: 700 }}
-            >
+
+          <div className='mb-5 flex flex-col'>
+            <label htmlFor='cinema' className='mb-1 font-semibold capitalize'>
               rạp
             </label>
             <select
@@ -197,16 +170,17 @@ const CreateRoom = () => {
               })}
               id='cinema'
               name='cinema'
-              style={{ padding: '10px', outline: 'none' }}
+              className='p-2 capitalize'
             >
-              <option value=''>Chọn rạp</option>
-              {cinemas?.data?.map((item: any) => (
-                <option key={item?._id} value={item?._id}>
+              <option>Chọn rạp</option>
+              {cinemas?.data?.map((item: CinemaType, index: number) => (
+                <option key={index} value={item._id}>
                   {item?.name}
                 </option>
               ))}
             </select>
           </div>
+
           <button
             type='submit'
             disabled={isLoadingCreate ? true : false}

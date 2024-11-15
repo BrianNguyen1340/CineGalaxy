@@ -17,5 +17,15 @@ router.put(
   [authentication, isManager],
   showtimeController.handleUpdate,
 )
+router.put(
+  '/hide/:id',
+  [authentication, isManager],
+  showtimeController.handleHideShowtime,
+)
+router.put(
+  '/show/:id',
+  [authentication, isManager],
+  showtimeController.handleShowShowtime,
+)
 
 export const showtimeRoute = router

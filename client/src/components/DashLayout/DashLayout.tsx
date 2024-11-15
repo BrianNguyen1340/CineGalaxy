@@ -1,13 +1,8 @@
-import React from 'react'
 import { Outlet } from 'react-router-dom'
 
-type DashLayoutProps = {
-  openSidebar: boolean
-}
-
-const DashLayout: React.FC<DashLayoutProps> = ({ openSidebar }) => {
+const DashLayout = () => {
   return (
-    <div className={`dash-layout ${openSidebar ? 'sidebar-open' : ''}`}>
+    <div>
       <Outlet />
     </div>
   )

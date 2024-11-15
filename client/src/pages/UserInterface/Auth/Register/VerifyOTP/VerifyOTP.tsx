@@ -16,17 +16,13 @@ import useTitle from '~/hooks/useTitle'
 
 const VerifyOTP = () => {
   useTitle('OTP xác nhận tài khoản')
-
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
-
   if (isAuthenticated && user) {
     return <Navigate to={paths.userPaths.home} />
   }
-
   const isAuthorized =
     isAuthenticated &&
     (user?.role === 0 || user?.role === 1 || user?.role === 2)
-
   if (isAuthorized) {
     return <Navigate to={paths.dashboardPaths.dashboard} replace />
   }
@@ -43,25 +39,20 @@ const VerifyOTP = () => {
   } = useForm<{ code: number }>()
 
   const [code, setCode] = useState<string[]>(Array(8).fill(''))
-
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
-
   const [verifyOTPApi, { isLoading: isLoadingVerifyRegister }] =
     useVerifyOTPMutation()
-
   const [resendOTPApi, { isLoading: isLoadingResendOTP }] =
     useResendOTPMutation()
 
   const handleChange = async (index: number, value: string) => {
     const newCode = [...code]
-
     if (value && value.length > 1) {
       const pastedCode = value.slice(0, 8).split('')
       for (let i = 0; i < 8; i++) {
         newCode[i] = pastedCode[i] || ''
       }
       setCode(newCode)
-
       let lastFilledIndex = -1
       for (let i = newCode.length - 1; i >= 0; i--) {
         if (newCode[i] !== '') {
@@ -69,17 +60,14 @@ const VerifyOTP = () => {
           break
         }
       }
-
       const focusIndex = lastFilledIndex < 7 ? lastFilledIndex + 1 : 7
       inputRefs.current[focusIndex]?.focus()
     } else {
       newCode[index] = value
       setCode(newCode)
-
       if (value && index < 7) {
         inputRefs.current[index + 1]?.focus()
       }
-
       setValue('code', Number(newCode.join('')))
       await trigger('code')
     }
@@ -93,7 +81,6 @@ const VerifyOTP = () => {
 
   const handleVerifyOTP: SubmitHandler<{ code: number }> = async () => {
     const otpCode = code.join('')
-
     if (otpCode.length < 8) {
       setError('code', {
         type: 'manual',
@@ -101,21 +88,16 @@ const VerifyOTP = () => {
       })
       return
     }
-
     try {
       nProgress.start()
-
       const response = await verifyOTPApi({
         code: code.join(''),
       }).unwrap()
-
       Swal.fire('Thành công', response.message, 'success')
-
       localStorage.removeItem('email')
-
       navigate(paths.userPaths.login)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
@@ -123,25 +105,19 @@ const VerifyOTP = () => {
 
   const handleResendOTP = async () => {
     const email = localStorage.getItem('email')
-
     if (!email) {
       return
     }
-
     try {
       nProgress.start()
-
       const response = await resendOTPApi({
         email,
       }).unwrap()
-
       Swal.fire('Thành công', response.message, 'success')
-
       localStorage.removeItem('email')
-
       navigate(paths.userPaths.verifyOtp)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
@@ -159,8 +135,9 @@ const VerifyOTP = () => {
           Xác minh OTP của bạn
         </div>
         <p className='my-5'>Nhập 8 mã số đã được gửi tới email của bạn!</p>
+
         <form onSubmit={handleSubmit(handleVerifyOTP)}>
-          <div className='flex items-center justify-center gap-[10px]'>
+          <div className='flex items-center justify-center gap-3'>
             {code.map((digit, index) => (
               <input
                 {...register('code', {
@@ -185,6 +162,7 @@ const VerifyOTP = () => {
           {errors.code && typeof errors.code.message === 'string' && (
             <div className='mt-3 italic text-[red]'>{errors.code.message}</div>
           )}
+
           <button
             type='submit'
             className='mt-5 flex w-full cursor-pointer items-center justify-center rounded-[40px] bg-[#f97417] p-5 text-base font-semibold capitalize text-white transition duration-300 hover:opacity-80'
@@ -192,6 +170,7 @@ const VerifyOTP = () => {
             {isLoadingVerifyRegister ? 'Đang xác nhận' : 'Xác nhận'}
           </button>
         </form>
+
         <button
           className='mt-5 cursor-pointer bg-white p-1 capitalize transition duration-300'
           onClick={handleResendOTP}

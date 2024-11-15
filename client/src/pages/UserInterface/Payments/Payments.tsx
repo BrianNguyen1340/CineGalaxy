@@ -6,18 +6,15 @@ import useTitle from '~/hooks/useTitle'
 
 const Payments = () => {
   useTitle('Thanh toán')
-
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
-
   const isAuthorized =
     isAuthenticated &&
     (user?.role === 0 || user?.role === 1 || user?.role === 2)
-
   if (isAuthorized) {
     return <Navigate to={paths.dashboardPaths.dashboard} replace />
   }
 
-  return <div></div>
+  return <div className='relative h-full w-full'></div>
 }
 
 export default Payments

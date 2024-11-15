@@ -12,24 +12,42 @@ import {
   useUnblockAccountMutation,
 } from '~/services/user.service'
 import useTitle from '~/hooks/useTitle'
+import { UserType } from '~/types/user.type'
 
 const ListAccount = () => {
   useTitle('Admin | Danh sách tài khoản')
 
-  const { data: users, isLoading, isSuccess, refetch } = useGetUsersQuery({})
+  const {
+    data: users,
+    isLoading: isLoadingUsers,
+    isSuccess: isSuccessUsers,
+    refetch: refetchUsers,
+  } = useGetUsersQuery({})
 
   useEffect(() => {
-    refetch()
-  }, [refetch])
+    refetchUsers()
+  }, [refetchUsers])
+
+  const [currentPage, setCurrentPage] = useState<number>(0)
+  const itemsPerPage = 10
+  const offset = currentPage * itemsPerPage
+  const currentItems = users
+    ? users?.data
+        ?.slice()
+        ?.reverse()
+        ?.slice(offset, offset + itemsPerPage)
+    : []
+
+  const handlePageClick = (event: { selected: number }) => {
+    setCurrentPage(event.selected)
+  }
 
   const [blockAccount] = useBlockAccountMutation()
-
   const [unblockAccount] = useUnblockAccountMutation()
 
-  const handleBlockAccount = async (_id: string) => {
+  const handleBlockAccount = async (id: string) => {
     try {
       nProgress.start()
-
       const result = await Swal.fire({
         title: 'Bạn có chắc',
         text: 'Muốn khóa tài khoản này?',
@@ -38,25 +56,21 @@ const ListAccount = () => {
         confirmButtonText: 'OK!',
         cancelButtonText: 'Không!',
       })
-
       if (result.isConfirmed) {
-        await blockAccount(_id)
-
+        await blockAccount(id)
         Swal.fire('Thành công!', 'Khóa tài khoản thành công!', 'success')
-
-        refetch()
+        refetchUsers()
       }
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
   }
 
-  const handleUnblockAccount = async (_id: string) => {
+  const handleUnblockAccount = async (id: string) => {
     try {
       nProgress.start()
-
       const result = await Swal.fire({
         title: 'Bạn có chắc',
         text: 'Muốn mở khóa tài khoản này?',
@@ -65,43 +79,23 @@ const ListAccount = () => {
         confirmButtonText: 'OK!',
         cancelButtonText: 'Không!',
       })
-
       if (result.isConfirmed) {
-        await unblockAccount(_id)
-
+        await unblockAccount(id)
         Swal.fire('Thành công!', 'Mở khóa tài khoản thành công!', 'success')
-
-        refetch()
+        refetchUsers()
       }
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
   }
 
-  const [currentPage, setCurrentPage] = useState(0)
-
-  const itemsPerPage = 10
-
-  const offset = currentPage * itemsPerPage
-
-  const currentItems = users
-    ? users.data
-        .slice()
-        .reverse()
-        .slice(offset, offset + itemsPerPage)
-    : []
-
-  const handlePageClick = (event: any) => {
-    setCurrentPage(event.selected)
-  }
-
   let content
 
-  if (isLoading) content = <div>Loading...</div>
+  if (isLoadingUsers) content = <div>Loading...</div>
 
-  if (isSuccess) {
+  if (isSuccessUsers) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
         <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
@@ -123,7 +117,7 @@ const ListAccount = () => {
                 </tr>
               </thead>
               <tbody>
-                {currentItems.map((item: any, index: number) => (
+                {currentItems.map((item: UserType, index: number) => (
                   <tr key={index}>
                     <td>{index + offset}</td>
                     <td>{item.email}</td>
@@ -138,9 +132,9 @@ const ListAccount = () => {
                       </div>
                     </td>
                     <td>
-                      {new Date(item.lastLogin).toLocaleTimeString('vi-VN')}
+                      {new Date(item?.lastLogin).toLocaleTimeString('vi-VN')}
                       {' - '}
-                      {new Date(item.lastLogin).toLocaleDateString('vi-VN')}
+                      {new Date(item?.lastLogin).toLocaleDateString('vi-VN')}
                     </td>
                     <td>
                       {item.role === 0 ? (
@@ -152,8 +146,8 @@ const ListAccount = () => {
                           {item.isBlocked === false ? (
                             <div className='flex items-center justify-center'>
                               <button
-                                className='cursor-pointer rounded bg-[#70e000] p-1 capitalize text-white'
-                                onClick={() => handleBlockAccount(item?._id)}
+                                className='cursor-pointer rounded bg-[#00b4d8] p-1 capitalize text-white shadow-custom'
+                                onClick={() => handleBlockAccount(item._id)}
                               >
                                 active
                               </button>
@@ -161,8 +155,8 @@ const ListAccount = () => {
                           ) : (
                             <div className='flex items-center justify-center'>
                               <button
-                                className='ff006e cursor-pointer rounded bg-[#ff006e] p-1 capitalize text-white'
-                                onClick={() => handleUnblockAccount(item?._id)}
+                                className='ff006e cursor-pointer rounded bg-[#ff006e] p-1 capitalize text-white shadow-custom'
+                                onClick={() => handleUnblockAccount(item._id)}
                               >
                                 unactive
                               </button>
@@ -190,7 +184,10 @@ const ListAccount = () => {
                         </div>
                       ) : (
                         <div className='flex items-center justify-center'>
-                          <Link to={`/update-account/${item._id}`}>
+                          <Link
+                            to={`/update-account/${item._id}`}
+                            className='rounded p-1 transition duration-300 hover:bg-[#67349D] hover:text-white hover:shadow-custom'
+                          >
                             <SquarePen />
                           </Link>
                         </div>
@@ -200,12 +197,13 @@ const ListAccount = () => {
                 ))}
               </tbody>
             </table>
+
             <ReactPaginate
               previousLabel={'<'}
               nextLabel={'>'}
               breakLabel={'...'}
               breakClassName={'break-me'}
-              pageCount={Math.ceil(users.data.length / itemsPerPage)}
+              pageCount={Math.ceil(users?.data?.length / itemsPerPage)}
               marginPagesDisplayed={2}
               pageRangeDisplayed={5}
               onPageChange={handlePageClick}

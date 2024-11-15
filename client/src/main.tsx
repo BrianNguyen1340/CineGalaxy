@@ -24,8 +24,8 @@ import {
   Promotions,
   Register,
   ResetPassword,
-  SelectSeats,
   Showtimes,
+  ShowtimeDetails,
   Support,
   TicketPurchaseHistory,
   VerifyOTP,
@@ -63,14 +63,18 @@ import {
   ListPromotion,
   CreatePromotion,
   UpdatePromotion,
-  ListSellService,
-  CreateSellService,
   ListCinemaComplex,
   CreateCinemaComplex,
   UpdateCinemaComplex,
   ListGenre,
   CreateGenre,
   UpdateGenre,
+  ListProductCategory,
+  CreateProductCategory,
+  UpdateProductCategory,
+  ListProduct,
+  CreateProduct,
+  UpdateProduct,
 } from '~/pages'
 import App from './App.tsx'
 import RequiredAuth from '~/routes/RequiredAuth'
@@ -111,7 +115,7 @@ createRoot(document.getElementById('root')!).render(
             />
             <Route path={paths.userPaths.giftShop} element={<GiftShop />} />
 
-            {/* private auth */}
+            {/* PRIVATE AUTH */}
             <Route
               path={paths.userPaths.privateLogin}
               element={<PrivateLogin />}
@@ -124,10 +128,14 @@ createRoot(document.getElementById('root')!).render(
               path={paths.userPaths.privateResetPassword}
               element={<PrivateResetPassword />}
             />
-            {/* <Route element={<PersistLogin />}></Route> */}
+
             {/* REQUIRED AUTH ROUTES */}
             <Route element={<RequiredAuth />}>
               <Route path={paths.userPaths.coupons} element={<Coupons />} />
+              <Route
+                path={paths.userPaths.showtimeDetails}
+                element={<ShowtimeDetails />}
+              />
               <Route
                 path={paths.userPaths.membership}
                 element={<Membership />}
@@ -144,14 +152,11 @@ createRoot(document.getElementById('root')!).render(
                 element={<WatchedMovies />}
               />
               <Route
-                path={paths.userPaths.selectSeats}
-                element={<SelectSeats />}
-              />
-              <Route
                 path={paths.userPaths.ticketPurchaseHistory}
                 element={<TicketPurchaseHistory />}
               />
             </Route>
+
             {/* PROTECTED ROUTES */}
             <Route element={<ProtectedRoute />}>
               <Route
@@ -162,6 +167,8 @@ createRoot(document.getElementById('root')!).render(
                 path={paths.dashboardPaths.privateProfile}
                 element={<PrivateProfile />}
               />
+
+              {/* account */}
               <Route
                 path={paths.dashboardPaths.managements.accounts.list}
                 element={<ListAccount />}
@@ -174,6 +181,8 @@ createRoot(document.getElementById('root')!).render(
                 path={paths.dashboardPaths.managements.accounts.update}
                 element={<UpdateAccount />}
               />
+
+              {/* cinema complex */}
               <Route
                 path={paths.dashboardPaths.managements.cinemaComplexes.list}
                 element={<ListCinemaComplex />}
@@ -186,6 +195,8 @@ createRoot(document.getElementById('root')!).render(
                 path={paths.dashboardPaths.managements.cinemaComplexes.update}
                 element={<UpdateCinemaComplex />}
               />
+
+              {/* cinema */}
               <Route
                 path={paths.dashboardPaths.managements.cinemas.list}
                 element={<ListCinema />}
@@ -198,6 +209,8 @@ createRoot(document.getElementById('root')!).render(
                 path={paths.dashboardPaths.managements.cinemas.update}
                 element={<UpdateCinema />}
               />
+
+              {/* genre */}
               <Route
                 path={paths.dashboardPaths.managements.genres.list}
                 element={<ListGenre />}
@@ -210,6 +223,8 @@ createRoot(document.getElementById('root')!).render(
                 path={paths.dashboardPaths.managements.genres.update}
                 element={<UpdateGenre />}
               />
+
+              {/* movie */}
               <Route
                 path={paths.dashboardPaths.managements.movies.list}
                 element={<ListMovie />}
@@ -222,6 +237,8 @@ createRoot(document.getElementById('root')!).render(
                 path={paths.dashboardPaths.managements.movies.update}
                 element={<UpdateMovie />}
               />
+
+              {/* room */}
               <Route
                 path={paths.dashboardPaths.managements.rooms.list}
                 element={<ListRoom />}
@@ -234,6 +251,8 @@ createRoot(document.getElementById('root')!).render(
                 path={paths.dashboardPaths.managements.rooms.update}
                 element={<UpdateRoom />}
               />
+
+              {/* seat */}
               <Route
                 path={paths.dashboardPaths.managements.seats.list}
                 element={<ListSeat />}
@@ -246,6 +265,8 @@ createRoot(document.getElementById('root')!).render(
                 path={paths.dashboardPaths.managements.seats.update}
                 element={<UpdateSeat />}
               />
+
+              {/* showtime */}
               <Route
                 path={paths.dashboardPaths.managements.showtimes.list}
                 element={<ListShowtime />}
@@ -258,6 +279,8 @@ createRoot(document.getElementById('root')!).render(
                 path={paths.dashboardPaths.managements.showtimes.update}
                 element={<UpdateShowtime />}
               />
+
+              {/* invoice */}
               <Route
                 path={paths.dashboardPaths.managements.invoices.list}
                 element={<ListInvoice />}
@@ -270,6 +293,8 @@ createRoot(document.getElementById('root')!).render(
                 path={paths.dashboardPaths.managements.invoices.update}
                 element={<UpdateInvoice />}
               />
+
+              {/* promotion */}
               <Route
                 path={paths.dashboardPaths.managements.promotions.list}
                 element={<ListPromotion />}
@@ -282,13 +307,33 @@ createRoot(document.getElementById('root')!).render(
                 path={paths.dashboardPaths.managements.promotions.update}
                 element={<UpdatePromotion />}
               />
+
+              {/* product category */}
               <Route
-                path={paths.dashboardPaths.managements.sellServices.list}
-                element={<ListSellService />}
+                path={paths.dashboardPaths.managements.productCategories.list}
+                element={<ListProductCategory />}
               />
               <Route
-                path={paths.dashboardPaths.managements.sellServices.create}
-                element={<CreateSellService />}
+                path={paths.dashboardPaths.managements.productCategories.create}
+                element={<CreateProductCategory />}
+              />
+              <Route
+                path={paths.dashboardPaths.managements.productCategories.update}
+                element={<UpdateProductCategory />}
+              />
+
+              {/* product */}
+              <Route
+                path={paths.dashboardPaths.managements.products.list}
+                element={<ListProduct />}
+              />
+              <Route
+                path={paths.dashboardPaths.managements.products.create}
+                element={<CreateProduct />}
+              />
+              <Route
+                path={paths.dashboardPaths.managements.products.update}
+                element={<UpdateProduct />}
               />
             </Route>
             <Route

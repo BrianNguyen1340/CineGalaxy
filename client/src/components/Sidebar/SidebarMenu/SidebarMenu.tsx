@@ -27,7 +27,7 @@ const SidebarMenu: FC<SidebarMenuProps> = ({
   return (
     <div className={`${className} mb-1 flex flex-col px-4`} style={style}>
       <div
-        className={`${openSidebarMenu ? 'mb-1' : 'mb-0'} mb-1 flex cursor-pointer items-center justify-between rounded-[6px] bg-[#f4f4f4] p-2 transition duration-300`}
+        className={`${openSidebarMenu ? 'mb-1' : 'mb-0'} mb-1 flex cursor-pointer items-center justify-between rounded bg-[#f4f4f4] p-2 transition duration-300`}
         onClick={() => setOpenSidebarMenu(!openSidebarMenu)}
       >
         <div className='flex items-center gap-4'>

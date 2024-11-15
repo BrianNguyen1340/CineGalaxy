@@ -3,15 +3,10 @@ import PerfectScrollbar from 'perfect-scrollbar'
 
 type ScrollbarProps = {
   content: React.ReactNode
-  height: string
-  className?: string
+  style: React.CSSProperties
 }
 
-const Scrollbar: React.FC<ScrollbarProps> = ({
-  content,
-  className,
-  height,
-}) => {
+const Scrollbar: React.FC<ScrollbarProps> = ({ content, style }) => {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -25,11 +20,7 @@ const Scrollbar: React.FC<ScrollbarProps> = ({
   }, [])
 
   return (
-    <div
-      ref={containerRef}
-      style={{ height: `${height}` }}
-      className={`${className} relative`}
-    >
+    <div ref={containerRef} style={style} className='relative'>
       {content}
     </div>
   )

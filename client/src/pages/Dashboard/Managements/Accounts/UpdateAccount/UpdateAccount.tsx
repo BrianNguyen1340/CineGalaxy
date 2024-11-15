@@ -20,9 +20,7 @@ const validationSchema = Yup.object().shape({
 
 const UpdateAccount = () => {
   useTitle('Admin | Cập nhật tài khoản')
-
   const { id } = useParams()
-
   const navigate = useNavigate()
 
   const {
@@ -38,15 +36,24 @@ const UpdateAccount = () => {
     resolver: yupResolver(validationSchema),
   })
 
-  const { data: user, isLoading, isSuccess } = useGetUserQuery(id)
+  const {
+    data: user,
+    isLoading: isLoadingUser,
+    isSuccess: isSuccessUser,
+    refetch: refetchUser,
+  } = useGetUserQuery(id)
 
   useEffect(() => {
-    if (user) {
+    if (user?.data) {
       setValue('name', user?.data?.name)
       setValue('email', user?.data?.email)
       setValue('role', user?.data?.role)
     }
   }, [setValue, user])
+
+  useEffect(() => {
+    refetchUser()
+  }, [refetchUser])
 
   const [updateApi, { isLoading: isLoadingUpdate }] = useUpdateUserMutation()
 
@@ -57,31 +64,26 @@ const UpdateAccount = () => {
   }> = async (reqBody) => {
     try {
       nProgress.start()
-
       const { email, name, role } = reqBody
-
       const response = await updateApi({ id, email, name, role }).unwrap()
-
       Swal.fire('Thành công', response.message, 'success')
-
       navigate(paths.dashboardPaths.managements.accounts.list)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
   }
 
   let content
-
-  if (isLoading) content = <div>Loading...</div>
-
-  if (isSuccess) {
+  if (isLoadingUser) content = <div>Loading...</div>
+  if (isSuccessUser) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
         <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
           cập nhật tài khoản
         </div>
+
         <form
           onSubmit={handleSubmit(handleUpdate)}
           className='mx-auto w-[500px]'
@@ -99,6 +101,7 @@ const UpdateAccount = () => {
             type='text'
             name='name'
           />
+
           <FormInputGroup
             register={register}
             errors={errors}
@@ -117,8 +120,8 @@ const UpdateAccount = () => {
             placeholder='example@.com'
           />
 
-          <div className='my-5 flex flex-col gap-1'>
-            <label htmlFor='role' className='font-semibold'>
+          <div className='my-5 flex flex-col'>
+            <label htmlFor='role' className='mb-1 font-semibold capitalize'>
               Chọn vai trò người dùng
             </label>
             <select
@@ -127,17 +130,16 @@ const UpdateAccount = () => {
               })}
               name='role'
               id='role'
-              className='rounded-lg border p-3 outline-none'
+              className='p-2 capitalize'
             >
-              <option value='Chọn vai trò' aria-hidden='true'>
-                Chọn vai trò
-              </option>
+              <option>Chọn vai trò</option>
               <option value='0'>0</option>
               <option value='1'>1</option>
               <option value='2'>2</option>
               <option value='3'>3</option>
             </select>
           </div>
+
           <button
             type='submit'
             disabled={isLoadingUpdate ? true : false}

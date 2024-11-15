@@ -14,7 +14,8 @@ const GoogleAuth = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
-  const [googleLoginApi, { isLoading }] = useGoogleLoginMutation()
+  const [googleLoginApi, { isLoading: isLoadingGoogleLogin }] =
+    useGoogleLoginMutation()
 
   const handleGoogleClick = async () => {
     try {
@@ -30,6 +31,7 @@ const GoogleAuth = () => {
       if (!email || !name || !photoURL) {
         throw new Error('Missing data!')
       }
+      
       const { data, accessToken, message } = await googleLoginApi({
         email,
         name,
@@ -57,10 +59,12 @@ const GoogleAuth = () => {
       type='button'
       className='flex w-full cursor-pointer items-center justify-center gap-3 rounded-[40px] bg-[#0d0c22] p-6 text-sm font-semibold capitalize text-white transition duration-500 hover:opacity-70'
       onClick={handleGoogleClick}
-      disabled={isLoading ? true : false}
+      disabled={isLoadingGoogleLogin ? true : false}
     >
       <FcGoogle size='16' />
-      <span>{isLoading ? 'Đang đăng nhập' : 'Đăng nhập với google'}</span>
+      <span>
+        {isLoadingGoogleLogin ? 'Đang đăng nhập' : 'Đăng nhập với google'}
+      </span>
     </button>
   )
 }

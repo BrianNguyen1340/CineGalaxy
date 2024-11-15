@@ -15,7 +15,7 @@ const ToggleHeaderButton: React.FC<ToggleHeaderButtonProps> = ({
   return (
     <button
       onClick={onClick}
-      className={`${!isMenuMobileOpen && 'rotate-180'} h-[30px] w-fit cursor-pointer bg-white transition duration-300 1001px:hidden`}
+      className={`${!isMenuMobileOpen && 'rotate-180'} h-7 w-fit cursor-pointer bg-white transition duration-300 1001px:hidden`}
       style={style}
     >
       {isMenuMobileOpen ? (

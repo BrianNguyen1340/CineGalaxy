@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { HashLoader } from 'react-spinners'
@@ -11,6 +12,7 @@ import { useCreateSeatMutation } from '~/services/seat.service'
 import { useGetRoomsQuery } from '~/services/room.service'
 import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
+import { RoomType } from '~/types/room.type'
 import useTitle from '~/hooks/useTitle'
 
 const validationSchema = Yup.object().shape({
@@ -23,7 +25,6 @@ const validationSchema = Yup.object().shape({
 
 const CreateSeat = () => {
   useTitle('Admin | Tạp ghế')
-
   const navigate = useNavigate()
 
   const {
@@ -40,7 +41,16 @@ const CreateSeat = () => {
     resolver: yupResolver(validationSchema),
   })
 
-  const { data: rooms, isLoading, isSuccess } = useGetRoomsQuery({})
+  const {
+    data: rooms,
+    isLoading: isLoadingRooms,
+    isSuccess: isSuccessRooms,
+    refetch: refetchRooms,
+  } = useGetRoomsQuery({})
+
+  useEffect(() => {
+    refetchRooms()
+  }, [refetchRooms])
 
   const [createApi, { isLoading: isLoadingCreate }] = useCreateSeatMutation()
 
@@ -54,7 +64,6 @@ const CreateSeat = () => {
     try {
       nProgress.start()
       const { row, number, room, price, type } = reqBody
-
       const response = await createApi({
         row,
         number,
@@ -62,22 +71,18 @@ const CreateSeat = () => {
         price,
         type,
       }).unwrap()
-
       Swal.fire('Thành công', response.message, 'success')
-
       navigate(paths.dashboardPaths.managements.seats.list)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
   }
 
   let content
-
-  if (isLoading) content = <div>Loading...</div>
-
-  if (isSuccess) {
+  if (isLoadingRooms) content = <div>Loading...</div>
+  if (isSuccessRooms) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
         <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
@@ -87,7 +92,7 @@ const CreateSeat = () => {
           onSubmit={handleSubmit(handleCreate)}
           className='mx-auto w-[500px]'
         >
-          <div className='mb-6 flex flex-col'>
+          <div className='mb-5 flex flex-col'>
             <label className='mb-1 font-semibold capitalize'>hàng ghế</label>
             <select
               {...register('row', {
@@ -95,16 +100,13 @@ const CreateSeat = () => {
               })}
               id='row'
               name='row'
-              className='p-2'
+              className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn hàng ghế
-              </option>
+              <option>Chọn hàng ghế</option>
               <option value='A'>A</option>
               <option value='B'>B</option>
               <option value='C'>C</option>
               <option value='D'>D</option>
-              <option value='E'>E</option>
               <option value='E'>E</option>
               <option value='F'>F</option>
               <option value='G'>G</option>
@@ -113,15 +115,12 @@ const CreateSeat = () => {
               <option value='J'>J</option>
             </select>
           </div>
+
           <FormInputGroup
             register={register}
             errors={errors}
             validation={{
               required: 'Vui lòng nhập số ghế!',
-              pattern: {
-                value: /^\d+$/,
-                message: 'Chỉ được nhập số',
-              },
             }}
             labelChildren='số ghế'
             htmlFor='number'
@@ -131,7 +130,8 @@ const CreateSeat = () => {
             name='number'
             icon={<FaRegStar color='red' />}
           />
-          <div className='mb-6 flex flex-col'>
+
+          <div className='mb-5 flex flex-col'>
             <label htmlFor='subtitle' className='mb-1 font-semibold capitalize'>
               loại ghế
             </label>
@@ -141,26 +141,21 @@ const CreateSeat = () => {
               })}
               id='type'
               name='type'
-              className='p-2'
+              className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn loại ghế
-              </option>
+              <option>Chọn loại ghế</option>
               <option value='Standard'>Standard</option>
               <option value='Vip'>Vip</option>
               <option value='Kid'>Kid</option>
               <option value='Couple'>Couple</option>
             </select>
           </div>
+
           <FormInputGroup
             register={register}
             errors={errors}
             validation={{
               required: 'Vui lòng nhập giá tiền ghế!',
-              pattern: {
-                value: /^\d+$/,
-                message: 'Chỉ được nhập số',
-              },
             }}
             labelChildren='giá tiền ghế'
             htmlFor='price'
@@ -170,7 +165,8 @@ const CreateSeat = () => {
             name='price'
             icon={<FaRegStar color='red' />}
           />
-          <div className='mb-6 flex flex-col'>
+
+          <div className='mb-5 flex flex-col'>
             <label htmlFor='subtitle' className='mb-1 font-semibold capitalize'>
               phòng
             </label>
@@ -180,18 +176,17 @@ const CreateSeat = () => {
               })}
               id='room'
               name='room'
-              className='p-2'
+              className='p-2 capitalize'
             >
-              <option value='' aria-hidden='true'>
-                Chọn phòng
-              </option>
-              {rooms?.data?.map((room: any) => (
-                <option key={room._id} value={room._id}>
+              <option>Chọn phòng</option>
+              {rooms?.data?.map((room: RoomType, index: number) => (
+                <option key={index} value={room._id}>
                   {room.name} - {room.cinema.name}
                 </option>
               ))}
             </select>
           </div>
+
           <button
             type='submit'
             disabled={isLoadingCreate ? true : false}

@@ -1,4 +1,4 @@
 export type CinemaComplexType = {
-  _id: string
+  readonly _id: string
   name: string
 }

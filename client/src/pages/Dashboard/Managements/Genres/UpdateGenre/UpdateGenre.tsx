@@ -21,9 +21,7 @@ const validationSchema = Yup.object().shape({
 
 const UpdateGenre = () => {
   useTitle('Admin | Cập nhật thể loại phim')
-
   const { id } = useParams()
-
   const navigate = useNavigate()
 
   const {
@@ -35,7 +33,12 @@ const UpdateGenre = () => {
     resolver: yupResolver(validationSchema),
   })
 
-  const { data: genre, isLoading, isSuccess, refetch } = useGetGenreQuery(id)
+  const {
+    data: genre,
+    isLoading: isLoadingGenre,
+    isSuccess: isSuccessGenre,
+    refetch: refetchGenre,
+  } = useGetGenreQuery(id)
 
   useEffect(() => {
     if (genre?.data) {
@@ -44,37 +47,33 @@ const UpdateGenre = () => {
   }, [genre, setValue])
 
   useEffect(() => {
-    refetch()
-  }, [refetch])
+    refetchGenre()
+  }, [refetchGenre])
 
   const [updateApi, { isLoading: isLoadingUpdate }] = useUpdateGenreMutation()
 
   const handleUpdate: SubmitHandler<{ name: string }> = async (reqBody) => {
     try {
       const { name } = reqBody
-
       const response = await updateApi({ id, name }).unwrap()
-
       Swal.fire('Thành công', response.message, 'success')
-
       navigate(paths.dashboardPaths.managements.genres.list)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
   }
 
   let content
-
-  if (isLoading) content = <div>Loading...</div>
-
-  if (isSuccess) {
+  if (isLoadingGenre) content = <div>Loading...</div>
+  if (isSuccessGenre) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
         <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
           Cập nhật thể loại phim
         </div>
+
         <form
           onSubmit={handleSubmit(handleUpdate)}
           className='mx-auto w-[500px]'
@@ -89,6 +88,7 @@ const UpdateGenre = () => {
             id='name'
             name='name'
           />
+
           <button
             type='submit'
             disabled={isLoadingUpdate ? true : false}

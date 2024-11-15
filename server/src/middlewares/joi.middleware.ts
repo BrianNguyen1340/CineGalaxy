@@ -56,6 +56,7 @@ export const handleJoiError = (schema: ValidationDataSchema) => {
       next()
     } catch (error) {
       if (error instanceof Error && 'details' in error) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const errors = (error as any).details.map((err: any) => err.message)
         res.status(StatusCodes.BAD_REQUEST).json({ errors })
       } else {

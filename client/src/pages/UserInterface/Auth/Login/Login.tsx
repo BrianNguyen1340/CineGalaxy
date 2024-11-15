@@ -15,17 +15,13 @@ import useTitle from '~/hooks/useTitle'
 
 const Login = () => {
   useTitle('Đăng nhập')
-
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
-
   if (isAuthenticated && user) {
     return <Navigate to={paths.userPaths.home} />
   }
-
   const isAuthorized =
     isAuthenticated &&
     (user?.role === 0 || user?.role === 1 || user?.role === 2)
-
   if (isAuthorized) {
     return <Navigate to={paths.dashboardPaths.dashboard} replace />
   }
@@ -45,7 +41,6 @@ const Login = () => {
   const [loginApi, { isLoading }] = useLoginMutation()
 
   const [showHidePassword, setShowHidePassword] = useState<boolean>(false)
-
   const handleShowHidePassword = (): void => {
     setShowHidePassword((prevState) => !prevState)
   }
@@ -57,21 +52,17 @@ const Login = () => {
     try {
       const { email, password } = reqBody
       nProgress.start()
-
       const { accessToken, data, message } = await loginApi({
         email,
         password,
       }).unwrap()
-
       dispatch(
         setCredentials({
           user: data,
           token: accessToken,
         }),
       )
-
       Swal.fire('Thành công', message, 'success')
-
       navigate(paths.userPaths.home)
     } catch (error: any) {
       Swal.fire('Thất bại', error.data.message, 'error')
@@ -93,7 +84,7 @@ const Login = () => {
       </div>
       <div className='relative mx-auto flex h-full w-[500px] flex-col items-center justify-center'>
         <div className='w-full px-4'>
-          <div className='mb-[30px] text-center text-xl font-semibold capitalize'>
+          <div className='mb-7 text-center text-xl font-semibold capitalize'>
             đăng nhập tài khoản
           </div>
           <GoogleAuth />
@@ -105,9 +96,10 @@ const Login = () => {
             <hr className='flex-grow border-t border-gray-400' />
           </div>
         </div>
+
         <form
           onSubmit={handleSubmit(handleLogin)}
-          className='relative flex w-full flex-col gap-[10px] px-4'
+          className='relative flex w-full flex-col gap-3 px-4'
         >
           <FormInputGroup
             register={register}
@@ -138,6 +130,7 @@ const Login = () => {
             name='email'
             placeholder='example@gmail.com'
           />
+
           <FormInputGroup
             register={register}
             errors={errors}
@@ -160,6 +153,7 @@ const Login = () => {
             }
             placeholder='Vui lòng nhập mật khẩu!'
           />
+
           <button
             type='submit'
             disabled={isLoading ? true : false}

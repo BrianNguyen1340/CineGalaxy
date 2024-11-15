@@ -6,8 +6,14 @@ import ReactPaginate from 'react-paginate'
 import { useGetSeatsQuery } from '~/services/seat.service'
 import { useGetCinemasQuery } from '~/services/cinema.service'
 import { useGetRoomsQuery } from '~/services/room.service'
+import { SeatType } from '~/types/seat.type'
+import { CinemaType } from '~/types/cinema.type'
+import { RoomType } from '~/types/room.type'
+import useTitle from '~/hooks/useTitle'
 
 const ListSeat = () => {
+  useTitle('Manager | Danh sách ghế')
+
   const {
     data: seats,
     isLoading: isLoadingSeats,
@@ -19,19 +25,21 @@ const ListSeat = () => {
     data: cinemas,
     isLoading: isLoadingCinemas,
     isSuccess: isSuccessCinemas,
+    refetch: refetchCinemas,
   } = useGetCinemasQuery({})
 
   const {
     data: rooms,
     isLoading: isLoadingRooms,
     isSuccess: isSuccessRooms,
+    refetch: refetchRooms,
   } = useGetRoomsQuery({})
 
   useEffect(() => {
     refetchSeats()
-  }, [refetchSeats])
-
-  const [currentPage, setCurrentPage] = useState(0)
+    refetchCinemas()
+    refetchRooms()
+  }, [refetchSeats, refetchCinemas, refetchRooms])
 
   const [selectedSeatRoomCinema, setSelectedSeatRoomCinema] = useState(
     localStorage.getItem('selectedSeatRoomCinema') || null,
@@ -46,41 +54,41 @@ const ListSeat = () => {
     localStorage.getItem('sortBySeatNumber') || 'asc',
   )
 
+  const [currentPage, setCurrentPage] = useState<number>(0)
   const itemsPerPage = 10
-
   const offset = currentPage * itemsPerPage
 
   const filteredSeats = seats
-    ? seats.data
-        .filter((seat: any) => {
+    ? seats?.data
+        .filter((seat: SeatType) => {
           const matchCinema = selectedSeatRoomCinema
-            ? seat?.room?.cinema?._id === selectedSeatRoomCinema
+            ? seat.room.cinema._id === selectedSeatRoomCinema
             : true
           const matchRoom = selectedSeatRoom
-            ? seat?.room?._id === selectedSeatRoom
+            ? seat.room._id === selectedSeatRoom
             : true
           return matchCinema && matchRoom
         })
-        .sort((a: any, b: any) => {
+        .sort((a: SeatType, b: SeatType) => {
           const rowComparison =
             sortOrderSeatRow === 'asc'
-              ? a?.row?.localeCompare(b?.row)
-              : b?.row?.localeCompare(a?.row)
+              ? a.row.localeCompare(b.row)
+              : b.row.localeCompare(a.row)
           if (rowComparison === 0) {
             return sortBySeatNumber === 'asc'
-              ? a?.number - b?.number
-              : b?.number - a?.number
+              ? a.number - b.number
+              : b.number - a.number
           }
           return rowComparison
         })
     : []
 
   const currentItems = filteredSeats
-    .slice()
-    .reverse()
-    .slice(offset, offset + itemsPerPage)
+    ?.slice()
+    ?.reverse()
+    ?.slice(offset, offset + itemsPerPage)
 
-  const handlePageClick = (event: any) => {
+  const handlePageClick = (event: { selected: number }) => {
     setCurrentPage(event.selected)
   }
 
@@ -112,10 +120,8 @@ const ListSeat = () => {
   }
 
   let content
-
   if (isLoadingSeats || isLoadingRooms || isLoadingCinemas)
     content = <div>Loading...</div>
-
   if (isSuccessSeats && isSuccessRooms && isSuccessCinemas) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
@@ -133,21 +139,21 @@ const ListSeat = () => {
               value={selectedSeatRoomCinema || ''}
               className='ml-2 rounded border p-2 capitalize'
             >
-              <option value=''>Tất cả rạp</option>
+              <option>Tất cả rạp</option>
               {cinemas &&
-                cinemas.data.map((cinema: any) => (
-                  <option
-                    key={cinema._id}
-                    value={cinema._id}
-                    className='capitalize'
-                  >
+                cinemas.data.map((cinema: CinemaType, index: number) => (
+                  <option key={index} value={cinema._id} className='capitalize'>
                     {cinema.name}
                   </option>
                 ))}
             </select>
           </div>
+
           <div>
-            <label htmlFor='room-select' className='font-semibold'>
+            <label
+              htmlFor='room-select'
+              className='mb-1 font-semibold capitalize'
+            >
               Chọn phòng:
             </label>
             <select
@@ -157,13 +163,14 @@ const ListSeat = () => {
               className='ml-2 rounded border p-2 capitalize'
               disabled={!selectedSeatRoomCinema}
             >
-              <option value=''>Tất cả phòng</option>
+              <option>Tất cả phòng</option>
               {rooms &&
-                rooms.data
+                rooms?.data
                   .filter(
-                    (room: any) => room.cinema._id === selectedSeatRoomCinema,
+                    (room: RoomType) =>
+                      room.cinema._id === selectedSeatRoomCinema,
                   )
-                  .map((room: any) => (
+                  .map((room: RoomType) => (
                     <option
                       key={room._id}
                       value={room._id}
@@ -189,11 +196,12 @@ const ListSeat = () => {
               onClick={toggleSortBySeatNumber}
               className='rounded bg-green-500 p-2 text-white'
             >
-              Sắp xếp số ghế{' '}
+              Sắp xếp số ghế
               {sortBySeatNumber === 'asc' ? 'Tăng dần' : 'Giảm dần'}
             </button>
           </div>
         </div>
+
         {filteredSeats.length > 0 ? (
           <>
             <table>
@@ -203,23 +211,28 @@ const ListSeat = () => {
                   <th>hàng ghế</th>
                   <th>số ghế</th>
                   <th>loại ghế</th>
+                  <th>giá</th>
                   <th>phòng</th>
                   <th>quản lý</th>
                 </tr>
               </thead>
               <tbody>
-                {currentItems.map((item: any, index: number) => (
+                {currentItems.map((item: SeatType, index: number) => (
                   <tr key={index}>
                     <td>{index + offset + 1}</td>
                     <td>{item.row}</td>
                     <td>{item.number}</td>
-                    <td>{item.type}</td>
-                    <td>
+                    <td className='capitalize'>{item.type}</td>
+                    <td>{item.price} VNĐ</td>
+                    <td className='capitalize'>
                       {item.room.name} - {item.room.cinema.name}
                     </td>
                     <td>
                       <div className='flex items-center justify-center'>
-                        <Link to={`/update-seat/${item._id}`}>
+                        <Link
+                          to={`/update-seat/${item._id}`}
+                          className='rounded p-1 transition duration-300 hover:bg-[#67349D] hover:text-white hover:shadow-custom'
+                        >
                           <SquarePen />
                         </Link>
                       </div>
@@ -228,11 +241,12 @@ const ListSeat = () => {
                 ))}
               </tbody>
             </table>
+
             <ReactPaginate
               previousLabel={'<'}
               nextLabel={'>'}
               breakLabel={'...'}
-              pageCount={Math.ceil(filteredSeats.length / itemsPerPage)}
+              pageCount={Math.ceil(filteredSeats?.length / itemsPerPage)}
               marginPagesDisplayed={2}
               pageRangeDisplayed={5}
               onPageChange={handlePageClick}

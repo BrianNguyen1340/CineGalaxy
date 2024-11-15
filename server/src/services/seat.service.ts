@@ -31,6 +31,7 @@ const handleCreate = async (
       row,
       type,
       room,
+      price,
     })
     if (!request) {
       return {
@@ -175,6 +176,7 @@ const handleUpdate = async (
 }> => {
   try {
     const seat = await seatModel.findById(id)
+
     if (!seat) {
       return {
         success: false,
@@ -188,6 +190,7 @@ const handleUpdate = async (
       row,
       _id: { $ne: id },
     })
+
     if (checkExist) {
       return {
         success: false,
@@ -211,11 +214,12 @@ const handleUpdate = async (
         new: true,
       },
     )
+
     if (!request) {
       return {
         success: false,
         statusCode: StatusCodes.BAD_REQUEST,
-        message: 'Cập nhật ghế thất bại!',
+        message: 'Cập nhật thông tin ghế thất bại!',
       }
     }
 
@@ -241,9 +245,43 @@ const handleUpdate = async (
   }
 }
 
+const handleDelete = async (id: Types.ObjectId) => {
+  try {
+    const request = await seatModel.findByIdAndDelete(id)
+
+    if (!request) {
+      return {
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'Xóa thông tin ghế thất bại!',
+      }
+    }
+
+    return {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: 'Xóa thông tin ghế thành công!',
+    }
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return {
+        success: false,
+        message: `Lỗi hệ thống: ${error.message}`,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+      }
+    }
+    return {
+      success: false,
+      message: 'Đã xảy ra lỗi không xác định!',
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+    }
+  }
+}
+
 export const seatService = {
   handleCreate,
   handleGetOne,
   handleGetAll,
   handleUpdate,
+  handleDelete,
 }

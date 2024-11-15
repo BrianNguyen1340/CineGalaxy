@@ -6,17 +6,16 @@ import { paths } from '~/utils/paths'
 import { useGetCinemaComplexesQuery } from '~/services/cinemaComplex.service'
 import { useGetCinemasQuery } from '~/services/cinema.service'
 import { DateSelector } from '~/components'
+import { CinemaComplexType } from '~/types/cinemaComplex.type'
+import { CinemaType } from '~/types/cinema.type'
 import useTitle from '~/hooks/useTitle'
 
 const Cinemas = () => {
   useTitle('Danh sách rạp')
-
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
-
   const isAuthorized =
     isAuthenticated &&
     (user?.role === 0 || user?.role === 1 || user?.role === 2)
-
   if (isAuthorized) {
     return <Navigate to={paths.dashboardPaths.dashboard} replace />
   }
@@ -40,44 +39,42 @@ const Cinemas = () => {
     refetchCinemaComplexes()
   }, [refetchCinemas, refetchCinemaComplexes])
 
-  const [hoveredCinemaComplexId, setHoveredCinemaComplexId] =
-    useState<null>(null)
-
+  const [hoveredCinemaComplex, setHoveredCinemaComplex] = useState<
+    string | null
+  >()
   const [selectedCinemaName, setSelectedCinemaName] = useState<string>('')
 
-  const handleCinemaClick = (cinemaName: any) => {
-    setSelectedCinemaName(cinemaName)
+  const handleCinemaClick = (cinemaName: CinemaType) => {
+    setSelectedCinemaName(cinemaName.name)
   }
 
   let content
-
   if (isLoadingCinemaComplexes || isLoadingCinemas)
     content = <div>Loading...</div>
-
   if (isSuccessCinemas && isSuccessCinemaComplexes) {
     content = (
       <div className='relative h-fit w-full bg-[#faf6ec]'>
         <div className='relative flex h-fit w-full items-center justify-center gap-6 bg-[#dad2b4]'>
-          {cinemaComplexes?.data?.map((cinemaComplex: any) => (
+          {cinemaComplexes?.data?.map((cinemaComplex: CinemaComplexType) => (
             <div
               key={cinemaComplex._id}
-              onMouseEnter={() => setHoveredCinemaComplexId(cinemaComplex._id)}
-              onMouseLeave={() => setHoveredCinemaComplexId(null)}
+              onMouseEnter={() => setHoveredCinemaComplex(cinemaComplex._id)}
+              onMouseLeave={() => setHoveredCinemaComplex(null)}
               className='cursor-pointer p-4 text-sm font-semibold capitalize hover:underline'
             >
               {cinemaComplex.name}
-              {hoveredCinemaComplexId === cinemaComplex._id && (
+              {hoveredCinemaComplex === cinemaComplex._id && (
                 <div className='absolute left-0 top-full flex w-full items-center justify-center gap-12 rounded bg-[rgba(0,0,0,0.8)] p-4 text-white shadow-custom'>
                   {cinemas?.data
                     ?.filter(
-                      (cinema: any) =>
+                      (cinema: CinemaType) =>
                         cinema.cinemaComplex._id === cinemaComplex._id,
                     )
-                    .map((cinema: any) => (
+                    .map((cinema: CinemaType) => (
                       <div
                         key={cinema._id}
                         className='py-1 text-sm hover:underline'
-                        onClick={() => handleCinemaClick(cinema.name)}
+                        onClick={() => handleCinemaClick(cinema)}
                       >
                         {cinema.name}
                       </div>

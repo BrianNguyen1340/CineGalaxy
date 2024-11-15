@@ -12,6 +12,7 @@ import { useGetCinemaComplexesQuery } from '~/services/cinemaComplex.service'
 import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
 import useTitle from '~/hooks/useTitle'
+import { CinemaComplexType } from '~/types/cinemaComplex.type'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().trim().required('Tên rạp là bắt buộc'),
@@ -23,7 +24,6 @@ const validationSchema = Yup.object().shape({
 
 const CreateCinema = () => {
   useTitle('Admin | Tạp rạp')
-
   const navigate = useNavigate()
 
   const {
@@ -63,7 +63,6 @@ const CreateCinema = () => {
     try {
       nProgress.start()
       const { name, email, phone, address, cinemaComplex } = reqBody
-
       const response = await createApi({
         name,
         email,
@@ -71,27 +70,24 @@ const CreateCinema = () => {
         address,
         cinemaComplex,
       }).unwrap()
-
       Swal.fire('Thành công', response.message, 'success')
-
       navigate(paths.dashboardPaths.managements.cinemas.list)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
   }
 
   let content
-
   if (isLoading) content = <div>Loading...</div>
-
   if (isSuccess) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
         <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
           tạo rạp
         </div>
+        
         <form
           onSubmit={handleSubmit(handleCreate)}
           className='mx-auto w-[500px]'
@@ -109,6 +105,7 @@ const CreateCinema = () => {
             type='text'
             name='name'
           />
+
           <FormInputGroup
             register={register}
             errors={errors}
@@ -126,6 +123,7 @@ const CreateCinema = () => {
             type='text'
             name='email'
           />
+
           <FormInputGroup
             register={register}
             errors={errors}
@@ -139,6 +137,7 @@ const CreateCinema = () => {
             type='text'
             name='address'
           />
+
           <FormInputGroup
             register={register}
             errors={errors}
@@ -152,8 +151,12 @@ const CreateCinema = () => {
             type='text'
             name='phone'
           />
-          <div className='mb-5 flex flex-col gap-1'>
-            <label htmlFor='cinemaComplex' className='font-semibold capitalize'>
+
+          <div className='mb-5 flex flex-col'>
+            <label
+              htmlFor='cinemaComplex'
+              className='mb-1 font-semibold capitalize'
+            >
               cụm rạp
             </label>
             <select
@@ -162,20 +165,19 @@ const CreateCinema = () => {
               })}
               id='cinemaComplex'
               name='cinemaComplex'
-              className='p-2'
+              className='p-2 capitalize'
             >
-              <option value=''>Chọn cụm rạp</option>
-              {cinemaComplexes?.data?.map((item: any) => (
-                <option
-                  key={item?._id}
-                  value={item?._id}
-                  className='capitalize'
-                >
-                  {item?.name}
-                </option>
-              ))}
+              <option>Chọn cụm rạp</option>
+              {cinemaComplexes?.data?.map(
+                (item: CinemaComplexType, index: number) => (
+                  <option key={index} value={item._id} className='capitalize'>
+                    {item?.name}
+                  </option>
+                ),
+              )}
             </select>
           </div>
+
           <button
             type='submit'
             disabled={isLoadingCreate ? true : false}

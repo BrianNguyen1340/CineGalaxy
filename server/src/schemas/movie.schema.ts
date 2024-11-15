@@ -15,6 +15,7 @@ export type MovieType = Document & {
   subtitle: string
   movieFormat: string
   genres: Types.ObjectId[]
+  hidden: boolean
 }
 
 const movieSchema = new Schema<MovieType>(
@@ -85,6 +86,10 @@ const movieSchema = new Schema<MovieType>(
       type: [Schema.Types.ObjectId],
       required: true,
       ref: 'Genre',
+    },
+    hidden: {
+      type: Boolean,
+      default: false,
     },
   },
   {

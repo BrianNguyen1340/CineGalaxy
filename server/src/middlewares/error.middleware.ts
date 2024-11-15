@@ -12,6 +12,7 @@ export const errorHandlerMiddleware: ErrorRequestHandler = (
   error: CustomError,
   req: Request,
   res: Response,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction,
 ): void => {
   logEvents(

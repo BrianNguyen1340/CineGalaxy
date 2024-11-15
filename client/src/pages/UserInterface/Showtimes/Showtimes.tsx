@@ -4,13 +4,13 @@ import { DateSelector } from '~/components'
 import { PiWarningOctagon } from 'react-icons/pi'
 import { FaTimes, FaAngleRight } from 'react-icons/fa'
 
+import { useAppSelector } from '~/hooks/redux'
+import { formatDateToVietnamese } from '~/utils/dateFormats'
 import { useGetCinemaComplexesQuery } from '~/services/cinemaComplex.service'
 import { useGetCinemasQuery } from '~/services/cinema.service'
 import { useGetShowtimesQuery } from '~/services/showtime.service'
 import { useGetMoviesQuery } from '~/services/movie.service'
-import { useAppSelector } from '~/hooks/redux'
 import { paths } from '~/utils/paths'
-import { formatDateToVietnamese } from '~/utils/dateFormats'
 import { CinemaComplexType } from '~/types/cinemaComplex.type'
 import { CinemaType } from '~/types/cinema.type'
 import { MovieType } from '~/types/movie.type'
@@ -19,13 +19,10 @@ import useTitle from '~/hooks/useTitle'
 
 const Showtimes = () => {
   useTitle('Suất chiếu')
-
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
-
   const isAuthorized =
     isAuthenticated &&
     (user?.role === 0 || user?.role === 1 || user?.role === 2)
-
   if (isAuthorized) {
     return <Navigate to={paths.dashboardPaths.dashboard} replace />
   }
@@ -70,9 +67,7 @@ const Showtimes = () => {
   const [selectedCinemaComplex, setSelectedCinemaComplex] = useState<
     string | null
   >(null)
-
   const [selectedCinema, setSelectedCinema] = useState<string | null>(null)
-
   const [selectedMovie, setSelectedMovie] = useState<string | null>(null)
 
   const selectMovieName = useMemo(() => {
@@ -80,22 +75,22 @@ const Showtimes = () => {
   }, [movies, selectedMovie])
 
   useEffect(() => {
-    if (cinemaComplexes) {
+    if (cinemaComplexes?.data) {
       setSelectedCinemaComplex(cinemaComplexes.data[0]._id)
     }
   }, [cinemaComplexes])
 
-  const handleCinemaComplexClick = (cinemaComplex: string) => {
-    setSelectedCinemaComplex(cinemaComplex)
+  const handleCinemaComplexClick = (cinemaComplex: CinemaComplexType) => {
+    setSelectedCinemaComplex(cinemaComplex._id)
     setSelectedCinema(null)
   }
 
-  const handleCinemaClick = (cinema: string) => {
-    setSelectedCinema(cinema)
+  const handleCinemaClick = (cinema: CinemaType) => {
+    setSelectedCinema(cinema._id)
   }
 
-  const handleMovieClick = (movie: string) => {
-    setSelectedMovie(movie)
+  const handleMovieClick = (movie: MovieType) => {
+    setSelectedMovie(movie._id)
   }
 
   const handleRemoveMovie = () => {
@@ -105,7 +100,7 @@ const Showtimes = () => {
   const filteredCinemas = useMemo(() => {
     return cinemas?.data?.filter(
       (cinema: CinemaType) =>
-        cinema?.cinemaComplex?._id === selectedCinemaComplex,
+        cinema.cinemaComplex._id === selectedCinemaComplex,
     )
   }, [cinemas, selectedCinemaComplex])
 
@@ -116,33 +111,31 @@ const Showtimes = () => {
   const filteredShowtimes = useMemo(() => {
     return showtimes?.data?.filter((showtime: ShowtimeType) => {
       const showtimeDate = new Date(showtime.date)
-
       const isCinemaMatch = showtime.cinema._id === selectedCinema
-
       const isMovieMatch =
         !selectedMovie || showtime.movie._id === selectedMovie
-
       const isDateMatch =
         showtimeDate.toDateString() === selectedDate.toDateString()
+      const isVisible = !showtime.hidden
 
-      return isCinemaMatch && isMovieMatch && isDateMatch
+      return isCinemaMatch && isMovieMatch && isDateMatch && isVisible
     })
   }, [showtimes, selectedCinema, selectedMovie, selectedDate])
 
-  const groupedShowtimes = filteredShowtimes?.reduce((acc: any, item: any) => {
-    const movieId = item.movie._id
-
-    if (!acc[movieId]) {
-      acc[movieId] = []
-    }
-
-    acc[movieId].push(item)
-
-    return acc
-  }, {})
+  const groupedShowtimes = useMemo(() => {
+    return (
+      filteredShowtimes?.reduce((acc: any, item: any) => {
+        const movieId = item.movie._id
+        if (!acc[movieId]) {
+          acc[movieId] = []
+        }
+        acc[movieId].push(item)
+        return acc
+      }, {}) || {}
+    )
+  }, [filteredShowtimes])
 
   let content
-
   if (
     isLoadingCinemaComplexes ||
     isLoadingCinemas ||
@@ -150,7 +143,6 @@ const Showtimes = () => {
     isLoadingMovies
   )
     content = <div>Loading...</div>
-
   if (
     isSuccessCinemaComplexes &&
     isSuccessCinemas &&
@@ -181,7 +173,7 @@ const Showtimes = () => {
                           <li
                             key={index}
                             className={`${selectedCinemaComplex === item._id && 'bg-[#231f20] text-white'} cursor-pointer py-3 text-center text-xs font-semibold capitalize`}
-                            onClick={() => handleCinemaComplexClick(item?._id)}
+                            onClick={() => handleCinemaComplexClick(item)}
                           >
                             {item.name}
                           </li>
@@ -194,10 +186,10 @@ const Showtimes = () => {
                           <div
                             key={index}
                             className={` ${
-                              selectedCinema === item?._id &&
+                              selectedCinema === item._id &&
                               'border border-black bg-[#fff]'
                             } flex h-10 cursor-pointer items-center justify-center bg-[#efefef] text-xs font-semibold capitalize`}
-                            onClick={() => handleCinemaClick(item?._id)}
+                            onClick={() => handleCinemaClick(item)}
                           >
                             {item.name}
                           </div>
@@ -210,14 +202,14 @@ const Showtimes = () => {
                   <div className='border-b-2 p-6 text-center text-xl font-semibold capitalize'>
                     phim
                   </div>
-                  <div className='flex h-[480px] flex-col gap-4 overflow-y-auto p-2'>
+                  <ul className='flex h-[480px] flex-col gap-4 overflow-y-auto p-2'>
                     {movies?.data?.map((item: MovieType, index: number) => (
-                      <div
+                      <li
                         key={index}
-                        onClick={() => handleMovieClick(item._id)}
+                        onClick={() => handleMovieClick(item)}
                         className={`${
                           selectedMovie === item._id
-                            ? 'border border-[#555]'
+                            ? 'border border-[red]'
                             : ''
                         } flex cursor-pointer items-center gap-2 border border-[#eee] p-2 text-sm font-semibold`}
                       >
@@ -249,10 +241,14 @@ const Showtimes = () => {
                             18
                           </div>
                         )}
-                        <div>{item.name}</div>
-                      </div>
+                        <div className='w-[200px] overflow-hidden text-ellipsis text-nowrap text-sm font-semibold uppercase'>
+                          {item.name}
+                        </div>
+                        <span className='mx-1'>|</span>
+                        <div>{item.duration} phút</div>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -287,9 +283,7 @@ const Showtimes = () => {
                 )}
               </div>
               <div className='flex items-center'>
-                <div className='mr-2 font-semibold capitalize'>
-                  phim:
-                </div>
+                <div className='mr-2 font-semibold capitalize'>phim:</div>
                 {selectMovieName ? (
                   <div className='flex items-center gap-2 border border-[#bab093] bg-[#e5e0cb] px-2 py-1 text-sm font-semibold capitalize'>
                     <span>{selectMovieName.name}</span>
@@ -323,9 +317,9 @@ const Showtimes = () => {
                   Kính mời quý khách chọn phim để xem lịch chiếu chi tiết tại
                   rạp
                 </div>
-              ) : Object.keys(groupedShowtimes).length ? (
+              ) : Object.keys(groupedShowtimes || {}).length ? (
                 <ul>
-                  {Object.keys(groupedShowtimes).map((movieId) => {
+                  {Object.keys(groupedShowtimes).map((movieId: string) => {
                     const showtimesForMovie = groupedShowtimes[movieId]
                     const movie = showtimesForMovie[0].movie
 
@@ -345,42 +339,55 @@ const Showtimes = () => {
                           {selectedCinema &&
                             showtimesForMovie[0].cinema._id ===
                               selectedCinema && (
-                              <div className='font-semibold'>
+                              <div className='font-semibold capitalize'>
                                 {showtimesForMovie[0].cinema.name}
                               </div>
                             )}
-                          <ul className='mt-4 flex items-center gap-2'>
-                            {showtimesForMovie.map(
-                              (item: any, index: number) => (
+                          <ul className='mt-4 flex flex-wrap items-center gap-2'>
+                            {showtimesForMovie
+                              .sort(
+                                (a: any, b: any) =>
+                                  new Date(a.timeStart).getTime() -
+                                  new Date(b.timeStart).getTime(),
+                              )
+                              .map((item: any, index: number) => (
                                 <li
                                   key={index}
-                                  className='w-[120px] border border-[#ebeaea] text-sm'
+                                  className='w-[120px] border border-[#ebeaea]'
                                 >
-                                  <div className='border-b border-[#ebeaea] p-2 text-center capitalize'>
-                                    phòng {item.room.name}
-                                  </div>
-                                  <div className='p-2 text-center font-semibold'>
-                                    {new Date(
-                                      item.timeStart,
-                                    ).toLocaleTimeString('vi-VN', {
-                                      hour: '2-digit',
-                                      minute: '2-digit',
-                                    })}
-                                    <span className='mx-1'>~</span>
-                                    {new Date(item.timeEnd).toLocaleTimeString(
-                                      'vi-VN',
-                                      {
+                                  <Link
+                                    to={`/showtime/${item._id}`}
+                                    className='group block hover:bg-[#231f20]'
+                                  >
+                                    <div className='border-b border-[#ebeaea] p-2 text-center text-xs capitalize group-hover:border-black group-hover:text-white'>
+                                      <span>{item.movie.movieFormat}</span>
+                                      <span className='mx-1'>|</span>
+                                      <span>{item.movie.subtitle}</span>
+                                    </div>
+                                    <div className='border-b border-[#ebeaea] p-2 text-center text-xs capitalize group-hover:border-black group-hover:text-white'>
+                                      phòng {item.room.name}
+                                    </div>
+                                    <div className='p-2 text-center text-sm font-semibold group-hover:border-black group-hover:text-white'>
+                                      {new Date(
+                                        item.timeStart,
+                                      ).toLocaleTimeString('vi-VN', {
                                         hour: '2-digit',
                                         minute: '2-digit',
-                                      },
-                                    )}
-                                  </div>
-                                  <div className='border-t border-[#ebeaea] p-2 text-center'>
-                                    {item.room.opacity} Ghế
-                                  </div>
+                                      })}
+                                      <span className='mx-1'>~</span>
+                                      {new Date(
+                                        item.timeEnd,
+                                      ).toLocaleTimeString('vi-VN', {
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                      })}
+                                    </div>
+                                    <div className='border-t border-[#ebeaea] p-2 text-center text-xs group-hover:border-black group-hover:text-white'>
+                                      {item.room.opacity} Ghế
+                                    </div>
+                                  </Link>
                                 </li>
-                              ),
-                            )}
+                              ))}
                           </ul>
                         </div>
                       </li>

@@ -84,5 +84,8 @@ export const cinemaComplexController = {
   ],
   handleGetOne,
   handleGetAll,
-  handleUpdate,
+  handleUpdate: [
+    handleJoiError({ body: cinemaComplexValidation.handleUpdate }),
+    handleUpdate,
+  ],
 }

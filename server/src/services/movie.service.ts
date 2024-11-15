@@ -27,6 +27,7 @@ const handleCreate = async (
     const checkExist = await movieModel.findOne({
       name,
     })
+
     if (checkExist) {
       return {
         success: false,
@@ -50,6 +51,7 @@ const handleCreate = async (
       movieFormat,
       genres,
     })
+
     if (!request) {
       return {
         success: false,
@@ -90,6 +92,7 @@ const handleGetOne = async (
 }> => {
   try {
     const request = await movieModel.findById(id).populate('genres')
+
     if (!request) {
       return {
         success: false,
@@ -128,6 +131,7 @@ const handleGetAll = async (): Promise<{
 }> => {
   try {
     const request = await movieModel.find().populate('genres')
+
     if (!request || request.length === 0) {
       return {
         success: false,
@@ -180,6 +184,7 @@ const handleUpdate = async (
 }> => {
   try {
     const checkExist = await movieModel.findOne(id)
+
     if (!checkExist) {
       return {
         success: false,
@@ -210,6 +215,7 @@ const handleUpdate = async (
         new: true,
       },
     )
+
     if (!request) {
       return {
         success: false,
@@ -240,9 +246,129 @@ const handleUpdate = async (
   }
 }
 
+const handleHideMovie = async (
+  id: Types.ObjectId,
+): Promise<{
+  success: boolean
+  message: string
+  data?: Partial<MovieType>
+  statusCode: number
+}> => {
+  try {
+    const checkExist = await movieModel.findOne(id)
+
+    if (!checkExist) {
+      return {
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'Phim không tồn tại',
+      }
+    }
+
+    const request = await movieModel.findByIdAndUpdate(
+      id,
+      {
+        hidden: true,
+      },
+      {
+        new: true,
+      },
+    )
+
+    if (!request) {
+      return {
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'Ẩn phim thất bại!',
+      }
+    }
+
+    return {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: 'Ẩn phim thành công!',
+      data: request,
+    }
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return {
+        success: false,
+        message: `Lỗi hệ thống: ${error.message}`,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+      }
+    }
+    return {
+      success: false,
+      message: 'Đã xảy ra lỗi không xác định!',
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+    }
+  }
+}
+
+const handleShowtimeMovie = async (
+  id: Types.ObjectId,
+): Promise<{
+  success: boolean
+  message: string
+  data?: Partial<MovieType>
+  statusCode: number
+}> => {
+  try {
+    const checkExist = await movieModel.findOne(id)
+
+    if (!checkExist) {
+      return {
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'Phim không tồn tại',
+      }
+    }
+
+    const request = await movieModel.findByIdAndUpdate(
+      id,
+      {
+        hidden: false,
+      },
+      {
+        new: true,
+      },
+    )
+
+    if (!request) {
+      return {
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'Hiện phim thất bại!',
+      }
+    }
+
+    return {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: 'Hiện phim thành công!',
+      data: request,
+    }
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return {
+        success: false,
+        message: `Lỗi hệ thống: ${error.message}`,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+      }
+    }
+    return {
+      success: false,
+      message: 'Đã xảy ra lỗi không xác định!',
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+    }
+  }
+}
+
 export const movieService = {
   handleCreate,
   handleGetOne,
   handleGetAll,
   handleUpdate,
+  handleHideMovie,
+  handleShowtimeMovie,
 }

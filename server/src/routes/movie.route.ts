@@ -1,4 +1,5 @@
 import { Router } from 'express'
+
 import { movieController } from '~/controllers/movie.controller'
 import { authentication, isAdmin } from '~/middlewares/auth.middleware'
 
@@ -11,6 +12,16 @@ router.put(
   '/update/:id',
   [authentication, isAdmin],
   movieController.handleUpdate,
+)
+router.put(
+  '/hide/:id',
+  [authentication, isAdmin],
+  movieController.handleHideMovie,
+)
+router.put(
+  '/show/:id',
+  [authentication, isAdmin],
+  movieController.handleShowMovie,
 )
 
 export const movieRoute = router

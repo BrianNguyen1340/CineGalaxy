@@ -19,6 +19,7 @@ const handleCreate = async (
     const checkExist = await cinemaModel.findOne({
       $or: [{ name }, { email }, { phone }],
     })
+
     if (checkExist) {
       return {
         success: false,
@@ -34,6 +35,7 @@ const handleCreate = async (
       email,
       cinemaComplex,
     })
+
     if (!request) {
       return {
         success: false,
@@ -74,7 +76,7 @@ const handleGetOne = async (
 }> => {
   try {
     const request = await cinemaModel.findById(id).populate('cinemaComplex')
-    
+
     if (!request) {
       return {
         success: false,
@@ -159,6 +161,7 @@ const handleUpdate = async (
 }> => {
   try {
     const cinema = await cinemaModel.findById(id)
+
     if (!cinema) {
       return {
         success: false,
@@ -172,6 +175,7 @@ const handleUpdate = async (
       cinemaComplex,
       _id: { $ne: id },
     })
+
     if (checkExist) {
       return {
         success: false,
@@ -195,6 +199,7 @@ const handleUpdate = async (
         new: true,
       },
     )
+
     if (!request) {
       return {
         success: false,

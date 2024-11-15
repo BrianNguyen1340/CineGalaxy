@@ -15,6 +15,7 @@ const handleCreate = async (
     const checkExist = await genreModel.findOne({
       name,
     })
+
     if (checkExist) {
       return {
         success: false,
@@ -26,6 +27,7 @@ const handleCreate = async (
     const request = await genreModel.create({
       name,
     })
+
     if (!request) {
       return {
         success: false,
@@ -66,6 +68,7 @@ const handleGetOne = async (
 }> => {
   try {
     const request = await genreModel.findById(id)
+
     if (!request) {
       return {
         success: false,
@@ -104,6 +107,7 @@ const handleGetAll = async (): Promise<{
 }> => {
   try {
     const request = await genreModel.find()
+
     if (!request || request.length === 0) {
       return {
         success: false,
@@ -145,6 +149,7 @@ const handleUpdate = async (
 }> => {
   try {
     const checkExist = await genreModel.findOne(id)
+
     if (!checkExist) {
       return {
         success: false,
@@ -164,6 +169,7 @@ const handleUpdate = async (
         new: true,
       },
     )
+    
     if (!request) {
       return {
         success: false,

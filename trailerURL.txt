@@ -6,7 +6,7 @@ desciption: Đây là phần phim cuối cùng và hoành tráng nhất về c�
 
 trailerUrl: https://www.youtube.com/embed/HyIyd9joTTc?si=h3HPANkzo_ICYXg0
 
-********************************************************************************************************************
+*************************************************************************
 
 name: NGÀY XƯA CÓ MỘT CHUYỆN TÌNH
 
@@ -16,7 +16,7 @@ desciption: Ngày Xưa Có Một Chuyện Tình xoay quanh câu chuyện tình b
 
 trailerUrl: https://www.youtube.com/embed/qaeHlk0OXec?si=zr8ABG1Y0K8ZPw30
 
-********************************************************************************************************************
+*************************************************************************
 
 name: ĐÔI BẠN HỌC YÊU
 
@@ -26,7 +26,7 @@ desciption: Bộ phim xoay quanh đôi bạn ngỗ nghịch Jae-hee và Heung-so
 
 trailerUrl: https://www.youtube.com/embed/EIARKqcXILM?si=r3x80NFdKlY8yBGr
 
-********************************************************************************************************************
+*************************************************************************
 
 name: AI OÁN TRONG VƯỜN XUÂN
 
@@ -36,8 +36,39 @@ desciption: Phim xoay quanh So-hee, người đã mất đi gia đình hạnh ph
 
 trailerUrl: https://www.youtube.com/embed/QeDo1uPujSc?si=YEZqrbFbs4Zyvx9l
 
-********************************************************************************************************************
+*************************************************************************
 
-name: 
+name: ROBOT HOANG DÃ
 
 director: Chris Sanders
+
+desciption: Cuộc phiêu lưu hoành tráng theo chân hành trình của một robot — đơn vị ROZZUM 7134, gọi tắt là Roz. Roz vô tình dạt vào hoang đảo sau một sự cố và nơi đây trở thành địa điểm sống mới của cô. Tại đây, Roz kết thân và nhận nuôi một chú ngỗng con, đặt tên là Brightbill. Roz và Brightbill dần dần thân thiết với các bạn thú trên đảo, song sau đó phải chống chọi, bảo vệ “nhà mới” trước sự xâm lăng của nhà máy từng sản xuất ra Roz.
+
+trailerUrl: https://www.youtube.com/embed/NuYnY_P3npY?si=0Vv3iXa23b1RNPqC
+
+*************************************************************************
+
+name: TEE YOD: QUỶ ĂN TẠNG PHẦN 2
+
+director: Taweewat Wantha
+
+desciption: Ba năm sau cái chết của Yam, Yak vẫn tiếp tục săn lùng linh hồn bí ẩn mặc áo choàng đen. Gặp một cô gái có triệu chứng giống Yam, Yak phát hiện ra người bảo vệ linh hồn, pháp sư ẩn dật Puang, sống trong một khu rừng đầy nguy hiểm. Giữa những phép thuật ma quỷ và những sinh vật nguy hiểm. Khi họ đuổi theo linh hồn mặc áo choàng đen, tiếng kêu đầy ám ảnh của Tee Yod sắp quay trở lại một lần nữa...
+
+trailerUrl: https://www.youtube.com/embed/xVVZvSybaEc?si=9ow3SyNYsvKcUVep
+
+*************************************************************************
+
+name: LINH MIÊU
+
+director: Lưu Thành Luân
+
+desciption: Linh Miêu: Quỷ Nhập Tràng lấy cảm hứng từ truyền thuyết dân gian về “quỷ nhập tràng” để xây dựng cốt truyện. Phim lồng ghép những nét văn hóa đặc trưng của Huế như nghệ thuật khảm sành - một văn hóa đặc sắc của thời nhà Nguyễn, đề cập đến các vấn đề về giai cấp và quan điểm trọng nam khinh nữ. Đặc biệt, hình ảnh rước kiệu thây ma và những hình nhân giấy không chỉ biểu trưng cho tai ương hay điềm dữ mà còn là hiện thân của nghiệp quả.
+
+trailerUrl: https://www.youtube.com/embed/8l4crgVt36Y?si=LoGHGvagh3wmJVlJ
+
+Chọn ghế là filter theo số lượng rồi mới cho chọn
+Sắp xếp phim theo lượt xem nhiều nhất
+Chọn sản phẩm có combo và sản phẩm riêng lẻ
+Khuyến mãi cho từng rạp theo giời gian nhất định
+Lần đầu tiên đến rạp mua vé tặng mã khuyến mãi (có tài khoản)
+Thêm ảnh cho combo và sản phẩm

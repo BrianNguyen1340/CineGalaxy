@@ -17,6 +17,7 @@ const profile: RequestHandler = catchErrors(async (req, res) => {
   const { _id } = req.user
 
   const response = await userService.profile(_id)
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -47,6 +48,7 @@ const updateProfile: RequestHandler = catchErrors(async (req, res) => {
     address,
     photoURL,
   )
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -88,6 +90,7 @@ const getUserByAdmin: RequestHandler = catchErrors(async (req, res) => {
   const objectId = new Types.ObjectId(id)
 
   const response = await userService.getUserByAdmin(objectId)
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -102,6 +105,7 @@ const getUserByAdmin: RequestHandler = catchErrors(async (req, res) => {
 
 const getAllUsersByAdmin: RequestHandler = catchErrors(async (req, res) => {
   const response = await userService.getAllUsersByAdmin()
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -120,6 +124,7 @@ const updateUserByAdmin: RequestHandler = catchErrors(async (req, res) => {
   const objectID = new Types.ObjectId(id)
 
   const response = await userService.updateUserByAdmin(objectID, req.body)
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -138,6 +143,7 @@ const blockAccount = catchErrors(async (req, res) => {
   const objectId = new Types.ObjectId(id)
 
   const response = await userService.blockAccount(objectId)
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -151,28 +157,13 @@ const unblockAccount = catchErrors(async (req, res) => {
   const objectId = new Types.ObjectId(id)
 
   const response = await userService.unblockAccount(objectId)
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
 
   return sendSuccessResponse(res, response.statusCode, response.message)
 })
-
-// const createUserByAdmin = catchErrors(async (req, res) => {
-//   const { email, name, password, role } = req.body
-
-//   const response = await userService.createUserByAdmin(
-//     email,
-//     name,
-//     password,
-//     role,
-//   )
-//   if (!response.success) {
-//     return sendErrorResponse(res, response.statusCode, response.message)
-//   }
-
-//   return sendSuccessResponse(res, response.statusCode, response.message)
-// })
 
 const userController = {
   profile,
@@ -185,7 +176,6 @@ const userController = {
   getAllUsersByAdmin,
   blockAccount,
   unblockAccount,
-  // createUserByAdmin: [handleJoiError({ body: userValidation.createUserByAdmin }), createUserByAdmin],
   updatePassword,
 }
 

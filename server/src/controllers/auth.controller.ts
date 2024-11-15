@@ -72,6 +72,7 @@ const resendOTPRegister: RequestHandler = catchErrors(async (req, res) => {
   }
 
   const response = await authService.resendOTPRegister(email)
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -83,12 +84,15 @@ const googleLogin: RequestHandler = catchErrors(async (req, res) => {
   const { email, name, photoURL } = req.body
 
   const response = await authService.googleLogin(email, name, photoURL)
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
 
   const accessToken = response.accessToken
+
   const refreshToken = response.refreshToken
+
   if (!accessToken || !refreshToken) {
     return sendErrorResponse(
       res,
@@ -111,12 +115,15 @@ const login: RequestHandler = catchErrors(async (req, res) => {
   const { email, password } = req.body
 
   const response = await authService.login(email, password)
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
 
   const accessToken = response.accessToken
+
   const refreshToken = response.refreshToken
+
   if (!accessToken || !refreshToken) {
     return sendErrorResponse(
       res,
@@ -155,6 +162,7 @@ const refresh = catchErrors(async (req, res) => {
       }
 
       const user = await userModel.findOne({ _id: decoded._id })
+
       if (!user) {
         return res.status(401).json({ message: 'Unauthorized' })
       }
@@ -179,6 +187,7 @@ const forgotPassword: RequestHandler = catchErrors(async (req, res) => {
   const { email } = req.body
 
   const response = await authService.forgotPassword(email)
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -188,9 +197,11 @@ const forgotPassword: RequestHandler = catchErrors(async (req, res) => {
 
 const resetPassword: RequestHandler = catchErrors(async (req, res) => {
   const { token } = req.params
+
   const { password } = req.body
 
   const response = await authService.resetPassword(token, password)
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -200,7 +211,9 @@ const resetPassword: RequestHandler = catchErrors(async (req, res) => {
 
 const logout: RequestHandler = catchErrors(async (req, res) => {
   const accessToken: string = req.cookies.AT
+
   const refreshToken: string = req.cookies.RT
+
   if (!accessToken && !refreshToken) {
     return sendErrorResponse(
       res,
@@ -212,6 +225,7 @@ const logout: RequestHandler = catchErrors(async (req, res) => {
   clearAuthCookies(res)
 
   const response = await authService.logout()
+  
   if (!response.success) {
     return sendErrorResponse(
       res,

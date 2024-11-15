@@ -25,7 +25,7 @@ const PasswordCriteria = ({ password }: { password: string }) => {
   ]
 
   return (
-    <div className='mt-[10px]'>
+    <div className='mt-2'>
       {criteria.map((item) => (
         <div className='flex items-center' key={item.label}>
           {item.met ? (
@@ -34,7 +34,7 @@ const PasswordCriteria = ({ password }: { password: string }) => {
             <X className='mr-2 h-4 w-4 text-[red]' />
           )}
           <span
-            className={`mr-[1px] font-semibold ${item.met ? 'text-[green]' : 'text-[red]'}`}
+            className={`mr-0.5 font-semibold ${item.met ? 'text-[green]' : 'text-[red]'}`}
           >
             {item.label}
           </span>
@@ -93,7 +93,7 @@ const PasswordStrength = ({ password }: { password: string }) => {
   }
 
   return (
-    <div className='mt-[30px]'>
+    <div className='mt-7'>
       <div className='mb-1 flex items-center justify-between'>
         <span className='m-0 font-semibold capitalize text-[gray]'>
           độ mạnh mật khẩu

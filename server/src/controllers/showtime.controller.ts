@@ -11,13 +11,11 @@ import { showtimeService } from '~/services/showtime.service'
 import { showtimeValidation } from '~/validations/showtime.validation'
 
 const handleCreate: RequestHandler = catchErrors(async (req, res) => {
-  const { date, timeStart, timeEnd, movie, room, cinema, cinemaComplex } =
-    req.body
+  const { date, timeStart, movie, room, cinema, cinemaComplex } = req.body
 
   const response = await showtimeService.handleCreate(
     date,
     timeStart,
-    timeEnd,
     movie,
     room,
     cinema,
@@ -71,8 +69,7 @@ const handleGetAll: RequestHandler = catchErrors(async (req, res) => {
 
 const handleUpdate: RequestHandler = catchErrors(async (req, res) => {
   const { id } = req.params
-  const { date, timeStart, timeEnd, movie, room, cinema, cinemaComplex } =
-    req.body
+  const { date, timeStart, movie, room, cinema, cinemaComplex } = req.body
 
   const objectID = new Types.ObjectId(id)
 
@@ -80,12 +77,49 @@ const handleUpdate: RequestHandler = catchErrors(async (req, res) => {
     objectID,
     date,
     timeStart,
-    timeEnd,
     movie,
     room,
     cinema,
     cinemaComplex,
   )
+  if (!response.success) {
+    return sendErrorResponse(res, response.statusCode, response.message)
+  }
+
+  return sendSuccessResponse(
+    res,
+    response.statusCode,
+    response.message,
+    response.data,
+  )
+})
+
+const handleHideShowtime = catchErrors(async (req, res) => {
+  const { id } = req.params
+
+  const objectID = new Types.ObjectId(id)
+
+  const response = await showtimeService.handleHideShowtime(objectID)
+
+  if (!response.success) {
+    return sendErrorResponse(res, response.statusCode, response.message)
+  }
+
+  return sendSuccessResponse(
+    res,
+    response.statusCode,
+    response.message,
+    response.data,
+  )
+})
+
+const handleShowShowtime = catchErrors(async (req, res) => {
+  const { id } = req.params
+
+  const objectID = new Types.ObjectId(id)
+
+  const response = await showtimeService.handleShowShowtime(objectID)
+
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -109,4 +143,6 @@ export const showtimeController = {
     handleJoiError({ body: showtimeValidation.handleUpdate }),
     handleUpdate,
   ],
+  handleHideShowtime,
+  handleShowShowtime,
 }

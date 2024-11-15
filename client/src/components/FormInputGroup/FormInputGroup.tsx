@@ -19,7 +19,7 @@ type FormInputGroupType = {
 const FormInputGroup: React.FC<FormInputGroupType> = ({
   htmlFor,
   labelChildren,
-  type = 'text',
+  type,
   placeholder = '',
   register,
   errors,

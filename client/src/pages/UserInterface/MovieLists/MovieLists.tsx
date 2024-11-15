@@ -4,17 +4,15 @@ import { Link, Navigate } from 'react-router-dom'
 import { useAppSelector } from '~/hooks/redux'
 import { paths } from '~/utils/paths'
 import { useGetMoviesQuery } from '~/services/movie.service'
+import { MovieType } from '~/types/movie.type'
 import useTitle from '~/hooks/useTitle'
 
 const MovieLists = () => {
   useTitle('Danh sách phim')
-
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
-
   const isAuthorized =
     isAuthenticated &&
     (user?.role === 0 || user?.role === 1 || user?.role === 2)
-
   if (isAuthorized) {
     return <Navigate to={paths.dashboardPaths.dashboard} replace />
   }
@@ -34,20 +32,17 @@ const MovieLists = () => {
 
   const currentDate = new Date()
 
-  const releasedMovies = movies?.data?.filter((movie: any) => {
+  const releasedMovies = movies?.data?.filter((movie: MovieType) => {
     const releaseDate = new Date(movie.releaseDate)
-    return releaseDate <= currentDate
+    return releaseDate <= currentDate && movie.hidden === false
   })
-
-  const upcomingMovies = movies?.data?.filter((movie: any) => {
+  const upcomingMovies = movies?.data?.filter((movie: MovieType) => {
     const releaseDate = new Date(movie.releaseDate)
-    return releaseDate > currentDate
+    return releaseDate > currentDate && movie.hidden === false
   })
 
   let content
-
   if (isLoadingMovies) content = <div>Loading...</div>
-
   if (isSuccessMovies) {
     content = (
       <div className='relative h-fit w-full'>
@@ -77,7 +72,7 @@ const MovieLists = () => {
           {activeTab === 'released' ? (
             releasedMovies.length > 0 ? (
               <div className='grid grid-cols-4 gap-4 pb-5'>
-                {releasedMovies.map((item: any, index: number) => (
+                {releasedMovies.map((item: MovieType, index: number) => (
                   <div key={index} className='h-fit border bg-white'>
                     <figure className='group relative h-full w-full overflow-hidden'>
                       <img
@@ -151,7 +146,7 @@ const MovieLists = () => {
             )
           ) : upcomingMovies.length > 0 ? (
             <div className='grid grid-cols-4 gap-4 pb-5'>
-              {upcomingMovies.map((item: any, index: number) => (
+              {upcomingMovies.map((item: MovieType, index: number) => (
                 <div key={index} className='h-fit border bg-white'>
                   <figure className='group relative h-full w-full overflow-hidden'>
                     <img

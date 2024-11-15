@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { GiFilmProjector } from 'react-icons/gi'
 import { MdCategory } from 'react-icons/md'
 import { SiShowtime } from 'react-icons/si'
+import { FaProductHunt } from 'react-icons/fa'
+import { BiSolidCategoryAlt } from 'react-icons/bi'
 import {
   Armchair,
   CircleParking,
@@ -98,7 +100,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <hr />
       </div>
       <Scrollbar
-        height='650px'
+        style={{ height: '650px' }}
         content={
           <>
             <SidebarMenu
@@ -309,6 +311,56 @@ const Sidebar: React.FC<SidebarProps> = ({
                       <SidebarMenuItem
                         path={paths.dashboardPaths.managements.showtimes.create}
                         spanText='tạo suất chiếu'
+                        spanTitle='C'
+                        isSelected={selectedMenuItem === location.pathname}
+                        onSelect={() => setSelectedMenuItem(location.pathname)}
+                      />
+                    </>
+                  }
+                />
+                <SidebarMenu
+                  spanTitle='Danh mục sản phẩm'
+                  icon={<BiSolidCategoryAlt size='16' />}
+                  item={
+                    <>
+                      <SidebarMenuItem
+                        path={
+                          paths.dashboardPaths.managements.productCategories
+                            .list
+                        }
+                        spanText='danh sách danh mục sản phẩm'
+                        spanTitle='L'
+                        isSelected={selectedMenuItem === location.pathname}
+                        onSelect={() => setSelectedMenuItem(location.pathname)}
+                      />
+                      <SidebarMenuItem
+                        path={
+                          paths.dashboardPaths.managements.productCategories
+                            .create
+                        }
+                        spanText='tạo danh mục sản phẩm'
+                        spanTitle='C'
+                        isSelected={selectedMenuItem === location.pathname}
+                        onSelect={() => setSelectedMenuItem(location.pathname)}
+                      />
+                    </>
+                  }
+                />
+                <SidebarMenu
+                  spanTitle='Sản phẩm'
+                  icon={<FaProductHunt size='16' />}
+                  item={
+                    <>
+                      <SidebarMenuItem
+                        path={paths.dashboardPaths.managements.products.list}
+                        spanText='danh sách sản phẩm'
+                        spanTitle='L'
+                        isSelected={selectedMenuItem === location.pathname}
+                        onSelect={() => setSelectedMenuItem(location.pathname)}
+                      />
+                      <SidebarMenuItem
+                        path={paths.dashboardPaths.managements.products.create}
+                        spanText='tạo sản phẩm'
                         spanTitle='C'
                         isSelected={selectedMenuItem === location.pathname}
                         onSelect={() => setSelectedMenuItem(location.pathname)}

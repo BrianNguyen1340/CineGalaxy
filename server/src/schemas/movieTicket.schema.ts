@@ -5,9 +5,9 @@ export type MovieTicketType = Document & {
   totalPrice: number
   quantity: number
   datetime: Date
-  showtimeId: Types.ObjectId
-  customerId: Types.ObjectId
-  cashierId: Types.ObjectId
+  showtime: Types.ObjectId
+  customer: Types.ObjectId
+  cashier: Types.ObjectId
 }
 
 const movieTicketSchema = new Schema<MovieTicketType>(
@@ -24,17 +24,17 @@ const movieTicketSchema = new Schema<MovieTicketType>(
       type: Date,
       required: true,
     },
-    showtimeId: {
+    showtime: {
       type: Schema.Types.ObjectId,
       ref: 'Showtime',
       required: true,
     },
-    customerId: {
+    customer: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
-    cashierId: {
+    cashier: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,

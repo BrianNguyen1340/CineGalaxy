@@ -21,7 +21,7 @@ const showtimeSeatStatusSchema = new Schema<ShowtimeSeatStatusType>(
     },
     status: {
       type: String,
-      enum: ['available', 'booked'],
+      enum: ['available', 'booked', 'unavailable'],
       required: true,
     },
   },

@@ -7,17 +7,15 @@ import Slider from 'react-slick'
 import { useGetMoviesQuery } from '~/services/movie.service'
 import { paths } from '~/utils/paths'
 import { useAppSelector } from '~/hooks/redux'
+import { MovieType } from '~/types/movie.type'
 import useTitle from '~/hooks/useTitle'
 
 const Home = () => {
   useTitle('Trang chủ')
-
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
-
   const isAuthorized =
     isAuthenticated &&
     (user?.role === 0 || user?.role === 1 || user?.role === 2)
-
   if (isAuthorized) {
     return <Navigate to={paths.dashboardPaths.dashboard} replace />
   }
@@ -61,25 +59,24 @@ const Home = () => {
     isSuccess: isSuccessMovies,
     refetch: refetchMovies,
   } = useGetMoviesQuery({})
-  console.log(movies)
 
   useEffect(() => {
     refetchMovies()
   }, [refetchMovies])
 
-  const moviesToDisplay = movies?.data?.slice(0, 7) || []
+  const moviesToDisplay = (movies?.data?.slice(0, 7) || []).filter(
+    (movie: MovieType) => movie.hidden === false,
+  )
 
   const currentDate = new Date()
 
-  const releasedMovies = movies?.data?.filter((movie: any) => {
+  const releasedMovies = movies?.data?.filter((movie: MovieType) => {
     const releaseDate = new Date(movie.releaseDate)
-    return releaseDate <= currentDate
+    return releaseDate <= currentDate && movie.hidden === false
   })
 
   let content
-
   if (isLoadingMovies) content = <div>Loading...</div>
-
   if (isSuccessMovies) {
     content = (
       <div className='h-fit w-full'>
@@ -98,7 +95,7 @@ const Home = () => {
               navigation={true}
               modules={[Autoplay, EffectFade, Navigation]}
             >
-              {movies?.data?.map((item: any, index: number) => (
+              {movies?.data?.map((item: MovieType, index: number) => (
                 <SwiperSlide key={index}>
                   <img src={item.banner} alt='banner' className='w-full' />
                 </SwiperSlide>
@@ -115,7 +112,7 @@ const Home = () => {
             <div className='border py-3'>
               {moviesToDisplay.length > 0 ? (
                 <>
-                  {moviesToDisplay?.map((item: any, index: number) => (
+                  {moviesToDisplay?.map((item: MovieType, index: number) => (
                     <ol key={index}>
                       <li className='flex items-center gap-1 border-[4px] border-white hover:border-[4px] hover:border-[#dad2b4]'>
                         <Link
@@ -187,38 +184,36 @@ const Home = () => {
             phim đang chiếu
           </div>
           <Slider {...settings}>
-            {releasedMovies.map((item: any, index: number) => (
-              <ul key={index} className='border border-[#ddd]'>
+            {releasedMovies.map((item: MovieType, index: number) => (
+              <div key={index} className='border border-[#ddd]'>
                 {
-                  <li>
-                    <figure className='group relative h-full w-full overflow-hidden'>
-                      <img
-                        src={item.poster}
-                        alt='poster'
-                        className='h-[412px] w-full object-cover'
-                      />
-                      <figcaption className='absolute bottom-0 left-0 right-0 top-0 z-10 flex h-full w-full flex-col items-center justify-center gap-10 transition duration-500 before:absolute before:z-[-1] before:bg-gray-700 before:opacity-0 group-hover:bg-[rgba(0,0,0,0.7)]'>
-                        <div className='border border-[#ffd60a] opacity-0 transition duration-500 group-hover:opacity-100'>
-                          <Link
-                            to={`/movie/${item?._id}`}
-                            className='mx-auto block min-w-[150px] cursor-pointer p-5 text-center font-semibold capitalize text-white transition duration-500 hover:bg-white hover:text-black'
-                          >
-                            xem chi tiết
-                          </Link>
-                        </div>
-                        <div className='border border-[#ffd60a] opacity-0 transition duration-500 group-hover:opacity-100'>
-                          <Link
-                            to={paths.userPaths.showtimes}
-                            className='mx-auto block min-w-[150px] cursor-pointer p-5 text-center font-semibold capitalize text-white transition duration-500 hover:bg-white hover:text-black'
-                          >
-                            đặt vé
-                          </Link>
-                        </div>
-                      </figcaption>
-                    </figure>
-                  </li>
+                  <figure className='group relative h-full w-full overflow-hidden'>
+                    <img
+                      src={item.poster}
+                      alt='poster'
+                      className='h-[412px] w-full object-cover'
+                    />
+                    <figcaption className='absolute bottom-0 left-0 right-0 top-0 z-10 flex h-full w-full flex-col items-center justify-center gap-10 transition duration-500 before:absolute before:z-[-1] before:bg-gray-700 before:opacity-0 group-hover:bg-[rgba(0,0,0,0.7)]'>
+                      <div className='border border-[#ffd60a] opacity-0 transition duration-500 group-hover:opacity-100'>
+                        <Link
+                          to={`/movie/${item._id}`}
+                          className='mx-auto block min-w-[150px] cursor-pointer p-5 text-center font-semibold capitalize text-white transition duration-500 hover:bg-white hover:text-black'
+                        >
+                          xem chi tiết
+                        </Link>
+                      </div>
+                      <div className='border border-[#ffd60a] opacity-0 transition duration-500 group-hover:opacity-100'>
+                        <Link
+                          to={paths.userPaths.showtimes}
+                          className='mx-auto block min-w-[150px] cursor-pointer p-5 text-center font-semibold capitalize text-white transition duration-500 hover:bg-white hover:text-black'
+                        >
+                          đặt vé
+                        </Link>
+                      </div>
+                    </figcaption>
+                  </figure>
                 }
-              </ul>
+              </div>
             ))}
           </Slider>
         </section>

@@ -1,5 +1,7 @@
+import { GenreType } from "./genre.type"
+
 export type MovieType = {
-  _id: string
+  readonly _id: string
   name: string
   slug: string
   description: string
@@ -12,5 +14,6 @@ export type MovieType = {
   movieRating: string
   subtitle: string
   movieFormat: string
-  genres: string[]
+  genres: GenreType[]
+  hidden: boolean
 }

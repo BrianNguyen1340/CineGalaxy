@@ -17,6 +17,7 @@ const validationSchema = Yup.object().shape({
 
 const CreateGenre = () => {
   useTitle('Admin | Tạo thể loại phim')
+  const navigate = useNavigate()
 
   const {
     register,
@@ -26,23 +27,17 @@ const CreateGenre = () => {
     resolver: yupResolver(validationSchema),
   })
 
-  const navigate = useNavigate()
-
-  const [createApi, { isLoading }] = useCreateGenreMutation()
+  const [createApi, { isLoading: isLoadingCreate }] = useCreateGenreMutation()
 
   const handleCreate: SubmitHandler<{ name: string }> = async (reqBody) => {
     try {
       nProgress.start()
-
       const { name } = reqBody
-
       const response = await createApi({ name }).unwrap()
-
       Swal.fire('Thành công', response.message, 'success')
-
       navigate(paths.dashboardPaths.managements.genres.list)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
@@ -53,6 +48,7 @@ const CreateGenre = () => {
       <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
         tạo danh mục phim
       </div>
+      
       <form onSubmit={handleSubmit(handleCreate)} className='mx-auto w-[500px]'>
         <FormInputGroup
           register={register}
@@ -67,14 +63,17 @@ const CreateGenre = () => {
           type='text'
           name='name'
         />
+        
         <button
           type='submit'
-          disabled={isLoading ? true : false}
+          disabled={isLoadingCreate ? true : false}
           className='rounded bg-black px-4 py-3 font-semibold text-white transition duration-300 hover:opacity-70'
         >
           <div className='flex items-center justify-center gap-3'>
-            {isLoading && <HashLoader size='20' color='#fff' />}
-            <span className='capitalize'>{isLoading ? 'đang lưu' : 'lưu'}</span>
+            {isLoadingCreate && <HashLoader size='20' color='#fff' />}
+            <span className='capitalize'>
+              {isLoadingCreate ? 'đang lưu' : 'lưu'}
+            </span>
           </div>
         </button>
       </form>

@@ -4,41 +4,46 @@ import { SquarePen } from 'lucide-react'
 import ReactPaginate from 'react-paginate'
 
 import { useGetGenresQuery } from '~/services/genre.service'
+import { GenreType } from '~/types/genre.type'
+import useTitle from '~/hooks/useTitle'
 
 const ListGenre = () => {
-  const { data: genres, isLoading, isSuccess, refetch } = useGetGenresQuery({})
+  useTitle('Admin | Danh sách thể loại phim')
+
+  const {
+    data: genres,
+    isLoading: isLoadingGenres,
+    isSuccess: isSuccessGenres,
+    refetch: refetchGenres,
+  } = useGetGenresQuery({})
 
   useEffect(() => {
-    refetch()
-  }, [refetch])
+    refetchGenres()
+  }, [refetchGenres])
 
-  const [currentPage, setCurrentPage] = useState(0)
-
+  const [currentPage, setCurrentPage] = useState<number>(0)
   const itemsPerPage = 10
-
   const offset = currentPage * itemsPerPage
-  
   const currentItems = genres
-    ? genres.data
-        .slice()
-        .reverse()
-        .slice(offset, offset + itemsPerPage)
+    ? genres?.data
+        ?.slice()
+        ?.reverse()
+        ?.slice(offset, offset + itemsPerPage)
     : []
 
-  const handlePageClick = (event: any) => {
+  const handlePageClick = (event: { selected: number }) => {
     setCurrentPage(event.selected)
   }
 
   let content
-
-  if (isLoading) content = <div>Loading...</div>
-
-  if (isSuccess) {
+  if (isLoadingGenres) content = <div>Loading...</div>
+  if (isSuccessGenres) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
         <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
           danh sách thể loại phim
         </div>
+        
         {genres ? (
           <>
             <table>
@@ -50,13 +55,16 @@ const ListGenre = () => {
                 </tr>
               </thead>
               <tbody>
-                {currentItems.map((item: any, index: number) => (
+                {currentItems.map((item: GenreType, index: number) => (
                   <tr key={index}>
                     <td>{index + offset}</td>
                     <td className='capitalize'>{item.name}</td>
                     <td>
                       <div className='flex items-center justify-center'>
-                        <Link to={`/update-genre/${item._id}`}>
+                        <Link
+                          to={`/update-genre/${item._id}`}
+                          className='rounded p-1 transition duration-300 hover:bg-[#67349D] hover:text-white hover:shadow-custom'
+                        >
                           <SquarePen />
                         </Link>
                       </div>
@@ -65,12 +73,13 @@ const ListGenre = () => {
                 ))}
               </tbody>
             </table>
+
             <ReactPaginate
               previousLabel={'<'}
               nextLabel={'>'}
               breakLabel={'...'}
               breakClassName={'break-me'}
-              pageCount={Math.ceil(genres.data.length / itemsPerPage)}
+              pageCount={Math.ceil(genres?.data?.length / itemsPerPage)}
               marginPagesDisplayed={2}
               pageRangeDisplayed={5}
               onPageChange={handlePageClick}

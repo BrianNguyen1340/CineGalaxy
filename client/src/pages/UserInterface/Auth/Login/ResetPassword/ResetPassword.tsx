@@ -15,20 +15,19 @@ import useTitle from '~/hooks/useTitle'
 
 const ResetPassword = () => {
   useTitle('Xác nhận thay đổi mật khẩu')
-
   const { isAuthenticated, user } = useAppSelector((state) => state.user)
-
   if (isAuthenticated && user) {
     return <Navigate to={paths.userPaths.home} />
   }
-
   const isAuthorized =
     isAuthenticated &&
     (user?.role === 0 || user?.role === 1 || user?.role === 2)
-
   if (isAuthorized) {
     return <Navigate to={paths.dashboardPaths.dashboard} replace />
   }
+
+  const { token } = useParams<{ token: string }>()
+  const navigate = useNavigate()
 
   const {
     handleSubmit,
@@ -39,15 +38,10 @@ const ResetPassword = () => {
     password: string
   }>()
 
-  const navigate = useNavigate()
-
-  const { token } = useParams<{ token: string }>()
-
   const [resetPasswordApi, { isLoading: isLoadingResetPassword }] =
     useResetPasswordMutation()
 
   const [showHidePassword, setShowHidePassword] = useState<boolean>(false)
-
   const [showHideConfirmPassword, setShowHideConfirmPassword] =
     useState<boolean>(false)
 
@@ -64,22 +58,18 @@ const ResetPassword = () => {
   }> = async (data) => {
     try {
       nProgress.start()
-
       const { password } = data
-
       if (!token) {
         throw new Error('Token không hợp lệ!')
       }
-
       const response = await resetPasswordApi({
         token,
         password,
       }).unwrap()
-
       Swal.fire('Thành công!', response.message)
       navigate(paths.userPaths.login)
     } catch (error: any) {
-      Swal.fire('Thất bại', error.data.message, 'error')
+      Swal.fire('Thất bại', error?.data?.message, 'error')
     } finally {
       nProgress.done()
     }
@@ -94,10 +84,11 @@ const ResetPassword = () => {
         className='w-[500px] overflow-hidden border-t border-[#ddd] bg-white p-5 shadow-md backdrop-blur-[24px]'
       >
         <div className='w-full'>
-          <div className='mb-[30px] text-center text-[30px] font-semibold'>
+          <div className='mb-7 text-center text-3xl font-semibold'>
             Thay đổi mật khẩu của bạn
           </div>
         </div>
+
         <form onSubmit={handleSubmit(handleResetPassword)} className='w-full'>
           <FormInputGroup
             register={register}
@@ -122,6 +113,7 @@ const ResetPassword = () => {
             }
             icon={<FileLock />}
           />
+
           <FormInputGroup
             register={register}
             errors={errors}
@@ -151,6 +143,7 @@ const ResetPassword = () => {
             }
             icon={<Mail />}
           />
+          
           <button
             type='submit'
             className='flex w-full cursor-pointer items-center justify-center rounded-[40px] bg-[#f97417] p-5 text-base font-semibold capitalize text-white transition duration-300 hover:opacity-80'

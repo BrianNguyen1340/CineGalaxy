@@ -26,6 +26,18 @@ export const showtimeAPISlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    hideShowtime: builder.mutation({
+      query: (id) => ({
+        url: `/api/v1/showtime/hide/${id}`,
+        method: 'PUT',
+      }),
+    }),
+    showShowtime: builder.mutation({
+      query: (id) => ({
+        url: `/api/v1/showtime/show/${id}`,
+        method: 'PUT',
+      }),
+    }),
   }),
 })
 
@@ -34,4 +46,6 @@ export const {
   useGetShowtimeQuery,
   useGetShowtimesQuery,
   useUpdateShowtimeMutation,
+  useHideShowtimeMutation,
+  useShowShowtimeMutation,
 } = showtimeAPISlice

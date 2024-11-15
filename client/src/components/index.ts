@@ -11,7 +11,6 @@ import SidebarTop from './Sidebar/SidebarTop/SidebarTop'
 import SidebarMenu from './Sidebar/SidebarMenu/SidebarMenu'
 import SidebarMenuItem from './Sidebar/SidebarMenu/SidebarMenuItem/SidebarMenuItem'
 import DashHeader from './DashHeader/DashHeader'
-import FloatingShape from './FloatingShape/FloatingShape'
 import DashLayout from './DashLayout/DashLayout'
 import MainLayout from './MainLayout/MainLayout'
 import GoogleAuth from './GoogleAuth/GoogleAuth'
@@ -29,7 +28,6 @@ export {
   DashHeader,
   DashLayout,
   DynamicNavigation,
-  FloatingShape,
   Footer,
   Logo,
   MenuMobile,

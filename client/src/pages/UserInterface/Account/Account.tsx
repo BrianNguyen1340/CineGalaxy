@@ -58,7 +58,7 @@ const Account = () => {
       nProgress.start()
       const { password } = reqBody
 
-      await updateApi({ id: user?.id, password }).unwrap()
+      await updateApi({ id: user?._id, password }).unwrap()
 
       setIsOpen(false)
 
