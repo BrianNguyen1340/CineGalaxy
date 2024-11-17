@@ -1,4 +1,6 @@
 const userPaths = {
+  // *** PUBLIC PATHS
+  home: '/',
   account: '/account',
   login: '/login',
   forgotPassword: '/forgot-password',
@@ -7,24 +9,27 @@ const userPaths = {
   verifyOtp: '/verify-otp',
   cinemas: '/cinemas',
   contact: '/contact',
-  coupons: '/coupons',
   giftShop: '/gift-shop',
-  home: '/',
-  membership: '/membership',
   movieDetails: '/movie/:id',
   movieLists: '/movies',
-  payments: '/payments',
-  pointsHistory: '/point-history',
-  profile: '/profile',
   promotions: '/promotions',
   showtimes: '/showtimes',
-  showtimeDetails: '/showtime/:id',
   support: '/support',
+  showtimeDetails: '/showtime/:id',
+
+  // *** PRIVATE PATHS
+  profile: '/profile',
+  payments: '/payments',
+  coupons: '/coupons',
+  pointsHistory: '/point-history',
   ticketPurchaseHistory: '/ticket-purchase-history',
   watchedMovies: '/watched-movies',
+  membership: '/membership',
+
+  // *** NOTFOUND PATH
   notFound: '/not-found',
 
-  // private auth
+  // *** PRIVATE AUTH PATHS
   privateLogin: '/private-login',
   privateForgotPassword: '/private-forgot-password',
   privateResetPassword: '/private-reset-password/:token',
@@ -34,6 +39,7 @@ const dashboardPaths = {
   privateProfile: '/private-profile',
   dashboard: '/dashboard',
   managements: {
+    // *** ADMIN PATHS
     accounts: {
       list: '/list-accounts',
       create: '/create-account',
@@ -58,23 +64,11 @@ const dashboardPaths = {
       update: '/update-cinema-complex/:id',
       delete: '/delete-cinema-complex/:id',
     },
-    invoices: {
-      list: '/list-invoices',
-      create: '/create-invoice',
-      update: '/update-invoice/:id',
-      delete: '/delete-invoice/:id',
-    },
     movies: {
       list: '/list-movies',
       create: '/create-movie',
       update: '/update-movie/:id',
       delete: '/delete-movie/:id',
-    },
-    promotions: {
-      list: '/list-promotions',
-      create: '/create-promotion',
-      update: '/update-promotion/:id',
-      delete: '/delete-promotion/:id',
     },
     rooms: {
       list: '/list-rooms',
@@ -88,29 +82,19 @@ const dashboardPaths = {
       update: '/update-seat/:id',
       delete: '/delete-seat/:id',
     },
-    sellServices: {
-      list: '/list-sell-services',
-      create: '/create-sell-service',
-      update: '/update-sell-service/:id',
-      delete: '/delete-sell-service/:id',
-    },
-    sellTickets: {
-      list: '/list-sell-tickets',
-      create: '/create-sell-ticket',
-      update: '/update-sell-ticket/:id',
-      delete: '/delete-sell-ticket/:id',
+
+    // *** MANAGER PATHS
+    promotions: {
+      list: '/list-promotions',
+      create: '/create-promotion',
+      update: '/update-promotion/:id',
+      delete: '/delete-promotion/:id',
     },
     showtimes: {
       list: '/list-showtimes',
       create: '/create-showtime',
       update: '/update-showtime/:id',
       delete: '/delete-showtime/:id',
-    },
-    ticketReports: {
-      list: '/list-reports',
-      create: '/create-report',
-      update: '/update-report/:id',
-      delete: '/delete-report/:id',
     },
     productCategories: {
       list: '/list-product-categories',
@@ -123,6 +107,38 @@ const dashboardPaths = {
       create: '/create-product',
       update: '/update-product/:id',
       delete: '/delete-product/:id',
+    },
+    combos: {
+      list: '/list-combos',
+      create: '/create-combo',
+      update: '/update-combo/:id',
+      delete: '/delete-combo/:id',
+    },
+
+    // *** CASHIER PATHS
+    ticketReports: {
+      list: '/list-reports',
+      create: '/create-report',
+      update: '/update-report/:id',
+      delete: '/delete-report/:id',
+    },
+    sellServices: {
+      list: '/list-sell-services',
+      create: '/create-sell-service',
+      update: '/update-sell-service/:id',
+      delete: '/delete-sell-service/:id',
+    },
+    sellTickets: {
+      list: '/list-sell-tickets',
+      create: '/create-sell-ticket',
+      update: '/update-sell-ticket/:id',
+      delete: '/delete-sell-ticket/:id',
+    },
+    invoices: {
+      list: '/list-invoices',
+      create: '/create-invoice',
+      update: '/update-invoice/:id',
+      delete: '/delete-invoice/:id',
     },
   },
   statistics: {

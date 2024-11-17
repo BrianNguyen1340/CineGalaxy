@@ -72,3 +72,13 @@ Chọn sản phẩm có combo và sản phẩm riêng lẻ
 Khuyến mãi cho từng rạp theo giời gian nhất định
 Lần đầu tiên đến rạp mua vé tặng mã khuyến mãi (có tài khoản)
 Thêm ảnh cho combo và sản phẩm
+
+*************************************************************************
+
+name: CƯỜI XUYÊN BIÊN GIỚI
+
+director: KIM Chang-ju
+
+desciption: Cười Xuyên Biên Giới kể về hành trình của Jin-bong (Ryu Seung-ryong) - cựu vô địch bắn cung quốc gia, sau khi nghỉ hưu, anh đã trở thành một nhân viên văn phòng bình thường. Đứng trước nguy cơ bị sa thải, Jin-bong phải nhận một nhiệm vụ bất khả thi là bay đến nửa kia của trái đất trong nỗ lực tuyệt vọng để sinh tồn. Sống sót sau một sự cố đe doạ tính mạng, Jin-bong đã “hạ cánh” xuống khu rừng Amazon, nơi anh gặp bộ ba thổ dân bản địa có kỹ năng bắn cung thượng thừa: Sika, Eeba và Walbu. Tin rằng đã tìm ra cách để tự cứu mình, Jin-bong hợp tác với phiên dịch ngáo ngơ Bbang-sik (Jin Sun-kyu) và đưa ba chiến thần cung thủ đến Hàn Quốc cho một nhiệm vụ táo bạo.
+
+trailerUrl: https://www.youtube.com/embed/4ALt4VT7grw?si=jU2D5_H-gms2T0Jn

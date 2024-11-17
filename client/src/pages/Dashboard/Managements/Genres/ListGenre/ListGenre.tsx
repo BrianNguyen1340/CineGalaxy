@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { BeatLoader } from 'react-spinners'
 import { SquarePen } from 'lucide-react'
 import ReactPaginate from 'react-paginate'
 
@@ -36,14 +37,21 @@ const ListGenre = () => {
   }
 
   let content
-  if (isLoadingGenres) content = <div>Loading...</div>
+
+  if (isLoadingGenres)
+    content = (
+      <div className='flex h-screen w-full items-center justify-center'>
+        <BeatLoader />
+      </div>
+    )
+
   if (isSuccessGenres) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
         <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
           danh sách thể loại phim
         </div>
-        
+
         {genres ? (
           <>
             <table>

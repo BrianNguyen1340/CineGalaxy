@@ -1,30 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
-// import jwt from 'jsonwebtoken'
 
 import { HttpException } from '~/utils/httpException'
 import { varEnv } from '~/configs/variableEnv.config'
 import { sendErrorResponse } from '~/utils/responseDataHandler'
 import { userModel } from '~/schemas/user.schema'
 import { verifyToken } from '~/utils/jsonwebtoken'
-
-// export const authenticated: RequestHandler = (req, res, next) => {
-//   const authHeader = req.headers.authorization || req.headers.Authorization
-
-//   if (typeof authHeader !== 'string' || !authHeader.startsWith('Bearer ')) {
-//     return res.status(401).json({ message: 'Unauthorized' })
-//   }
-
-//   const token = authHeader.split(' ')[1]
-
-//   jwt.verify(token, varEnv.JWT_ACCESS_TOKEN_KEY, (error: any, decoded: any) => {
-//     if (error) return sendErrorResponse(res, StatusCodes.FORBIDDEN, 'Forbidden')
-//     req.user = decoded
-//     req.role = decoded.role
-//     next()
-//   })
-// }
 
 export const authentication: RequestHandler = async (
   req: Request,
@@ -52,7 +34,6 @@ export const authentication: RequestHandler = async (
 
     try {
       const decoded = verifyToken(accessToken, JWT_ACCESS_TOKEN_KEY)
-
       req.user = await userModel.findById(decoded._id).select('-password')
       if (!req.user) {
         return sendErrorResponse(

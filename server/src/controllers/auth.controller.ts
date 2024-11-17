@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 
 import { handleJoiError } from '~/middlewares/joi.middleware'
 import { authValidation } from '~/validations/auth.validation'
@@ -8,22 +8,20 @@ import {
   sendSuccessResponse,
   sendErrorResponse,
 } from '~/utils/responseDataHandler'
-import { authService } from '~/services/auth.service'
 import { clearAuthCookies, setAuthCookies } from '~/utils/cookies'
 import { catchErrors } from '~/utils/catchErrors'
+import { authService } from '~/services/auth.service'
+import { redis } from '~/configs/redis.config'
 import { varEnv } from '~/configs/variableEnv.config'
-import { userModel } from '~/schemas/user.schema'
-import { generateToken } from '~/utils/jsonwebtoken'
 
 const register: RequestHandler = catchErrors(async (req, res) => {
   const { email, password, name } = req.body
-
-  const response = await authService.register(email, password, name)
 
   if (req.session) {
     req.session.email = email
   }
 
+  const response = await authService.register(email, password, name)
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -35,14 +33,12 @@ const verifyOTPRegister: RequestHandler = catchErrors(async (req, res) => {
   const { code } = req.body
 
   const response = await authService.verifyOTPRegister(code)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
 
   await new Promise<void>((resolve, reject) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    req.session.destroy((error: any) => {
+    req.session.destroy((error) => {
       if (error) {
         reject(new Error('Xóa session không thành công!'))
       } else {
@@ -51,6 +47,18 @@ const verifyOTPRegister: RequestHandler = catchErrors(async (req, res) => {
       }
     })
   })
+
+  const accessToken = response.accessToken
+  const refreshToken = response.refreshToken
+  if (!accessToken || !refreshToken) {
+    return sendErrorResponse(
+      res,
+      StatusCodes.BAD_REQUEST,
+      'Missing access token or refresh token!',
+    )
+  }
+
+  setAuthCookies({ res, accessToken, refreshToken })
 
   return sendSuccessResponse(
     res,
@@ -62,7 +70,6 @@ const verifyOTPRegister: RequestHandler = catchErrors(async (req, res) => {
 
 const resendOTPRegister: RequestHandler = catchErrors(async (req, res) => {
   const { email } = req.session
-
   if (!email || typeof email !== 'string') {
     return sendErrorResponse(
       res,
@@ -72,7 +79,6 @@ const resendOTPRegister: RequestHandler = catchErrors(async (req, res) => {
   }
 
   const response = await authService.resendOTPRegister(email)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -84,15 +90,12 @@ const googleLogin: RequestHandler = catchErrors(async (req, res) => {
   const { email, name, photoURL } = req.body
 
   const response = await authService.googleLogin(email, name, photoURL)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
 
   const accessToken = response.accessToken
-
   const refreshToken = response.refreshToken
-
   if (!accessToken || !refreshToken) {
     return sendErrorResponse(
       res,
@@ -115,15 +118,12 @@ const login: RequestHandler = catchErrors(async (req, res) => {
   const { email, password } = req.body
 
   const response = await authService.login(email, password)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
 
   const accessToken = response.accessToken
-
   const refreshToken = response.refreshToken
-
   if (!accessToken || !refreshToken) {
     return sendErrorResponse(
       res,
@@ -144,42 +144,48 @@ const login: RequestHandler = catchErrors(async (req, res) => {
 })
 
 const refresh = catchErrors(async (req, res) => {
-  const cookies = req.cookies
-
-  if (!cookies?.RT) {
-    return res.status(401).json({ message: 'Unauthorized' })
+  const refreshToken = req.cookies.RT
+  if (!refreshToken) {
+    return sendErrorResponse(
+      res,
+      StatusCodes.UNAUTHORIZED,
+      'No refresh token provided!',
+    )
   }
 
-  const refreshToken = cookies.RT
-
-  jwt.verify(
+  const decoded = jwt.verify(
     refreshToken,
     varEnv.JWT_REFRESH_TOKEN_KEY,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async (error: any, decoded: any) => {
-      if (error) {
-        return res.status(403).json({ message: 'Forbidden' })
-      }
+  ) as JwtPayload
+  console.log('Decoded Payload:', decoded)
+  console.log('Decoded Payload:', decoded._id)
+  const storedToken = await redis.get(`refresh_token:${decoded._id}`)
 
-      const user = await userModel.findOne({ _id: decoded._id })
+  if (storedToken !== refreshToken) {
+    return sendErrorResponse(
+      res,
+      StatusCodes.UNAUTHORIZED,
+      'Invalid refresh token!',
+    )
+  }
 
-      if (!user) {
-        return res.status(401).json({ message: 'Unauthorized' })
-      }
+  const accessToken = jwt.sign(
+    { _id: decoded._id, role: decoded.role },
+    varEnv.JWT_ACCESS_TOKEN_KEY,
+    { expiresIn: '1d' },
+  )
 
-      const accessToken = generateToken(
-        {
-          _id: user._id,
-          role: user.role,
-        },
-        { secret: varEnv.JWT_ACCESS_TOKEN_KEY, expiresIn: '1d' },
-      )
+  res.cookie('AT', accessToken, {
+    httpOnly: true,
+    secure: varEnv.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 1 * 24 * 60 * 60 * 1000,
+  })
 
-      return res.status(200).json({
-        message: `Token đã được làm mới thành công - ${new Date().toLocaleTimeString('vi-VN')} - ${new Date().toLocaleDateString('vi-VN')}`,
-        accessToken: accessToken,
-      })
-    },
+  return sendSuccessResponse(
+    res,
+    StatusCodes.OK,
+    'Token refreshed successfully!',
   )
 })
 
@@ -187,7 +193,6 @@ const forgotPassword: RequestHandler = catchErrors(async (req, res) => {
   const { email } = req.body
 
   const response = await authService.forgotPassword(email)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -197,11 +202,9 @@ const forgotPassword: RequestHandler = catchErrors(async (req, res) => {
 
 const resetPassword: RequestHandler = catchErrors(async (req, res) => {
   const { token } = req.params
-
   const { password } = req.body
 
   const response = await authService.resetPassword(token, password)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -211,9 +214,7 @@ const resetPassword: RequestHandler = catchErrors(async (req, res) => {
 
 const logout: RequestHandler = catchErrors(async (req, res) => {
   const accessToken: string = req.cookies.AT
-
   const refreshToken: string = req.cookies.RT
-
   if (!accessToken && !refreshToken) {
     return sendErrorResponse(
       res,
@@ -225,7 +226,6 @@ const logout: RequestHandler = catchErrors(async (req, res) => {
   clearAuthCookies(res)
 
   const response = await authService.logout()
-  
   if (!response.success) {
     return sendErrorResponse(
       res,

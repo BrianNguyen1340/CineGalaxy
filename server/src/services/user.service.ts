@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { StatusCodes } from 'http-status-codes'
 import { Types } from 'mongoose'
-import bcrypt, { genSalt } from 'bcrypt'
+import bcrypt from 'bcrypt'
 
 import { userModel, UserType } from '~/schemas/user.schema'
 
@@ -15,7 +15,6 @@ const profile = async (
 }> => {
   try {
     const user = await userModel.findById(id)
-
     if (!user) {
       return {
         success: false,
@@ -87,7 +86,6 @@ const updateProfile = async (
         new: true,
       },
     )
-
     if (!request) {
       return {
         success: false,
@@ -149,7 +147,6 @@ const updatePassword = async (
       },
       { new: true },
     )
-
     if (!request) {
       return {
         success: false,
@@ -196,7 +193,6 @@ const createUserByAdmin = async (
 }> => {
   try {
     const checkExist = await userModel.findOne({ email })
-
     if (checkExist) {
       return {
         success: false,
@@ -213,7 +209,6 @@ const createUserByAdmin = async (
       password: hashedPassword,
       role,
     })
-
     if (!request) {
       return {
         success: false,
@@ -254,7 +249,6 @@ const getUserByAdmin = async (
 }> => {
   try {
     const user = await userModel.findById(_id).select('-password')
-
     if (!user) {
       return {
         success: false,
@@ -293,7 +287,6 @@ const getAllUsersByAdmin = async (): Promise<{
 }> => {
   try {
     const users = await userModel.find().select('-password')
-
     if (!users || users.length === 0) {
       return {
         success: false,
@@ -344,7 +337,6 @@ const updateUserByAdmin = async (
 }> => {
   try {
     const user = await userModel.findById(id)
-
     if (!user) {
       return {
         success: false,
@@ -360,7 +352,6 @@ const updateUserByAdmin = async (
         new: true,
       },
     )
-
     if (!request) {
       return {
         success: false,
@@ -401,7 +392,6 @@ const blockAccount = async (
 }> => {
   try {
     const user = await userModel.findById(id).select('-password')
-
     if (!user) {
       return {
         success: false,
@@ -415,7 +405,6 @@ const blockAccount = async (
       { isBlocked: true },
       { new: true },
     )
-
     if (!response) {
       return {
         success: false,
@@ -458,7 +447,6 @@ const unblockAccount = async (
 }> => {
   try {
     const user = await userModel.findById(id)
-    
     if (!user) {
       return {
         success: false,
@@ -472,7 +460,6 @@ const unblockAccount = async (
       { isBlocked: false },
       { new: true },
     )
-
     if (!response) {
       return {
         success: false,
@@ -505,7 +492,45 @@ const unblockAccount = async (
   }
 }
 
-const userService = {
+const getUsersByManager = async (): Promise<{
+  success: boolean
+  message: string
+  statusCode: number
+  data?: Partial<UserType>[]
+}> => {
+  try {
+    const users = await userModel.find().select('-password')
+    if (!users || users.length === 0) {
+      return {
+        success: false,
+        message: 'Danh sách người dùng trống!',
+        statusCode: StatusCodes.BAD_REQUEST,
+      }
+    }
+
+    return {
+      success: true,
+      message: 'Lấy tất cả thông tin người dùng thành công!',
+      statusCode: StatusCodes.OK,
+      data: users.map((user) => user.toObject()),
+    }
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return {
+        success: false,
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: `Lỗi hệ thống: ${error.message}`,
+      }
+    }
+    return {
+      success: false,
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+      message: 'Đã xảy ra lỗi không xác định!',
+    }
+  }
+}
+
+export const userService = {
   profile,
   updateProfile,
   createUserByAdmin,
@@ -515,6 +540,5 @@ const userService = {
   blockAccount,
   unblockAccount,
   updatePassword,
+  getUsersByManager,
 }
-
-export default userService

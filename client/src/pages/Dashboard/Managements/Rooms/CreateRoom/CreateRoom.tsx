@@ -1,8 +1,6 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { HashLoader } from 'react-spinners'
 import { useNavigate } from 'react-router-dom'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
@@ -13,14 +11,6 @@ import { FormInputGroup } from '~/components'
 import { useEffect } from 'react'
 import { CinemaType } from '~/types/cinema.type'
 import useTitle from '~/hooks/useTitle'
-
-const validationSchema = Yup.object().shape({
-  name: Yup.string().trim().required('Tên phòng là bắt buộc'),
-  opacity: Yup.number().required('Sức chứa phòng là bắt buộc'),
-  status: Yup.string().trim().required('Tình trạng phòng là bắt buộc'),
-  screen: Yup.string().trim().required('Màn hình phòng là bắt buộc'),
-  cinema: Yup.string().trim().required('Rạp của phòng là bắt buộc'),
-})
 
 const CreateRoom = () => {
   useTitle('Admin | Tạo phòng')
@@ -36,9 +26,7 @@ const CreateRoom = () => {
     status: string
     screen: string
     cinema: string
-  }>({
-    resolver: yupResolver(validationSchema),
-  })
+  }>()
 
   const {
     data: cinemas,

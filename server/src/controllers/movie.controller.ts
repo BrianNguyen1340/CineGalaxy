@@ -48,7 +48,6 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
     movieFormat,
     genres,
   )
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -63,11 +62,9 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
 
 const handleGetOne: RequestHandler = catchErrors(async (req, res) => {
   const { id } = req.params
-
   const objectID = new Types.ObjectId(id)
 
   const response = await movieService.handleGetOne(objectID)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -82,7 +79,6 @@ const handleGetOne: RequestHandler = catchErrors(async (req, res) => {
 
 const handleGetAll: RequestHandler = catchErrors(async (req, res) => {
   const response = await movieService.handleGetAll()
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -130,7 +126,6 @@ const handleUpdate: RequestHandler = catchErrors(async (req, res) => {
     movieFormat,
     genres,
   )
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -145,11 +140,9 @@ const handleUpdate: RequestHandler = catchErrors(async (req, res) => {
 
 const handleHideMovie = catchErrors(async (req, res) => {
   const { id } = req.params
-
   const objectID = new Types.ObjectId(id)
 
   const response = await movieService.handleHideMovie(objectID)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -164,11 +157,9 @@ const handleHideMovie = catchErrors(async (req, res) => {
 
 const handleShowMovie = catchErrors(async (req, res) => {
   const { id } = req.params
-
   const objectID = new Types.ObjectId(id)
 
   const response = await movieService.handleShowtimeMovie(objectID)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }

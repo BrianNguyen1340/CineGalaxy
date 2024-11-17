@@ -1,3 +1,4 @@
+import { Server as SocketIOServer } from 'socket.io'
 import express from 'express'
 import helmet from 'helmet'
 import cors from 'cors'
@@ -7,12 +8,11 @@ import morgan from 'morgan'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
 import http from 'http'
-import { Server as SocketIOServer } from 'socket.io'
 import mongoose from 'mongoose'
+import path from 'path'
 
 import { varEnv } from '~/configs/variableEnv.config'
 import { logEvents } from '~/logs/customLoggers'
-import { winstonLoggers } from './logs/winston'
 import { logger } from '~/logs/customLoggers'
 import { errorHandlerMiddleware } from '~/middlewares/error.middleware'
 import { validateEnv } from '~/configs/validateEnv.config'
@@ -61,6 +61,9 @@ const bootstrap = () => {
 
   initAPIRoutes(app)
 
+  const __dirname = path.resolve()
+  app.use('/uploads', express.static(path.join(__dirname + '/uploads')))
+
   const httpServer = http.createServer(app)
   const io = new SocketIOServer(httpServer, {
     cors: {
@@ -82,7 +85,7 @@ const bootstrap = () => {
 
   mongoose.connection.once('open', () => {
     httpServer.listen(port, () => {
-      winstonLoggers.info(`Server is running at http://${hostname}:${port}`)
+      console.log(`Server is running at http://${hostname}:${port}`)
     })
   })
 

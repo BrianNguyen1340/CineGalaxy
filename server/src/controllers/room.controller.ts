@@ -19,7 +19,6 @@ const handleCreate = catchErrors(async (req, res) => {
     screen,
     cinema,
   )
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -34,11 +33,9 @@ const handleCreate = catchErrors(async (req, res) => {
 
 const handleGetOne = catchErrors(async (req, res) => {
   const { id } = req.params
-
   const objectID = new Types.ObjectId(id)
 
   const response = await roomService.handleGetOne(objectID)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -53,7 +50,6 @@ const handleGetOne = catchErrors(async (req, res) => {
 
 const handleGetAll = catchErrors(async (req, res) => {
   const response = await roomService.handleGetAll()
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -68,10 +64,9 @@ const handleGetAll = catchErrors(async (req, res) => {
 
 const handleUpdate = catchErrors(async (req, res) => {
   const { id } = req.params
+  const objectID = new Types.ObjectId(id)
 
   const { name, opacity, status, screen, cinema } = req.body
-
-  const objectID = new Types.ObjectId(id)
 
   const response = await roomService.handleUpdate(
     objectID,
@@ -81,7 +76,6 @@ const handleUpdate = catchErrors(async (req, res) => {
     screen,
     cinema,
   )
-  
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }

@@ -25,9 +25,8 @@ const updateProfile = Joi.object({
   photoURL: Joi.string().trim().optional(),
 })
 
-const userValidation = {
+export const userValidation = {
   createUserByAdmin,
   updateProfile,
 }
 
-export default userValidation

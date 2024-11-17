@@ -23,7 +23,6 @@ const handleCreate = async (
     }
 
     const movieData = await movieModel.findById(movie)
-
     if (!movieData) {
       return {
         success: false,
@@ -50,7 +49,6 @@ const handleCreate = async (
         },
       ],
     })
-
     if (checkExist) {
       return {
         success: false,
@@ -119,7 +117,6 @@ const handleGetOne = async (
           path: 'cinema',
         },
       })
-
     if (!request) {
       return {
         success: false,
@@ -168,7 +165,6 @@ const handleGetAll = async (): Promise<{
           path: 'cinema',
         },
       })
-
     if (!request || request.length === 0) {
       return {
         success: false,
@@ -219,7 +215,6 @@ const handleUpdate = async (
     }
 
     const showtime = await showtimeModel.findById(id)
-
     if (!showtime) {
       return {
         success: false,
@@ -287,7 +282,6 @@ const handleUpdate = async (
       },
       { new: true },
     )
-
     if (!request) {
       return {
         success: false,
@@ -328,7 +322,6 @@ const handleHideShowtime = async (
 }> => {
   try {
     const checkExist = await showtimeModel.findOne(id)
-
     if (!checkExist) {
       return {
         success: false,
@@ -346,7 +339,6 @@ const handleHideShowtime = async (
         new: true,
       },
     )
-
     if (!request) {
       return {
         success: false,
@@ -387,7 +379,6 @@ const handleShowShowtime = async (
 }> => {
   try {
     const checkExist = await showtimeModel.findOne(id)
-
     if (!checkExist) {
       return {
         success: false,
@@ -405,7 +396,6 @@ const handleShowShowtime = async (
         new: true,
       },
     )
-
     if (!request) {
       return {
         success: false,

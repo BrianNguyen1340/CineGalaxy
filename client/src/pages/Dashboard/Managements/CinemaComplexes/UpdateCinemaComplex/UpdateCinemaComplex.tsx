@@ -1,9 +1,7 @@
 import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
-import { HashLoader } from 'react-spinners'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
+import { BeatLoader, HashLoader } from 'react-spinners'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
@@ -15,10 +13,6 @@ import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
 import useTitle from '~/hooks/useTitle'
 
-const validationSchema = Yup.object().shape({
-  name: Yup.string().trim().required('Tên cụm rạp là bắt buộc'),
-})
-
 const UpdateCinemaComplex = () => {
   useTitle('Admin | Cập nhật cụm rạp')
   const { id } = useParams()
@@ -29,9 +23,7 @@ const UpdateCinemaComplex = () => {
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm<{ name: string }>({
-    resolver: yupResolver(validationSchema),
-  })
+  } = useForm<{ name: string }>()
 
   const {
     data: cinemaComplex,
@@ -53,8 +45,6 @@ const UpdateCinemaComplex = () => {
   const [updateApi, { isLoading: isLoadingUpdate }] =
     useUpdateCinemaComplexMutation()
 
-  let content
-  if (isLoading) content = <div>Loading...</div>
   const handleUpdate: SubmitHandler<{ name: string }> = async (reqBody) => {
     try {
       const { name } = reqBody
@@ -67,6 +57,16 @@ const UpdateCinemaComplex = () => {
       nProgress.done()
     }
   }
+
+  let content
+
+  if (isLoading)
+    content = (
+      <div className='flex h-screen w-full items-center justify-center'>
+        <BeatLoader />
+      </div>
+    )
+
   if (isSuccess) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>

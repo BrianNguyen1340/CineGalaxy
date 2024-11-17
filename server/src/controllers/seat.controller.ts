@@ -13,8 +13,13 @@ import { seatValidation } from '~/validations/seat.validation'
 const handleCreate: RequestHandler = catchErrors(async (req, res) => {
   const { number, row, type, price, room } = req.body
 
-  const response = await seatService.handleCreate(number, row, type, price, room)
-
+  const response = await seatService.handleCreate(
+    number,
+    row,
+    type,
+    price,
+    room,
+  )
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -29,11 +34,9 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
 
 const handleGetOne = catchErrors(async (req, res) => {
   const { id } = req.params
-
   const objectID = new Types.ObjectId(id)
 
   const response = await seatService.handleGetOne(objectID)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -48,7 +51,6 @@ const handleGetOne = catchErrors(async (req, res) => {
 
 const handleGetAll = catchErrors(async (req, res) => {
   const response = await seatService.handleGetAll()
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -63,10 +65,9 @@ const handleGetAll = catchErrors(async (req, res) => {
 
 const handleUpdate = catchErrors(async (req, res) => {
   const { id } = req.params
+  const objectID = new Types.ObjectId(id)
 
   const { number, row, type, price, room } = req.body
-
-  const objectID = new Types.ObjectId(id)
 
   const response = await seatService.handleUpdate(
     objectID,
@@ -76,7 +77,6 @@ const handleUpdate = catchErrors(async (req, res) => {
     price,
     room,
   )
-  
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }

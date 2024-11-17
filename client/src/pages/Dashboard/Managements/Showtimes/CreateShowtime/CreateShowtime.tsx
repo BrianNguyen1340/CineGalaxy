@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { HashLoader } from 'react-spinners'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
 import Flatpickr from 'react-flatpickr'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
@@ -19,15 +17,6 @@ import { CinemaType } from '~/types/cinema.type'
 import { RoomType } from '~/types/room.type'
 import { MovieType } from '~/types/movie.type'
 import useTitle from '~/hooks/useTitle'
-
-const validationSchema = Yup.object().shape({
-  date: Yup.date().required('Ngày chiếu là bắt buộc'),
-  timeStart: Yup.date().required('Giờ bắt đầu là bắt buộc'),
-  movie: Yup.string().required('Phim là bắt buộc'),
-  room: Yup.string().required('Phòng là bắt buộc'),
-  cinema: Yup.string().required('Rạp là bắt buộc'),
-  cinemaComplex: Yup.string().required('Cụm rạp là bắt buộc'),
-})
 
 const CreateShowtime = () => {
   useTitle('Admin | Tạo suất chiếu')
@@ -46,9 +35,7 @@ const CreateShowtime = () => {
     room: string
     cinema: string
     cinemaComplex: string
-  }>({
-    resolver: yupResolver(validationSchema),
-  })
+  }>()
 
   const {
     data: movies,

@@ -21,7 +21,6 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
     cinema,
     cinemaComplex,
   )
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -36,7 +35,6 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
 
 const handleGetOne: RequestHandler = catchErrors(async (req, res) => {
   const { id } = req.params
-
   const objectID = new Types.ObjectId(id)
 
   const response = await showtimeService.handleGetOne(objectID)
@@ -54,7 +52,6 @@ const handleGetOne: RequestHandler = catchErrors(async (req, res) => {
 
 const handleGetAll: RequestHandler = catchErrors(async (req, res) => {
   const response = await showtimeService.handleGetAll()
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -69,9 +66,9 @@ const handleGetAll: RequestHandler = catchErrors(async (req, res) => {
 
 const handleUpdate: RequestHandler = catchErrors(async (req, res) => {
   const { id } = req.params
-  const { date, timeStart, movie, room, cinema, cinemaComplex } = req.body
-
   const objectID = new Types.ObjectId(id)
+
+  const { date, timeStart, movie, room, cinema, cinemaComplex } = req.body
 
   const response = await showtimeService.handleUpdate(
     objectID,
@@ -96,11 +93,9 @@ const handleUpdate: RequestHandler = catchErrors(async (req, res) => {
 
 const handleHideShowtime = catchErrors(async (req, res) => {
   const { id } = req.params
-
   const objectID = new Types.ObjectId(id)
 
   const response = await showtimeService.handleHideShowtime(objectID)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -115,11 +110,9 @@ const handleHideShowtime = catchErrors(async (req, res) => {
 
 const handleShowShowtime = catchErrors(async (req, res) => {
   const { id } = req.params
-
   const objectID = new Types.ObjectId(id)
 
   const response = await showtimeService.handleShowShowtime(objectID)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }

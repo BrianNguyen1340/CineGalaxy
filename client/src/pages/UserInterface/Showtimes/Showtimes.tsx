@@ -241,11 +241,9 @@ const Showtimes = () => {
                             18
                           </div>
                         )}
-                        <div className='w-[200px] overflow-hidden text-ellipsis text-nowrap text-sm font-semibold uppercase'>
+                        <div className='text-sm font-semibold uppercase'>
                           {item.name}
                         </div>
-                        <span className='mx-1'>|</span>
-                        <div>{item.duration} phút</div>
                       </li>
                     ))}
                   </ul>

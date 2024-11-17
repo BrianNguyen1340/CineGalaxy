@@ -86,7 +86,7 @@ const MenuDropdown = () => {
         className='relative flex h-full w-fit items-center justify-end gap-2'
         ref={dropdownRef}
       >
-        <div>Xin chào {user?.name}!</div>
+        <div>Xin chào {user?.name}</div>
         <div className='rounded-full border-[3px] border-[#90e0ef]'>
           <button
             onClick={toggleDropdown}

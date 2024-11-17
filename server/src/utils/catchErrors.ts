@@ -20,7 +20,6 @@ export const catchErrors =
           new HttpException(StatusCodes.INTERNAL_SERVER_ERROR, error.message),
         )
       }
-
       return next(
         new HttpException(StatusCodes.INTERNAL_SERVER_ERROR, 'Server Error!'),
       )

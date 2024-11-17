@@ -27,7 +27,6 @@ const handleCreate = async (
     const checkExist = await movieModel.findOne({
       name,
     })
-
     if (checkExist) {
       return {
         success: false,
@@ -36,7 +35,7 @@ const handleCreate = async (
       }
     }
 
-    const request = await movieModel.create({
+    const newMovie = await movieModel.create({
       name,
       slug,
       description,
@@ -51,8 +50,7 @@ const handleCreate = async (
       movieFormat,
       genres,
     })
-
-    if (!request) {
+    if (!newMovie) {
       return {
         success: false,
         message: 'Có lỗi khi tạo phim!',
@@ -64,7 +62,7 @@ const handleCreate = async (
       success: true,
       message: 'Tạo phim thành công!',
       statusCode: StatusCodes.CREATED,
-      data: request,
+      data: newMovie,
     }
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -92,7 +90,6 @@ const handleGetOne = async (
 }> => {
   try {
     const request = await movieModel.findById(id).populate('genres')
-
     if (!request) {
       return {
         success: false,
@@ -131,7 +128,6 @@ const handleGetAll = async (): Promise<{
 }> => {
   try {
     const request = await movieModel.find().populate('genres')
-
     if (!request || request.length === 0) {
       return {
         success: false,
@@ -184,7 +180,6 @@ const handleUpdate = async (
 }> => {
   try {
     const checkExist = await movieModel.findOne(id)
-
     if (!checkExist) {
       return {
         success: false,
@@ -215,7 +210,6 @@ const handleUpdate = async (
         new: true,
       },
     )
-
     if (!request) {
       return {
         success: false,
@@ -256,7 +250,6 @@ const handleHideMovie = async (
 }> => {
   try {
     const checkExist = await movieModel.findOne(id)
-
     if (!checkExist) {
       return {
         success: false,
@@ -274,7 +267,6 @@ const handleHideMovie = async (
         new: true,
       },
     )
-
     if (!request) {
       return {
         success: false,
@@ -315,7 +307,6 @@ const handleShowtimeMovie = async (
 }> => {
   try {
     const checkExist = await movieModel.findOne(id)
-
     if (!checkExist) {
       return {
         success: false,
@@ -333,7 +324,6 @@ const handleShowtimeMovie = async (
         new: true,
       },
     )
-
     if (!request) {
       return {
         success: false,

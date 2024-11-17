@@ -1,26 +1,16 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { HashLoader } from 'react-spinners'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
+import { BeatLoader, HashLoader } from 'react-spinners'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
+import { paths } from '~/utils/paths'
 import { useCreateCinemaMutation } from '~/services/cinema.service'
 import { useGetCinemaComplexesQuery } from '~/services/cinemaComplex.service'
-import { paths } from '~/utils/paths'
+import { CinemaComplexType } from '~/types/cinemaComplex.type'
 import { FormInputGroup } from '~/components'
 import useTitle from '~/hooks/useTitle'
-import { CinemaComplexType } from '~/types/cinemaComplex.type'
-
-const validationSchema = Yup.object().shape({
-  name: Yup.string().trim().required('Tên rạp là bắt buộc'),
-  email: Yup.string().trim().email().required('Email rạp là bắt buộc'),
-  address: Yup.string().trim().required('Địa chỉ rạp là bắt buộc'),
-  phone: Yup.string().trim().required('Số điện thoại rạp là bắt buộc'),
-  cinemaComplex: Yup.string().trim().required('Tên cụm rạp là bắt buộc'),
-})
 
 const CreateCinema = () => {
   useTitle('Admin | Tạp rạp')
@@ -36,9 +26,7 @@ const CreateCinema = () => {
     address: string
     phone: string
     cinemaComplex: string
-  }>({
-    resolver: yupResolver(validationSchema),
-  })
+  }>()
 
   const {
     data: cinemaComplexes,
@@ -63,6 +51,7 @@ const CreateCinema = () => {
     try {
       nProgress.start()
       const { name, email, phone, address, cinemaComplex } = reqBody
+
       const response = await createApi({
         name,
         email,
@@ -70,6 +59,7 @@ const CreateCinema = () => {
         address,
         cinemaComplex,
       }).unwrap()
+
       Swal.fire('Thành công', response.message, 'success')
       navigate(paths.dashboardPaths.managements.cinemas.list)
     } catch (error: any) {
@@ -80,14 +70,21 @@ const CreateCinema = () => {
   }
 
   let content
-  if (isLoading) content = <div>Loading...</div>
+
+  if (isLoading)
+    content = (
+      <div className='flex h-screen w-full items-center justify-center'>
+        <BeatLoader />
+      </div>
+    )
+
   if (isSuccess) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
         <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
           tạo rạp
         </div>
-        
+
         <form
           onSubmit={handleSubmit(handleCreate)}
           className='mx-auto w-[500px]'

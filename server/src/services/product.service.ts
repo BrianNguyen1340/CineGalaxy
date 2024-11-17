@@ -6,9 +6,9 @@ import { ProductType, productModel } from '~/schemas/product.schema'
 const handleCreate = async (
   name: string,
   category: Types.ObjectId,
-  image: string,
   price: number,
   size: string,
+  image: string,
   description?: string,
 ): Promise<{
   success: boolean
@@ -18,7 +18,6 @@ const handleCreate = async (
 }> => {
   try {
     const checkExist = await productModel.findOne({ name })
-
     if (checkExist) {
       return {
         success: false,
@@ -30,12 +29,11 @@ const handleCreate = async (
     const request = await productModel.create({
       name,
       category,
-      image,
       price,
       size,
+      image,
       description,
     })
-
     if (!request) {
       return {
         success: false,
@@ -76,7 +74,6 @@ const handleGetOne = async (
 }> => {
   try {
     const request = await productModel.findById(id).populate('category')
-
     if (!request) {
       return {
         success: false,
@@ -115,7 +112,6 @@ const handleGetAll = async (): Promise<{
 }> => {
   try {
     const datas = await productModel.find().populate('category')
-
     if (!datas || datas.length === 0) {
       return {
         success: false,
@@ -150,9 +146,9 @@ const handleUpdate = async (
   id: Types.ObjectId,
   name: string,
   category: Types.ObjectId,
-  image: string,
   price: number,
   size: string,
+  image: string,
   description?: string,
 ): Promise<{
   success: boolean
@@ -162,7 +158,6 @@ const handleUpdate = async (
 }> => {
   try {
     const product = await productModel.findById(id)
-
     if (!product) {
       return {
         success: false,
@@ -175,7 +170,6 @@ const handleUpdate = async (
       name,
       _id: { $ne: id },
     })
-
     if (checkExist) {
       return {
         success: false,
@@ -186,10 +180,9 @@ const handleUpdate = async (
 
     const request = await productModel.findByIdAndUpdate(
       id,
-      { $set: { name, category, image, price, size, description } },
+      { $set: { name, category, price, size, image, description } },
       { new: true },
     )
-
     if (!request) {
       return {
         success: false,

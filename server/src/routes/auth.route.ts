@@ -9,15 +9,12 @@ const router = Router()
 
 router.post('/create-account', async (req, res) => {
   const { email, name, password } = req.body
-
   const hashedPassword = await bcrypt.hash(password, 12)
-
   const result = await userModel.create({
     email,
     name,
     password: hashedPassword,
   })
-
   return res.status(201).json(result)
 })
 
@@ -29,6 +26,6 @@ router.post('/login', [loginLimiter], authController.login)
 router.post('/forgot-password', authController.forgotPassword)
 router.post('/reset-password/:token', authController.resetPassword)
 router.post('/logout', authController.logout)
-router.get('/refresh', authController.refresh)
+router.post('/refresh-token', authController.refresh)
 
 export const authRoute = router

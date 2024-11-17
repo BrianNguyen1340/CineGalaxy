@@ -11,6 +11,12 @@ import { seatRoute } from './seat.route'
 import { showtimeRoute } from './showtime.route'
 import { productCategoryRoute } from './productCategory.route'
 import { productRoute } from './product.route'
+import { comboRoute } from './combo.route'
+import { cartRoute } from './cart.route'
+import { uploadPosterMovie } from './uploadPosterMovie.route'
+import { uploadBannerMovie } from './uploadBannerMovie.router'
+import { uploadCombo } from './uploadCombo.route'
+import { uploadProduct } from './uploadProduct.route'
 
 const router = Router()
 
@@ -26,6 +32,12 @@ export const initAPIRoutes = (app: Application) => {
   router.use('/showtime', showtimeRoute)
   router.use('/product-category', productCategoryRoute)
   router.use('/product', productRoute)
+  router.use('/combo', comboRoute)
+  router.use('/cart', cartRoute)
+  router.use('/upload', uploadPosterMovie)
+  router.use('/upload', uploadBannerMovie)
+  router.use('/upload', uploadCombo)
+  router.use('/upload', uploadProduct)
 
   return app.use('/api/v1', router)
 }

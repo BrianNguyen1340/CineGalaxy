@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { BeatLoader } from 'react-spinners'
 import { SquarePen } from 'lucide-react'
 import ReactPaginate from 'react-paginate'
 import nProgress from 'nprogress'
@@ -92,7 +93,14 @@ const ListMovie = () => {
   }
 
   let content
-  if (isLoadingMovie) content = <div>Loading...</div>
+
+  if (isLoadingMovie)
+    content = (
+      <div className='flex h-screen w-full items-center justify-center'>
+        <BeatLoader />
+      </div>
+    )
+
   if (isSuccessMovie) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
@@ -133,11 +141,9 @@ const ListMovie = () => {
                     <td>{item.duration} phút</td>
                     <td>
                       <div className='flex flex-col gap-3 capitalize'>
-                        {item.genres.map(
-                          (genre: GenreType, index: number) => (
-                            <span key={index}>{genre.name}</span>
-                          ),
-                        )}
+                        {item.genres.map((genre: GenreType, index: number) => (
+                          <span key={index}>{genre.name}</span>
+                        ))}
                       </div>
                     </td>
                     <td>
@@ -175,7 +181,7 @@ const ListMovie = () => {
                 ))}
               </tbody>
             </table>
-            
+
             <ReactPaginate
               previousLabel={'<'}
               nextLabel={'>'}

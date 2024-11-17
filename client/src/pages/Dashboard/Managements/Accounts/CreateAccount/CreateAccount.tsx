@@ -3,8 +3,6 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { HashLoader } from 'react-spinners'
 import { Eye, EyeOff } from 'lucide-react'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
 import nProgress from 'nprogress'
 import Swal from 'sweetalert2'
 
@@ -12,13 +10,6 @@ import { useCreateUserMutation } from '~/services/user.service'
 import { paths } from '~/utils/paths'
 import { FormInputGroup, PasswordStrength } from '~/components'
 import useTitle from '~/hooks/useTitle'
-
-const validationSchema = Yup.object().shape({
-  email: Yup.string().trim().email().required('Email là bắt buộc'),
-  name: Yup.string().trim().required('Tên người dùng là bắt buộc'),
-  password: Yup.string().trim().required('Mật khẩu là bắt buộc'),
-  role: Yup.number().required('Vai trò là bắt buộc'),
-})
 
 const CreateAccount = () => {
   useTitle('Admin | Tạo tài khoản người dùng')
@@ -34,9 +25,7 @@ const CreateAccount = () => {
     name: string
     password: string
     role: number
-  }>({
-    resolver: yupResolver(validationSchema),
-  })
+  }>()
 
   const password = watch('password')
 
@@ -56,7 +45,9 @@ const CreateAccount = () => {
     try {
       nProgress.start()
       const { email, name, password, role } = reqBody
+
       const response = await createApi({ email, name, password, role }).unwrap()
+
       Swal.fire('Thành công', response.message, 'success')
       navigate(paths.dashboardPaths.managements.accounts.list)
     } catch (error: any) {
@@ -71,7 +62,7 @@ const CreateAccount = () => {
       <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
         tạo tài khoản
       </div>
-      
+
       <form onSubmit={handleSubmit(handleCreate)} className='mx-auto w-[500px]'>
         <FormInputGroup
           register={register}

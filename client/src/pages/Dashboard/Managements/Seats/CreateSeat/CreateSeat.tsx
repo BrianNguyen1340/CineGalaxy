@@ -3,8 +3,6 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { HashLoader } from 'react-spinners'
 import { FaRegStar } from 'react-icons/fa'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
@@ -14,14 +12,6 @@ import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
 import { RoomType } from '~/types/room.type'
 import useTitle from '~/hooks/useTitle'
-
-const validationSchema = Yup.object().shape({
-  row: Yup.string().trim().required('Hàng ghế là bắt buộc'),
-  number: Yup.number().required('Số ghế là bắt buộc'),
-  type: Yup.string().trim().required('Loại ghế là bắt buộc'),
-  price: Yup.number().required('Giá ghế là bắt buộc'),
-  room: Yup.string().trim().required('Phòng của ghế là bắt buộc'),
-})
 
 const CreateSeat = () => {
   useTitle('Admin | Tạp ghế')
@@ -37,9 +27,7 @@ const CreateSeat = () => {
     type: string
     price: number
     room: string
-  }>({
-    resolver: yupResolver(validationSchema),
-  })
+  }>()
 
   const {
     data: rooms,

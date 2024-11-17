@@ -14,6 +14,7 @@ import 'perfect-scrollbar/css/perfect-scrollbar.css'
 import 'react-datepicker/dist/react-datepicker.css'
 import 'swiper/css'
 import 'swiper/swiper-bundle.css'
+import 'react-phone-number-input/style.css'
 
 import {
   DashHeader,
@@ -86,7 +87,7 @@ const App = () => {
               setOpenSidebar={setOpenSidebar}
             />
             <div className='mt-4 h-screen'>
-              <DashLayout openSidebar={openSidebar} />
+              <DashLayout />
             </div>
           </motion.main>
         </div>

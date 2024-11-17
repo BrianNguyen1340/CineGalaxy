@@ -6,7 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { persistor, store } from '~/redux/store.ts'
 import { paths } from '~/utils/paths.ts'
 import {
-  // user
+  // *** USER PAGES
   Account,
   Cinemas,
   Contact,
@@ -31,20 +31,26 @@ import {
   VerifyOTP,
   WatchedMovies,
 
-  // private auth
+  // *** PRIVATE AUTH
   PrivateLogin,
   PrivateForgotPassword,
   PrivateResetPassword,
+  PrivateProfile,
 
-  // dashboard
+  // *** ADMIN PAGES
   Dashboard,
-  NotFound,
   ListAccount,
   CreateAccount,
   UpdateAccount,
+  ListCinemaComplex,
+  CreateCinemaComplex,
+  UpdateCinemaComplex,
   ListCinema,
   CreateCinema,
   UpdateCinema,
+  ListGenre,
+  CreateGenre,
+  UpdateGenre,
   ListMovie,
   CreateMovie,
   UpdateMovie,
@@ -54,6 +60,8 @@ import {
   ListSeat,
   CreateSeat,
   UpdateSeat,
+
+  // *** MANAGER PAGES
   ListShowtime,
   CreateShowtime,
   UpdateShowtime,
@@ -63,26 +71,26 @@ import {
   ListPromotion,
   CreatePromotion,
   UpdatePromotion,
-  ListCinemaComplex,
-  CreateCinemaComplex,
-  UpdateCinemaComplex,
-  ListGenre,
-  CreateGenre,
-  UpdateGenre,
   ListProductCategory,
   CreateProductCategory,
   UpdateProductCategory,
   ListProduct,
   CreateProduct,
   UpdateProduct,
+  ListCombo,
+  CreateCombo,
+  UpdateCombo,
+
+  // *** CASHIER PAGES
+
+  // *** NOTFOUND PAGE
+  NotFound,
 } from '~/pages'
 import App from './App.tsx'
 import RequiredAuth from '~/routes/RequiredAuth'
-import PrivateProfile from '~/pages/Dashboard/PrivateProfile/PrivateProfile.tsx'
 import ProtectedRoute from '~/routes/ProtectedRoute.tsx'
 import './index.scss'
 import './index.css'
-// import PersistLogin from '~/features/PersistLogin.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
@@ -334,6 +342,20 @@ createRoot(document.getElementById('root')!).render(
               <Route
                 path={paths.dashboardPaths.managements.products.update}
                 element={<UpdateProduct />}
+              />
+
+              {/* combo */}
+              <Route
+                path={paths.dashboardPaths.managements.combos.list}
+                element={<ListCombo />}
+              />
+              <Route
+                path={paths.dashboardPaths.managements.combos.create}
+                element={<CreateCombo />}
+              />
+              <Route
+                path={paths.dashboardPaths.managements.combos.update}
+                element={<UpdateCombo />}
               />
             </Route>
             <Route

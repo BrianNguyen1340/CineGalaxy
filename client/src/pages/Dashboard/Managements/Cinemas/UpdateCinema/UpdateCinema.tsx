@@ -1,9 +1,7 @@
 import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
-import { HashLoader } from 'react-spinners'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
+import { BeatLoader, HashLoader } from 'react-spinners'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
@@ -16,14 +14,6 @@ import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
 import useTitle from '~/hooks/useTitle'
 import { CinemaComplexType } from '~/types/cinemaComplex.type'
-
-const validationSchema = Yup.object().shape({
-  name: Yup.string().trim().required('Tên rạp là bắt buộc'),
-  email: Yup.string().trim().email().required('Email rạp là bắt buộc'),
-  address: Yup.string().trim().required('Địa chỉ rạp là bắt buộc'),
-  phone: Yup.string().trim().required('Số điện thoại rạp là bắt buộc'),
-  cinemaComplex: Yup.string().trim().required('Tên cụm rạp là bắt buộc'),
-})
 
 const UpdateCinema = () => {
   useTitle('Admin | Cập nhật rạp')
@@ -41,9 +31,7 @@ const UpdateCinema = () => {
     phone: string
     address: string
     cinemaComplex: string
-  }>({
-    resolver: yupResolver(validationSchema),
-  })
+  }>()
 
   const {
     data: cinema,
@@ -103,15 +91,21 @@ const UpdateCinema = () => {
   }
 
   let content
+
   if (isLoadingCinema || isLoadingCinemaComplexes)
-    content = <div>Loading...</div>
+    content = (
+      <div className='flex h-screen w-full items-center justify-center'>
+        <BeatLoader />
+      </div>
+    )
+
   if (isSuccessCinema && isSuccessCinemaComplexes) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
         <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
           cập nhật rạp
         </div>
-        
+
         <form
           onSubmit={handleSubmit(handleUpdate)}
           className='mx-auto w-[500px]'
@@ -126,7 +120,7 @@ const UpdateCinema = () => {
             id='name'
             name='name'
           />
-          
+
           <FormInputGroup
             register={register}
             errors={errors}

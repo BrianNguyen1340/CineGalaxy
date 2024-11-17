@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { StatusCodes } from 'http-status-codes'
+import { Types } from 'mongoose'
 import bcrypt from 'bcrypt'
 
 import {
@@ -15,8 +16,20 @@ import {
   sendPasswordResetEmail,
   sendVerificationOTPRegister,
 } from '~/emails/nodemailerSendEmail'
+import { redis } from '~/configs/redis.config'
 
-// hàm đăng ký
+const storeRefreshToken = async (_id: Types.ObjectId, refreshToken: string) => {
+  const result = await redis.set(
+    `refresh_token:${_id}`,
+    refreshToken,
+    'EX',
+    7 * 24 * 60 * 60,
+  )
+  if (result !== 'OK') {
+    throw new Error('Failed to store refresh token in Redis')
+  }
+}
+
 const register = async (
   email: string,
   password: string,
@@ -84,9 +97,11 @@ const verifyOTPRegister = async (
   code: string,
 ): Promise<{
   success: boolean
+  statusCode: number
   message: string
   data?: Partial<UserType>
-  statusCode: number
+  accessToken?: string
+  refreshToken?: string
 }> => {
   try {
     const tempUser = await verificationCodeRegister.findOne({
@@ -108,15 +123,32 @@ const verifyOTPRegister = async (
       isVerified: true,
     })
 
+    const accessToken = generateToken(
+      {
+        _id: newUser._id,
+        role: newUser.role,
+      },
+      { secret: varEnv.JWT_ACCESS_TOKEN_KEY, expiresIn: '1d' },
+    )
+    const refreshToken = generateToken(
+      { _id: newUser._id },
+      { secret: varEnv.JWT_REFRESH_TOKEN_KEY, expiresIn: '7d' },
+    )
+
+    const token = await storeRefreshToken(newUser._id, refreshToken)
+    console.log('token: ', token)
+
     await verificationCodeRegister.deleteOne({ _id: tempUser._id })
 
-    const { password, isVerified, isBlocked, __v, ...data } = newUser.toObject()
+    const { password, ...data } = newUser.toObject()
 
     return {
       success: true,
       statusCode: StatusCodes.OK,
       message: 'Xác nhận tài khoản thành công. Vui lòng đăng nhập!',
       data,
+      accessToken,
+      refreshToken,
     }
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -134,10 +166,9 @@ const verifyOTPRegister = async (
   }
 }
 
-// hàm gửi lại otp
 const resendOTPRegister = async (
   email: string,
-): Promise<{ success: boolean; message: string; statusCode: number }> => {
+): Promise<{ success: boolean; statusCode: number; message: string }> => {
   try {
     const verificationToken = generateRandomNumber(8)
     const expiresAt = getExpirationTime(10, 'minutes')
@@ -184,7 +215,6 @@ const resendOTPRegister = async (
   }
 }
 
-// hàm đăng nhập với google
 const googleLogin = async (
   email: string,
   name: string,
@@ -201,6 +231,7 @@ const googleLogin = async (
     const user = await userModel.findOne({
       email,
     })
+
     if (user?.isBlocked === true) {
       return {
         success: false,
@@ -220,17 +251,19 @@ const googleLogin = async (
           _id: user._id,
           role: user.role,
         },
-        { secret: varEnv.JWT_ACCESS_TOKEN_KEY, expiresIn: '7d' },
+        { secret: varEnv.JWT_ACCESS_TOKEN_KEY, expiresIn: '1d' },
       )
       const refreshToken = generateToken(
         { _id: user._id },
-        { secret: varEnv.JWT_REFRESH_TOKEN_KEY, expiresIn: '30d' },
+        { secret: varEnv.JWT_REFRESH_TOKEN_KEY, expiresIn: '7d' },
       )
 
       user.lastLogin = new Date()
       await user.save()
 
-      const { password, isVerified, isBlocked, __v, ...data } = user.toObject()
+      await storeRefreshToken(user._id, refreshToken)
+
+      const { password, ...data } = user.toObject()
 
       return {
         success: true,
@@ -263,18 +296,17 @@ const googleLogin = async (
           _id: newUser._id,
           role: newUser.role,
         },
-        { secret: varEnv.JWT_ACCESS_TOKEN_KEY, expiresIn: '7d' },
+        { secret: varEnv.JWT_ACCESS_TOKEN_KEY, expiresIn: '1d' },
       )
       const refreshToken = generateToken(
         { _id: newUser._id },
-        { secret: varEnv.JWT_REFRESH_TOKEN_KEY, expiresIn: '30d' },
+        { secret: varEnv.JWT_REFRESH_TOKEN_KEY, expiresIn: '7d' },
       )
 
       newUser.lastLogin = new Date()
       await newUser.save()
 
-      const { password, isVerified, isBlocked, __v, ...data } =
-        newUser.toObject()
+      const { password, ...data } = newUser.toObject()
 
       return {
         success: true,
@@ -301,7 +333,6 @@ const googleLogin = async (
   }
 }
 
-// hàm đăng nhập
 const login = async (
   email: string,
   enteredPassword: string,
@@ -346,17 +377,17 @@ const login = async (
         _id: user._id,
         role: user.role,
       },
-      { secret: varEnv.JWT_ACCESS_TOKEN_KEY, expiresIn: '7d' },
+      { secret: varEnv.JWT_ACCESS_TOKEN_KEY, expiresIn: '1d' },
     )
     const refreshToken = generateToken(
       { _id: user._id },
-      { secret: varEnv.JWT_REFRESH_TOKEN_KEY, expiresIn: '30d' },
+      { secret: varEnv.JWT_REFRESH_TOKEN_KEY, expiresIn: '7d' },
     )
 
     user.lastLogin = new Date()
     await user.save()
 
-    const { password, isVerified, isBlocked, __v, ...data } = user.toObject()
+    const { password, ...data } = user.toObject()
 
     return {
       success: true,
@@ -382,7 +413,6 @@ const login = async (
   }
 }
 
-// hàm quên mật khẩu
 const forgotPassword = async (
   email: string,
 ): Promise<{ success: boolean; message: string; statusCode: number }> => {
@@ -433,7 +463,6 @@ const forgotPassword = async (
   }
 }
 
-// hàm xác thực token khi thay đổi mật khẩu
 const resetPassword = async (
   token: string,
   password: string,

@@ -1,9 +1,7 @@
 import { useEffect } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
-import { HashLoader } from 'react-spinners'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
+import { BeatLoader, HashLoader } from 'react-spinners'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
@@ -15,10 +13,6 @@ import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
 import useTitle from '~/hooks/useTitle'
 
-const validationSchema = Yup.object().shape({
-  name: Yup.string().trim().required('Tên thể loại phim là bắt buộc'),
-})
-
 const UpdateGenre = () => {
   useTitle('Admin | Cập nhật thể loại phim')
   const { id } = useParams()
@@ -29,9 +23,7 @@ const UpdateGenre = () => {
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm<{ name: string }>({
-    resolver: yupResolver(validationSchema),
-  })
+  } = useForm<{ name: string }>()
 
   const {
     data: genre,
@@ -66,7 +58,14 @@ const UpdateGenre = () => {
   }
 
   let content
-  if (isLoadingGenre) content = <div>Loading...</div>
+
+  if (isLoadingGenre)
+    content = (
+      <div className='flex h-screen w-full items-center justify-center'>
+        <BeatLoader />
+      </div>
+    )
+
   if (isSuccessGenre) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>

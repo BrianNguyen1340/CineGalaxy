@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { BeatLoader } from 'react-spinners'
 import { SquarePen } from 'lucide-react'
 import ReactPaginate from 'react-paginate'
 
@@ -36,14 +37,21 @@ const ListProductCategory = () => {
   }
 
   let content
-  if (isLoadingProductCategory) content = <div>Loading...</div>
+
+  if (isLoadingProductCategory)
+    content = (
+      <div className='flex h-screen w-full items-center justify-center'>
+        <BeatLoader />
+      </div>
+    )
+
   if (isSuccessProductCategory) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
         <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
           danh sách danh mục sản phẩm
         </div>
-        
+
         {productCategories ? (
           <>
             <table>
@@ -75,7 +83,7 @@ const ListProductCategory = () => {
                 )}
               </tbody>
             </table>
-            
+
             <ReactPaginate
               previousLabel={'<'}
               nextLabel={'>'}

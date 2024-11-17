@@ -52,9 +52,9 @@ const ListProduct = () => {
                   <th>no.</th>
                   <th>tên sản phẩm</th>
                   <th>danh mục sản phẩm</th>
-                  <th>hình ảnh sản phẩm</th>
                   <th>giá sản phẩm</th>
                   <th>kích cỡ sản phẩm</th>
+                  <th>hình ảnh sản phẩm</th>
                   <th>hành động</th>
                 </tr>
               </thead>
@@ -64,11 +64,18 @@ const ListProduct = () => {
                     <td>{index + offset}</td>
                     <td className='capitalize'>{item.name}</td>
                     <td className='capitalize'>{item.category.name}</td>
-                    <td className='flex items-center justify-center'>
-                      <img src='' alt='image' />
+                    <td className='capitalize'>
+                      {item.price.toLocaleString('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND',
+                      })}
                     </td>
-                    <td className='capitalize'>{item.price} VNĐ</td>
                     <td className='capitalize'>{item.size}</td>
+                    <td>
+                      <div className='flex items-center justify-center'>
+                        <img src={item.image} alt='image' width='200' />
+                      </div>
+                    </td>
                     <td>
                       <div className='flex items-center justify-center'>
                         <Link
@@ -83,7 +90,7 @@ const ListProduct = () => {
                 ))}
               </tbody>
             </table>
-            
+
             <ReactPaginate
               previousLabel={'<'}
               nextLabel={'>'}

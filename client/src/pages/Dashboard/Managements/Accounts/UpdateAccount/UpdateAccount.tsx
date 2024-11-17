@@ -1,9 +1,7 @@
 import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
-import { HashLoader } from 'react-spinners'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
+import { BeatLoader, HashLoader } from 'react-spinners'
 import nProgress from 'nprogress'
 import Swal from 'sweetalert2'
 
@@ -11,12 +9,6 @@ import { useGetUserQuery, useUpdateUserMutation } from '~/services/user.service'
 import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
 import useTitle from '~/hooks/useTitle'
-
-const validationSchema = Yup.object().shape({
-  email: Yup.string().trim().email().required('Email là bắt buộc'),
-  name: Yup.string().trim().required('Tên người dùng là bắt buộc'),
-  role: Yup.number().required('Vai trò là bắt buộc'),
-})
 
 const UpdateAccount = () => {
   useTitle('Admin | Cập nhật tài khoản')
@@ -32,9 +24,7 @@ const UpdateAccount = () => {
     email: string
     name: string
     role: number
-  }>({
-    resolver: yupResolver(validationSchema),
-  })
+  }>()
 
   const {
     data: user,
@@ -76,7 +66,12 @@ const UpdateAccount = () => {
   }
 
   let content
-  if (isLoadingUser) content = <div>Loading...</div>
+  if (isLoadingUser)
+    content = (
+      <div className='flex h-screen w-full items-center justify-center'>
+        <BeatLoader />
+      </div>
+    )
   if (isSuccessUser) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>

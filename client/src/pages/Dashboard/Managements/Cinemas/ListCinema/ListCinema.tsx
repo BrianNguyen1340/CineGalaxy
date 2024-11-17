@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { SquarePen } from 'lucide-react'
+import { BeatLoader } from 'react-spinners'
 import ReactPaginate from 'react-paginate'
 
 import { useGetCinemasQuery } from '~/services/cinema.service'
@@ -12,14 +13,14 @@ const ListCinema = () => {
 
   const {
     data: cinemas,
-    isLoading,
-    isSuccess,
-    refetch,
+    isLoading: isLoadingCinemas,
+    isSuccess: isSuccessCinemas,
+    refetch: refetchCinemas,
   } = useGetCinemasQuery({})
 
   useEffect(() => {
-    refetch()
-  }, [refetch])
+    refetchCinemas()
+  }, [refetchCinemas])
 
   const [currentPage, setCurrentPage] = useState<number>(0)
   const itemsPerPage = 10
@@ -36,8 +37,15 @@ const ListCinema = () => {
   }
 
   let content
-  if (isLoading) content = <div>Loading...</div>
-  if (isSuccess) {
+
+  if (isLoadingCinemas)
+    content = (
+      <div className='flex h-screen w-full items-center justify-center'>
+        <BeatLoader />
+      </div>
+    )
+
+  if (isSuccessCinemas) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
         <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>

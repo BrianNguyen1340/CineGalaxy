@@ -6,6 +6,7 @@ import ReactPaginate from 'react-paginate'
 import { useGetCinemaComplexesQuery } from '~/services/cinemaComplex.service'
 import { CinemaComplexType } from '~/types/cinemaComplex.type'
 import useTitle from '~/hooks/useTitle'
+import { BeatLoader } from 'react-spinners'
 
 const ListCinemaComplex = () => {
   useTitle('Admin | Danh sách cụm rạp')
@@ -36,14 +37,21 @@ const ListCinemaComplex = () => {
   }
 
   let content
-  if (isLoading) content = <div>Loading...</div>
+
+  if (isLoading)
+    content = (
+      <div className='flex h-screen w-full items-center justify-center'>
+        <BeatLoader />
+      </div>
+    )
+    
   if (isSuccess) {
     content = (
       <div className='relative h-fit w-full rounded-xl border bg-white p-4 shadow-md'>
         <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
           danh sách cụm rạp
         </div>
-        
+
         {cinemaComplexes ? (
           <>
             <table>
@@ -79,7 +87,9 @@ const ListCinemaComplex = () => {
               nextLabel={'>'}
               breakLabel={'...'}
               breakClassName={'break-me'}
-              pageCount={Math.ceil(cinemaComplexes?.data?.length / itemsPerPage)}
+              pageCount={Math.ceil(
+                cinemaComplexes?.data?.length / itemsPerPage,
+              )}
               marginPagesDisplayed={2}
               pageRangeDisplayed={5}
               onPageChange={handlePageClick}

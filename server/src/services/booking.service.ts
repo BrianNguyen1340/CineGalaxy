@@ -28,6 +28,7 @@ const handleCreate = async (
         message: 'Người dùng không tồn tại!',
       }
     }
+
     const checkShowtime = await showtimeModel.findById(showtime)
     if (!checkShowtime) {
       return {
@@ -63,6 +64,7 @@ const handleCreate = async (
       (sum, product: ProductType) => sum + product.price,
       0,
     )
+
     const totalAmount = totalSeatsPrice + totalProductsPrice
     const taxPrice = totalAmount * 0.1
 
@@ -77,7 +79,6 @@ const handleCreate = async (
       paymentMethod,
       bookingDate: new Date(),
     })
-
     if (!request) {
       return {
         success: false,

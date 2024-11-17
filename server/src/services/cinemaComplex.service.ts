@@ -16,7 +16,6 @@ const handleCreate = async (
 }> => {
   try {
     const checkExist = await cinemaComplexModel.findOne({ name })
-    
     if (checkExist) {
       return {
         success: false,
@@ -26,7 +25,6 @@ const handleCreate = async (
     }
 
     const request = await cinemaComplexModel.create({ name })
-
     if (!request) {
       return {
         success: false,
@@ -67,7 +65,6 @@ const handleGetOne = async (
 }> => {
   try {
     const data = await cinemaComplexModel.findById(id)
-
     if (!data) {
       return {
         success: false,
@@ -106,7 +103,6 @@ const handleGetAll = async (): Promise<{
 }> => {
   try {
     const datas = await cinemaComplexModel.find()
-
     if (!datas || datas.length === 0) {
       return {
         success: false,
@@ -148,7 +144,6 @@ const handleUpdate = async (
 }> => {
   try {
     const cinemaComplex = await cinemaComplexModel.findById(id)
-
     if (!cinemaComplex) {
       return {
         success: false,
@@ -174,7 +169,6 @@ const handleUpdate = async (
       { $set: { name } },
       { new: true },
     )
-
     if (!request) {
       return {
         success: false,

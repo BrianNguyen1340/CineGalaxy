@@ -14,7 +14,6 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
   const { name } = req.body
 
   const response = await genreService.handleCreate(name)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -29,11 +28,9 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
 
 const handleGetOne = catchErrors(async (req, res) => {
   const { id } = req.params
-
   const objectID = new Types.ObjectId(id)
 
   const response = await genreService.handleGetOne(objectID)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -48,7 +45,6 @@ const handleGetOne = catchErrors(async (req, res) => {
 
 const handleGetAll = catchErrors(async (req, res) => {
   const response = await genreService.handleGetAll()
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -63,17 +59,15 @@ const handleGetAll = catchErrors(async (req, res) => {
 
 const handleUpdate = catchErrors(async (req, res) => {
   const { id } = req.params
+  const objectID = new Types.ObjectId(id)
 
   const { name } = req.body
 
-  const objectID = new Types.ObjectId(id)
-
   const response = await genreService.handleUpdate(objectID, name)
-  
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
-
+  
   return sendSuccessResponse(
     res,
     response.statusCode,

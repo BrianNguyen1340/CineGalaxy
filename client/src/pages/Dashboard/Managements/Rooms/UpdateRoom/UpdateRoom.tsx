@@ -2,25 +2,15 @@ import { useEffect } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { HashLoader } from 'react-spinners'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
 import { paths } from '~/utils/paths'
 import { useUpdateRoomMutation, useGetRoomQuery } from '~/services/room.service'
 import { useGetCinemasQuery } from '~/services/cinema.service'
+import { CinemaType } from '~/types/cinema.type'
 import { FormInputGroup } from '~/components'
 import useTitle from '~/hooks/useTitle'
-import { CinemaType } from '~/types/cinema.type'
-
-const validationSchema = Yup.object().shape({
-  name: Yup.string().trim().required('Tên phòng là bắt buộc'),
-  opacity: Yup.number().required('Sức chứa phòng là bắt buộc'),
-  status: Yup.string().trim().required('Tình trạng phòng là bắt buộc'),
-  screen: Yup.string().trim().required('Màn hình phòng là bắt buộc'),
-  cinema: Yup.string().trim().required('Rạp của phòng là bắt buộc'),
-})
 
 const UpdateRoom = () => {
   useTitle('Admin | Cập nhật phòng')
@@ -38,9 +28,7 @@ const UpdateRoom = () => {
     status: string
     screen: string
     cinema: string
-  }>({
-    resolver: yupResolver(validationSchema),
-  })
+  }>()
 
   const {
     data: room,

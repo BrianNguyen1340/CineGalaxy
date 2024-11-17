@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { BeatLoader } from 'react-spinners'
 import { FaTimes } from 'react-icons/fa'
 import { SquarePen } from 'lucide-react'
 import ReactPaginate from 'react-paginate'
@@ -11,8 +12,8 @@ import {
   useBlockAccountMutation,
   useUnblockAccountMutation,
 } from '~/services/user.service'
-import useTitle from '~/hooks/useTitle'
 import { UserType } from '~/types/user.type'
+import useTitle from '~/hooks/useTitle'
 
 const ListAccount = () => {
   useTitle('Admin | Danh sách tài khoản')
@@ -56,6 +57,7 @@ const ListAccount = () => {
         confirmButtonText: 'OK!',
         cancelButtonText: 'Không!',
       })
+
       if (result.isConfirmed) {
         await blockAccount(id)
         Swal.fire('Thành công!', 'Khóa tài khoản thành công!', 'success')
@@ -79,6 +81,7 @@ const ListAccount = () => {
         confirmButtonText: 'OK!',
         cancelButtonText: 'Không!',
       })
+
       if (result.isConfirmed) {
         await unblockAccount(id)
         Swal.fire('Thành công!', 'Mở khóa tài khoản thành công!', 'success')
@@ -93,7 +96,12 @@ const ListAccount = () => {
 
   let content
 
-  if (isLoadingUsers) content = <div>Loading...</div>
+  if (isLoadingUsers)
+    content = (
+      <div className='flex h-screen w-full items-center justify-center'>
+        <BeatLoader />
+      </div>
+    )
 
   if (isSuccessUsers) {
     content = (

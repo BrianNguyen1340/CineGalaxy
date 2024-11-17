@@ -9,6 +9,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api/v1/': 'http://localhost:7777',
+      '/uploads/': 'http://localhost:7777',
     },
     port: 3000,
   },

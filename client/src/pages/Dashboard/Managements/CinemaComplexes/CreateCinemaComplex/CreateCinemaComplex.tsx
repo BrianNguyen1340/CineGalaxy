@@ -1,8 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { HashLoader } from 'react-spinners'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
@@ -10,10 +8,6 @@ import { useCreateCinemaComplexMutation } from '~/services/cinemaComplex.service
 import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
 import useTitle from '~/hooks/useTitle'
-
-const validationSchema = Yup.object().shape({
-  name: Yup.string().trim().required('Tên cụm rạp là bắt buộc'),
-})
 
 const CreateCinemaComplex = () => {
   useTitle('Admin | Tạo cụm rạp')
@@ -23,9 +17,7 @@ const CreateCinemaComplex = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<{ name: string }>({
-    resolver: yupResolver(validationSchema),
-  })
+  } = useForm<{ name: string }>()
 
   const [createApi, { isLoading: isLoadingCreate }] =
     useCreateCinemaComplexMutation()
@@ -49,7 +41,7 @@ const CreateCinemaComplex = () => {
       <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
         tạo cụm rạp
       </div>
-      
+
       <form onSubmit={handleSubmit(handleCreate)} className='mx-auto w-[500px]'>
         <FormInputGroup
           register={register}
@@ -64,7 +56,7 @@ const CreateCinemaComplex = () => {
           name='name'
           placeholder='Vui lòng nhập tên cụm rạp'
         />
-        
+
         <button
           type='submit'
           disabled={isLoadingCreate ? true : false}

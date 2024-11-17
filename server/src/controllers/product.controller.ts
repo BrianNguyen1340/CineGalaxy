@@ -11,17 +11,16 @@ import { productService } from '~/services/product.service'
 import { productValidation } from '~/validations/product.validation'
 
 const handleCreate: RequestHandler = catchErrors(async (req, res) => {
-  const { name, category, image, price, size, description } = req.body
+  const { name, category, price, size, image, description } = req.body
 
   const response = await productService.handleCreate(
     name,
     category,
-    image,
     price,
     size,
+    image,
     description,
   )
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -36,11 +35,9 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
 
 const handleGetOne: RequestHandler = catchErrors(async (req, res) => {
   const { id } = req.params
-
   const objectID = new Types.ObjectId(id)
 
   const response = await productService.handleGetOne(objectID)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -55,7 +52,6 @@ const handleGetOne: RequestHandler = catchErrors(async (req, res) => {
 
 const handleGetAll: RequestHandler = catchErrors(async (req, res) => {
   const response = await productService.handleGetAll()
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -70,21 +66,19 @@ const handleGetAll: RequestHandler = catchErrors(async (req, res) => {
 
 const handleUpdate: RequestHandler = catchErrors(async (req, res) => {
   const { id } = req.params
-
-  const { name, category, image, price, size, description } = req.body
-
   const objectID = new Types.ObjectId(id)
+
+  const { name, category, price, size, image, description } = req.body
 
   const response = await productService.handleUpdate(
     objectID,
     name,
     category,
-    image,
     price,
     size,
+    image,
     description,
   )
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }

@@ -28,7 +28,6 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
 
 const handleGetOne: RequestHandler = catchErrors(async (req, res) => {
   const { id } = req.params
-
   const objectID = new Types.ObjectId(id)
 
   const response = await cinemaComplexService.handleGetOne(objectID)
@@ -60,9 +59,9 @@ const handleGetAll: RequestHandler = catchErrors(async (req, res) => {
 
 const handleUpdate: RequestHandler = catchErrors(async (req, res) => {
   const { id } = req.params
-  const { name } = req.body
-
   const objectID = new Types.ObjectId(id)
+
+  const { name } = req.body
 
   const response = await cinemaComplexService.handleUpdate(objectID, name)
   if (!response.success) {

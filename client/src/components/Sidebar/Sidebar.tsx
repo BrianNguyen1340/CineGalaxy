@@ -9,6 +9,7 @@ import {
   Armchair,
   CircleParking,
   Clapperboard,
+  Combine,
   Film,
   LogOut,
   ShieldCheck,
@@ -361,6 +362,28 @@ const Sidebar: React.FC<SidebarProps> = ({
                       <SidebarMenuItem
                         path={paths.dashboardPaths.managements.products.create}
                         spanText='tạo sản phẩm'
+                        spanTitle='C'
+                        isSelected={selectedMenuItem === location.pathname}
+                        onSelect={() => setSelectedMenuItem(location.pathname)}
+                      />
+                    </>
+                  }
+                />
+                <SidebarMenu
+                  spanTitle='Combo'
+                  icon={<Combine size='16' />}
+                  item={
+                    <>
+                      <SidebarMenuItem
+                        path={paths.dashboardPaths.managements.combos.list}
+                        spanText='danh sách combo'
+                        spanTitle='L'
+                        isSelected={selectedMenuItem === location.pathname}
+                        onSelect={() => setSelectedMenuItem(location.pathname)}
+                      />
+                      <SidebarMenuItem
+                        path={paths.dashboardPaths.managements.combos.create}
+                        spanText='tạo combo'
                         spanTitle='C'
                         isSelected={selectedMenuItem === location.pathname}
                         onSelect={() => setSelectedMenuItem(location.pathname)}

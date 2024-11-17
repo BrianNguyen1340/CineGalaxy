@@ -4,9 +4,9 @@ export type ProductType = Document & {
   readonly _id: Types.ObjectId
   name: string
   category: Types.ObjectId
-  image: string
   price: number
   size: string
+  image: string
   description?: string
 }
 
@@ -22,10 +22,6 @@ const productSchema = new Schema<ProductType>(
       ref: 'ProductCategory',
       trim: true,
     },
-    image: {
-      type: String,
-      required: true,
-    },
     price: {
       type: Number,
       required: true,
@@ -34,6 +30,11 @@ const productSchema = new Schema<ProductType>(
       type: String,
       required: true,
       enum: ['Small', 'Medium', 'Large'],
+    },
+    image: {
+      type: String,
+      required: true,
+      trim: true,
     },
     description: {
       type: String,
@@ -59,3 +60,4 @@ export const productModel = model<ProductType>('Product', productSchema)
 // saleStartDate: Date
 // saleEndDate: Date
 // supplier: Types.ObjectId
+// image: string

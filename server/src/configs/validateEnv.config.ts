@@ -1,6 +1,5 @@
 import { cleanEnv, str, port, num } from 'envalid'
 
-// khai báo hàm xác thực biến môi trường
 export const validateEnv = () => {
   cleanEnv(process.env, {
     SERVER_URI: str(),
@@ -26,10 +25,11 @@ export const validateEnv = () => {
     PAYPAL_CLIENT_ID: str(),
     PAYPAL_SECRET_KEY: str(),
 
-    MAILTRAP_TOKEN: str(),
-    MAILTRAP_ENDPOINT: str(),
-
     REDIS_HOST: str(),
     REDIS_PORT: str(),
+
+    UPSTASH_REDIS_URL: str(),
+
+    STRIPE_SECRET_KEYS: str(),
   })
 }

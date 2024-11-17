@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { HashLoader } from 'react-spinners'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
 import Flatpickr from 'react-flatpickr'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
@@ -24,23 +22,9 @@ import { CinemaComplexType } from '~/types/cinemaComplex.type'
 import useTitle from '~/hooks/useTitle'
 import { MovieType } from '~/types/movie.type'
 
-const validationSchema = Yup.object().shape({
-  date: Yup.date().required('Ngày chiếu là bắt buộc'),
-  timeStart: Yup.date().required('Giờ bắt đầu là bắt buộc'),
-  timeEnd: Yup.date()
-    .required('Giờ kết thúc là bắt buộc')
-    .min(Yup.ref('timeStart'), 'Giờ kết thúc phải sau giờ bắt đầu'),
-  movie: Yup.string().required('Phim là bắt buộc'),
-  room: Yup.string().required('Phòng là bắt buộc'),
-  cinema: Yup.string().required('Rạp là bắt buộc'),
-  cinemaComplex: Yup.string().required('Cụm rạp là bắt buộc'),
-})
-
 const UpdateShowtime = () => {
   useTitle('Admin | Cập nhật suất chiếu')
-
   const { id } = useParams()
-
   const navigate = useNavigate()
 
   const {
@@ -56,9 +40,7 @@ const UpdateShowtime = () => {
     room: string
     cinema: string
     cinemaComplex: string
-  }>({
-    resolver: yupResolver(validationSchema),
-  })
+  }>()
 
   const {
     data: showtime,
@@ -403,7 +385,7 @@ const UpdateShowtime = () => {
               <div className='text-sm text-[red]'>{errors.timeEnd.message}</div>
             )}
           </div>
-          
+
           <button
             type='submit'
             disabled={isLoadingUpdate ? true : false}

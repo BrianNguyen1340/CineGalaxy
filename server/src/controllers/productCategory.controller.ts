@@ -14,7 +14,6 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
   const { name } = req.body
 
   const response = await productCategoryService.handleCreate(name)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -29,11 +28,9 @@ const handleCreate: RequestHandler = catchErrors(async (req, res) => {
 
 const handleGetOne: RequestHandler = catchErrors(async (req, res) => {
   const { id } = req.params
-
   const objectID = new Types.ObjectId(id)
 
   const response = await productCategoryService.handleGetOne(objectID)
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -48,7 +45,6 @@ const handleGetOne: RequestHandler = catchErrors(async (req, res) => {
 
 const handleGetAll: RequestHandler = catchErrors(async (req, res) => {
   const response = await productCategoryService.handleGetAll()
-
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }
@@ -63,13 +59,11 @@ const handleGetAll: RequestHandler = catchErrors(async (req, res) => {
 
 const handleUpdate: RequestHandler = catchErrors(async (req, res) => {
   const { id } = req.params
-  
-  const { name } = req.body
-
   const objectID = new Types.ObjectId(id)
 
-  const response = await productCategoryService.handleUpdate(objectID, name)
+  const { name } = req.body
 
+  const response = await productCategoryService.handleUpdate(objectID, name)
   if (!response.success) {
     return sendErrorResponse(res, response.statusCode, response.message)
   }

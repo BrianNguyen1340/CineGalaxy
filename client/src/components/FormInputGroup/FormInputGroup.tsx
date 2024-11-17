@@ -32,7 +32,7 @@ const FormInputGroup: React.FC<FormInputGroupType> = ({
   const errorMessage = errors[name]?.message
 
   return (
-    <div className='relative mb-6 flex flex-col'>
+    <div className='relative mb-5 flex flex-col'>
       <label
         htmlFor={htmlFor}
         className='mb-1 text-base font-semibold capitalize'

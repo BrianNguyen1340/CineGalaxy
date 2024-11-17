@@ -38,6 +38,20 @@ export const movieAPISlice = apiSlice.injectEndpoints({
         method: 'PUT',
       }),
     }),
+    uploadPosterMovie: builder.mutation({
+      query: (data) => ({
+        url: `/api/v1/upload/poster`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    uploadBannerMovie: builder.mutation({
+      query: (data) => ({
+        url: `/api/v1/upload/banner`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 })
 
@@ -48,4 +62,6 @@ export const {
   useUpdateMovieMutation,
   useHideMovieMutation,
   useShowMovieMutation,
+  useUploadPosterMovieMutation,
+  useUploadBannerMovieMutation,
 } = movieAPISlice

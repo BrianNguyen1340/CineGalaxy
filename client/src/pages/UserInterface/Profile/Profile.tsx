@@ -14,6 +14,7 @@ import AvatarEditor from 'react-avatar-editor'
 import Swal from 'sweetalert2'
 import ReactModal from 'react-modal'
 import nProgress from 'nprogress'
+import PhoneInput from 'react-phone-number-input'
 
 import { app } from '~/firebase/firebase.config'
 import { useAppDispatch, useAppSelector } from '~/hooks/redux'
@@ -43,11 +44,13 @@ const Profile = () => {
   const [photo, setPhoto] = useState<File | null>(null)
   const [photoURL, setPhotoURL] = useState<string | null>(null)
 
-  const [name, setName] = useState<string>(user?.name || '')
-  const [email, setEmail] = useState<string>(user?.email || '')
-  const [phone, setPhone] = useState<string>(user?.phone || '')
-  const [gender, setGender] = useState<string>(user?.gender || '')
-  const [address, setAddress] = useState<string>(user?.address || '')
+  const [name, setName] = useState<string | undefined>(user?.name)
+  const [email, setEmail] = useState<string | undefined>(user?.email)
+  const [phone, setPhone] = useState<string | undefined>(user?.phone || '')
+  const [gender, setGender] = useState<string | undefined>(user?.gender || '')
+  const [address, setAddress] = useState<string | undefined>(
+    user?.address || '',
+  )
 
   const [editName, setEditName] = useState<string>('Chỉnh sửa')
   const [editEmail, setEditEmail] = useState<string>('Chỉnh sửa')
@@ -178,6 +181,33 @@ const Profile = () => {
           user: data,
         }),
       )
+
+      switch (true) {
+        case isEditingName:
+          setIsEditingName(false)
+          setEditName('Chỉnh sửa')
+          break
+
+        case isEditingEmail:
+          setIsEditingEmail(false)
+          setEditEmail('Chỉnh sửa')
+          break
+
+        case isEditingAddress:
+          setIsEditingAddress(false)
+          setEditAddress('Chỉnh sửa')
+          break
+
+        case isEditingPhone:
+          setIsEditingPhone(false)
+          setEditPhone('Chỉnh sửa')
+          break
+
+        case isEditingGender:
+          setIsEditingGender(false)
+          setEditGender('Chỉnh sửa')
+          break
+      }
 
       setPhoto(null)
       setPhotoURL(null)
@@ -399,7 +429,7 @@ const Profile = () => {
                           type='submit'
                           className='block w-fit rounded-3xl bg-[#c2e7ff] px-4 py-2 font-semibold capitalize transition duration-500 hover:shadow-custom'
                         >
-                          update avatar
+                          cập nhật ảnh đại diện
                         </button>
                       </form>
                     </div>
@@ -440,6 +470,7 @@ const Profile = () => {
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setName(e.target.value)
                       }
+                      autoComplete='off'
                     />
                     <button
                       type='submit'
@@ -484,6 +515,7 @@ const Profile = () => {
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setEmail(e.target.value)
                       }
+                      autoComplete='off'
                     />
                     <button
                       type='submit'
@@ -543,6 +575,7 @@ const Profile = () => {
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setAddress(e.target.value)
                       }
+                      autoComplete='off'
                     />
                     <button
                       type='submit'
@@ -599,15 +632,15 @@ const Profile = () => {
                 </div>
                 {isEditingPhone && (
                   <form onSubmit={handleUpdate} className='mt-1'>
-                    <input
-                      placeholder='Nhập số điện thoại'
+                    <PhoneInput
+                      value={phone}
+                      onChange={setPhone}
                       className='h-fit w-full rounded-lg border border-[#ccc] p-4 text-base outline-none'
                       id='phone'
                       name='phone'
-                      value={phone}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setPhone(e.target.value)
-                      }
+                      autoComplete='off'
+                      placeholder='Nhập số điện thoại'
+                      defaultCountry='VN'
                     />
                     <button
                       type='submit'

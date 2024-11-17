@@ -1,8 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { HashLoader } from 'react-spinners'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
@@ -10,10 +8,6 @@ import { useCreateGenreMutation } from '~/services/genre.service'
 import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
 import useTitle from '~/hooks/useTitle'
-
-const validationSchema = Yup.object().shape({
-  name: Yup.string().trim().required('Tên thể loại phim là bắt buộc'),
-})
 
 const CreateGenre = () => {
   useTitle('Admin | Tạo thể loại phim')
@@ -23,9 +17,7 @@ const CreateGenre = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<{ name: string }>({
-    resolver: yupResolver(validationSchema),
-  })
+  } = useForm<{ name: string }>()
 
   const [createApi, { isLoading: isLoadingCreate }] = useCreateGenreMutation()
 
@@ -48,7 +40,7 @@ const CreateGenre = () => {
       <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
         tạo danh mục phim
       </div>
-      
+
       <form onSubmit={handleSubmit(handleCreate)} className='mx-auto w-[500px]'>
         <FormInputGroup
           register={register}
@@ -63,7 +55,7 @@ const CreateGenre = () => {
           type='text'
           name='name'
         />
-        
+
         <button
           type='submit'
           disabled={isLoadingCreate ? true : false}

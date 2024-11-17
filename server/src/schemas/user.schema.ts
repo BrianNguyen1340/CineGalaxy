@@ -6,9 +6,13 @@ export type UserType = Document & {
   email: string
   password: string
   phone: string
-  gender?: string
-  address?: string
-  photoURL?: string
+  gender: string
+  address: string
+  photoURL: string
+  cart: {
+    product: Types.ObjectId
+    quantity: number
+  }[]
   role: number
   isBlocked: boolean
   isVerified: boolean
@@ -55,13 +59,25 @@ const userSchema = new Schema<UserType>(
       default:
         'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
     },
-    isBlocked: {
-      type: Boolean,
-      default: false,
-    },
+    cart: [
+      {
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: 'Product',
+        },
+        quantity: {
+          type: Number,
+          default: 1,
+        },
+      },
+    ],
     role: {
       type: Number,
       default: 3,
+    },
+    isBlocked: {
+      type: Boolean,
+      default: false,
     },
     isVerified: {
       type: Boolean,
@@ -86,3 +102,5 @@ const userSchema = new Schema<UserType>(
 )
 
 export const userModel = model<UserType>('User', userSchema)
+
+

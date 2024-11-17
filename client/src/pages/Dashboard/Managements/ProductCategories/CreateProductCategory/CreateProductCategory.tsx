@@ -1,8 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { HashLoader } from 'react-spinners'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
 import Swal from 'sweetalert2'
 import nProgress from 'nprogress'
 
@@ -10,10 +8,6 @@ import { useCreateProductCategoryMutation } from '~/services/productCategory.ser
 import { paths } from '~/utils/paths'
 import { FormInputGroup } from '~/components'
 import useTitle from '~/hooks/useTitle'
-
-const validationSchema = Yup.object().shape({
-  name: Yup.string().trim().required('Tên danh mục sản phẩm là bắt buộc'),
-})
 
 const CreateProductCategory = () => {
   useTitle('Manager | Tạo danh mục sản phẩm')
@@ -23,9 +17,7 @@ const CreateProductCategory = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<{ name: string }>({
-    resolver: yupResolver(validationSchema),
-  })
+  } = useForm<{ name: string }>()
 
   const [createApi, { isLoading: isLoadingCreate }] =
     useCreateProductCategoryMutation()
@@ -49,7 +41,7 @@ const CreateProductCategory = () => {
       <div className='mb-5 rounded-xl bg-[#289ae7] py-5 text-center text-xl font-semibold capitalize text-white'>
         tạo danh mục sản phẩm
       </div>
-      
+
       <form onSubmit={handleSubmit(handleCreate)} className='mx-auto w-[500px]'>
         <FormInputGroup
           register={register}

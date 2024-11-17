@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, EffectFade, Navigation } from 'swiper/modules'
+import { BeatLoader } from 'react-spinners'
 import Slider from 'react-slick'
 
 import { useGetMoviesQuery } from '~/services/movie.service'
@@ -76,7 +77,14 @@ const Home = () => {
   })
 
   let content
-  if (isLoadingMovies) content = <div>Loading...</div>
+
+  if (isLoadingMovies)
+    content = (
+      <div className='flex h-screen w-full items-center justify-center'>
+        <BeatLoader />
+      </div>
+    )
+
   if (isSuccessMovies) {
     content = (
       <div className='h-fit w-full'>

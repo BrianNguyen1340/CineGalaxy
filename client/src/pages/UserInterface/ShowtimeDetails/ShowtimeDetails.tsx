@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import Swal from 'sweetalert2'
 
 import { useGetShowtimeQuery } from '~/services/showtime.service'
 import { useGetSeatsQuery } from '~/services/seat.service'
@@ -7,7 +8,6 @@ import { useGetProductsQuery } from '~/services/product.service'
 import { SeatType } from '~/types/seat.type'
 import { ProductType } from '~/types/product.type'
 import useTitle from '~/hooks/useTitle'
-import Swal from 'sweetalert2'
 
 const ShowtimeDetails = () => {
   useTitle('Chọn ghế')
@@ -40,6 +40,22 @@ const ShowtimeDetails = () => {
     refetchProducts()
   }, [refetchShowtime, refetchSeats, refetchProducts])
 
+  const groupProductsByCategory = (products: ProductType[] | undefined) => {
+    if (!products) return {}
+    return products.reduce((acc: Record<string, ProductType[]>, product) => {
+      const categoryKey = product.category.name
+      if (!acc[categoryKey]) {
+        acc[categoryKey] = []
+      }
+      acc[categoryKey].push(product)
+      return acc
+    }, {})
+  }
+
+  const groupedProducts = isSuccessProducts
+    ? groupProductsByCategory(products?.data)
+    : {}
+
   const filteredSeats = seats?.data?.filter(
     (seat: SeatType) => seat.room._id === showtime?.data?.room?._id,
   )
@@ -64,24 +80,30 @@ const ShowtimeDetails = () => {
     }
   }
 
-  const handleProductClick = (product: ProductType) => {
-    const existingProduct = selectedProducts.find(
-      (item) => item.product._id === product._id,
-    )
-    if (existingProduct) {
-      setSelectedProducts((prevProducts) =>
-        prevProducts.map((item) =>
+  const handleProductSelection = (
+    product: ProductType,
+    action: 'increase' | 'decrease',
+  ) => {
+    setSelectedProducts((prevProducts) =>
+      prevProducts
+        .map((item) =>
           item.product._id === product._id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? {
+                ...item,
+                quantity:
+                  action === 'increase' ? item.quantity + 1 : item.quantity - 1,
+              }
             : item,
+        )
+        .filter((item) => item.quantity > 0)
+        .concat(
+          prevProducts.some((item) => item.product._id === product._id)
+            ? []
+            : action === 'increase'
+              ? [{ product, quantity: 1 }]
+              : [],
         ),
-      )
-    } else {
-      setSelectedProducts((prevProducts) => [
-        ...prevProducts,
-        { product, quantity: 1 },
-      ])
-    }
+    )
   }
 
   const seatTotalPrice = useMemo(() => {
@@ -97,34 +119,6 @@ const ShowtimeDetails = () => {
 
   const totalPrice = seatTotalPrice + productTotalPrice
 
-  const handleIncreaseQuantity = (product: ProductType) => {
-    setSelectedProducts((prevProducts) =>
-      prevProducts.map((item) =>
-        item.product._id === product._id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item,
-      ),
-    )
-  }
-
-  const handleDecreaseQuantity = (product: ProductType) => {
-    setSelectedProducts((prevProducts) =>
-      prevProducts
-        .map((item) =>
-          item.product._id === product._id
-            ? { ...item, quantity: Math.max(1, item.quantity - 1) }
-            : item,
-        )
-        .filter((item) => item.quantity > 0),
-    )
-  }
-
-  const handleRemoveProduct = (product: ProductType) => {
-    setSelectedProducts((prevProducts) =>
-      prevProducts.filter((item) => item.product._id !== product._id),
-    )
-  }
-  
   let content
   if (isLoadingShowtime || isLoadingSeats || isLoadingProducts)
     content = <div>Loading...</div>
@@ -167,64 +161,112 @@ const ShowtimeDetails = () => {
           </div>
         </div>
         <div className='h-fit w-full bg-[#f9f6ec]'>
-          <div className='mx-auto w-[1000px] p-6'>
+          <div className='mx-auto w-[1000px] py-6'>
             <div className='mb-6 text-xl font-semibold'>Đặt hàng sản phẩm</div>
-            <ul className='grid grid-cols-4 gap-6'>
-              {products?.data?.map((item: ProductType, index: number) => (
-                <li
-                  key={index}
-                  className='cursor-pointer gap-2 border text-sm font-semibold'
-                  onClick={() => handleProductClick(item)}
-                >
-                  <div className='p-4 capitalize'>{item.name}</div>
-                  <div className='flex items-center justify-between bg-[#231f20] p-4 text-white'>
-                    <div>Giá bán online</div>
-                    <div>{item.price} vnđ</div>
-                  </div>
+            <ul>
+              {Object.entries(groupedProducts).map(([categoryName, items]) => (
+                <li key={categoryName} className='mb-4'>
+                  <h2 className='mb-2 font-bold capitalize'>{categoryName}</h2>
+                  <ul>
+                    <li className='grid grid-cols-[1fr_100px_100px] border-2 bg-white p-4 font-semibold'>
+                      <div className='flex items-center justify-start font-semibold'>
+                        Mô tả
+                      </div>
+                      <div className='flex items-center justify-center'>
+                        Số lượng
+                      </div>
+                      <div className='flex items-center justify-center'>
+                        Giá tiền
+                      </div>
+                    </li>
+                    {items.map((item: ProductType) => {
+                      const selectedItem = selectedProducts.find(
+                        (prod) => prod.product._id === item._id,
+                      )
+                      const quantity = selectedItem ? selectedItem.quantity : 0
+                      return (
+                        <li
+                          key={item._id}
+                          className='grid grid-cols-[1fr_100px_100px] border-2 bg-white p-4 font-semibold'
+                        >
+                          <div className='flex items-center justify-start text-sm capitalize'>
+                            {item.name} ({item.size})
+                          </div>
+                          <div className='flex items-center justify-center'>
+                            {item.price.toLocaleString('vi-VN', {
+                              style: 'currency',
+                              currency: 'VND',
+                            })}
+                          </div>
+                          <div className='flex items-center justify-center gap-2 py-2'>
+                            <button
+                              onClick={() =>
+                                handleProductSelection(item, 'decrease')
+                              }
+                              className='flex h-6 w-6 items-center justify-center rounded-full bg-[#efebdb] text-2xl'
+                            >
+                              -
+                            </button>
+                            <div className='flex h-4 w-4 items-center justify-center'>
+                              {quantity}
+                            </div>
+                            <button
+                              onClick={() =>
+                                handleProductSelection(item, 'increase')
+                              }
+                              className='flex h-6 w-6 items-center justify-center rounded-full bg-[#efebdb] text-2xl'
+                            >
+                              +
+                            </button>
+                          </div>
+                        </li>
+                      )
+                    })}
+                  </ul>
                 </li>
               ))}
             </ul>
           </div>
         </div>
-        <div className='mb-4 h-fit w-full bg-[#33373a]'>
+        <div className='h-fit w-full bg-[#33373a]'>
           <div className='mx-auto grid w-[1000px] grid-cols-4'>
-            <div className='border-l p-4'>
-              <div className='mb-4 text-sm font-semibold text-[#e5e0cb]'>
+            <div className='border-l border-[#515151] p-4'>
+              <div className='mb-4 font-semibold text-[#e5e0cb]'>
                 Phim chiếu rạp
               </div>
-              <div className='flex items-start gap-4'>
-                <div className='flex items-center justify-center'>
+              <div>
+                <div className='mb-4 flex items-center justify-center'>
                   <img
                     src={showtime?.data?.movie?.poster}
                     alt='poster'
-                    className='w-[65px]'
+                    className='w-[150px]'
                   />
                 </div>
-                <div className='flex flex-col items-start'>
-                  <div className='mb-4 w-[125px] overflow-hidden text-ellipsis text-nowrap text-sm font-semibold uppercase text-white'>
+                <div className='flex flex-col items-start gap-2'>
+                  <div className='font-semibold uppercase text-white'>
                     {showtime?.data?.movie?.name}
                   </div>
-                  <div className='mb-4 uppercase text-white'>
+                  <div className='uppercase text-white'>
                     {showtime?.data?.movie?.movieFormat}
                   </div>
-                  <div className='w-[125px] overflow-hidden text-ellipsis text-nowrap text-xs uppercase text-white'>
+                  <div className='text-xs uppercase text-white'>
                     {showtime?.data?.movie?.movieRating}
                   </div>
                 </div>
               </div>
             </div>
-            <div className='border-l p-4'>
-              <div className='mb-4 text-sm font-semibold text-[#e5e0cb]'>
+            <div className='border-l border-[#515151] p-4'>
+              <div className='mb-4 font-semibold text-[#e5e0cb]'>
                 Thông tin vé đã đặt
               </div>
               <div>
-                <div className='mb-2 flex items-start text-sm'>
+                <div className='mb-2 flex items-start'>
                   <div className='w-[100px] text-[#a7a9ac]'>Ngày</div>
                   <div className='text-white'>
                     {new Date(showtime?.data?.date).toLocaleDateString('vi-VN')}
                   </div>
                 </div>
-                <div className='mb-2 flex items-start text-sm'>
+                <div className='mb-2 flex items-start'>
                   <div className='w-[100px] text-[#a7a9ac]'>Giờ chiếu</div>
                   <div className='text-white'>
                     {new Date(showtime?.data?.timeStart).toLocaleTimeString(
@@ -234,7 +276,7 @@ const ShowtimeDetails = () => {
                         minute: '2-digit',
                       },
                     )}
-                    <span className='mx-1'>-</span>
+                    <span className='mx-1'>~</span>
                     {new Date(showtime?.data?.timeEnd).toLocaleTimeString(
                       'vi-VN',
                       {
@@ -244,19 +286,19 @@ const ShowtimeDetails = () => {
                     )}
                   </div>
                 </div>
-                <div className='mb-2 flex items-start text-sm'>
+                <div className='mb-2 flex items-start'>
                   <div className='w-[100px] text-[#a7a9ac]'>Rạp chiếu</div>
                   <div className='text-white'>
                     {showtime?.data?.cinema?.name}
                   </div>
                 </div>
-                <div className='mb-2 flex items-start text-sm'>
+                <div className='mb-2 flex items-start'>
                   <div className='w-[100px] text-[#a7a9ac]'>Phòng chiếu</div>
                   <div className='capitalize text-white'>
                     {showtime?.data?.room?.name}
                   </div>
                 </div>
-                <div className='mb-2 flex items-start text-sm'>
+                <div className='mb-2 flex items-start'>
                   <div className='w-[100px] text-[#a7a9ac]'>Ghế ngồi</div>
                   {selectedSeats.length > 0 ? (
                     <ul className='grid grid-cols-4 items-center gap-0.5 text-white'>
@@ -276,9 +318,7 @@ const ShowtimeDetails = () => {
                   )}
                 </div>
                 <div className='flex items-start'>
-                  <div className='w-[100px] text-sm text-[#a7a9ac]'>
-                    Tiền ghế
-                  </div>
+                  <div className='w-[100px] text-[#a7a9ac]'>Tiền ghế</div>
                   <div className='text-xl text-white'>
                     {selectedSeats
                       .reduce((total, seat) => total + seat.price, 0)
@@ -290,61 +330,60 @@ const ShowtimeDetails = () => {
                 </div>
               </div>
             </div>
-            <ul className='border-l p-4'>
-              <div className='mb-4 text-sm font-semibold text-[#e5e0cb]'>
+            <ul className='border-l border-[#515151] p-4'>
+              <div className='mb-4 font-semibold text-[#e5e0cb]'>
                 Thông tin sản phẩm
               </div>
               <ul>
                 {selectedProducts.map(({ product, quantity }) => (
-                  <li key={product._id} className='mb-6'>
-                    <div className='flex items-start text-white'>
-                      <div className='mb-2 w-[100px] capitalize'>
-                        {product.name}
-                      </div>
-                      <div>{product.price.toLocaleString()}₫</div>
+                  <li key={product._id} className='mb-4 border-b pb-2'>
+                    <div className='flex items-center gap-2 capitalize text-white'>
+                      {product.name}
+                      <div className='px-0.5 text-sm'>x</div>
+                      {quantity}
                     </div>
-                    <div className='mb-2 text-white'>Số lượng: {quantity}</div>
-                    <div className='flex items-start gap-4'>
-                      <button
-                        onClick={() => handleIncreaseQuantity(product)}
-                        className='flex h-8 w-8 items-center justify-center rounded-full bg-[#efebdb]'
-                      >
-                        +
-                      </button>
-                      <button
-                        onClick={() => handleDecreaseQuantity(product)}
-                        className='flex h-8 w-8 items-center justify-center rounded-full bg-[#efebdb]'
-                      >
-                        -
-                      </button>
-                      <button
-                        onClick={() => handleRemoveProduct(product)}
-                        className='flex h-8 w-8 items-center justify-center rounded-full bg-[#ee1c25] text-white'
-                      >
-                        xóa
-                      </button>
+                    <div className='text-white'>
+                      {(product.price * quantity).toLocaleString('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND',
+                      })}
                     </div>
                   </li>
                 ))}
               </ul>
             </ul>
-            <div className='border-l border-r p-4'>
-              <div className='mb-4 text-sm font-semibold text-[#e5e0cb]'>
-                Tổng tiền đơn hàn
+            <div className='border-l border-r border-[#515151] p-4'>
+              <div className='mb-4 font-semibold text-[#e5e0cb]'>
+                Tổng tiền đơn hàng
               </div>
               <div className='text-white'>
-                <div className='flex items-start gap-4 text-sm'>
-                  <div className='w-[100px]'>Đặt trước phim</div>
-                  <div>{seatTotalPrice}₫</div>
+                <div className='flex items-start gap-4'>
+                  <div className='w-[100px]'>Tiền phim</div>
+                  <div>
+                    {seatTotalPrice.toLocaleString('vi-VN', {
+                      style: 'currency',
+                      currency: 'VND',
+                    })}
+                  </div>
                 </div>
-                <div className='flex items-start gap-4 text-sm'>
+                <div className='flex items-start gap-4'>
                   <div className='w-[100px]'>Mua hàng</div>
-                  <div className='flex items-end'>{productTotalPrice}₫</div>
+                  <div className='flex items-end'>
+                    {productTotalPrice.toLocaleString('vi-VN', {
+                      style: 'currency',
+                      currency: 'VND',
+                    })}
+                  </div>
                 </div>
               </div>
               <div className='mt-10 flex items-start gap-4 text-white'>
                 <div className='w-[100px]'>Tổng tiền:</div>
-                <div>{totalPrice.toLocaleString()}₫</div>
+                <div className='text-xl'>
+                  {totalPrice.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                  })}
+                </div>
               </div>
             </div>
           </div>

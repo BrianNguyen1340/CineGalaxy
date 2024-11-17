@@ -17,7 +17,6 @@ const handleCreate = async (
 }> => {
   try {
     const checkExist = await seatModel.findOne({ number, row, room })
-
     if (checkExist) {
       return {
         success: false,
@@ -82,7 +81,6 @@ const handleGetOne = async (
           select: 'name',
         },
       })
-
     if (!request) {
       return {
         success: false,
@@ -130,7 +128,6 @@ const handleGetAll = async (): Promise<{
           select: 'name',
         },
       })
-
     if (!request || request.length === 0) {
       return {
         success: false,
@@ -176,7 +173,6 @@ const handleUpdate = async (
 }> => {
   try {
     const seat = await seatModel.findById(id)
-
     if (!seat) {
       return {
         success: false,
@@ -190,7 +186,6 @@ const handleUpdate = async (
       row,
       _id: { $ne: id },
     })
-
     if (checkExist) {
       return {
         success: false,
@@ -214,7 +209,6 @@ const handleUpdate = async (
         new: true,
       },
     )
-
     if (!request) {
       return {
         success: false,
@@ -248,7 +242,6 @@ const handleUpdate = async (
 const handleDelete = async (id: Types.ObjectId) => {
   try {
     const request = await seatModel.findByIdAndDelete(id)
-
     if (!request) {
       return {
         success: false,

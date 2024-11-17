@@ -79,6 +79,9 @@ import UpdateProductCategory from './Dashboard/Managements/ProductCategories/Upd
 import ListProduct from './Dashboard/Managements/Products/ListProduct/ListProduct'
 import CreateProduct from './Dashboard/Managements/Products/CreateProduct/CreateProduct'
 import UpdateProduct from './Dashboard/Managements/Products/UpdateProduct/UpdateProduct'
+import ListCombo from './Dashboard/Managements/Combo/ListCombo/ListCombo'
+import CreateCombo from './Dashboard/Managements/Combo/CreateCombo/CreateCombo'
+import UpdateCombo from './Dashboard/Managements/Combo/UpdateCombo/UpdateCombo'
 
 // cashier
 
@@ -165,6 +168,9 @@ export {
   ListProduct,
   CreateProduct,
   UpdateProduct,
+  ListCombo,
+  CreateCombo,
+  UpdateCombo,
 
   // cashier
 }
